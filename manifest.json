@@ -9,15 +9,9 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*", "http://www.youtube.com/*"],
+      "matches": ["https://www.youtube.com/*"],
       "js": ["content/contentScript.js"],
-      "run_at": "document_idle"
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["popup/popup.html", "popup/popup.js", "popup/popup.css"],
-      "matches": ["<all_urls>"]
+      "css": ["content/styles.css"]
     }
   ]
 }

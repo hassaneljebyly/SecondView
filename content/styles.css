@@ -1,0 +1,108 @@
+:root {
+  /* Light Mode Variables */
+  --secondView-bg-color: #ffffff;
+  --secondView-text-color: #0f0f0f;
+  --secondView-youtube-bg: #f2f2f2;
+  --secondView-youtube-hover-bg: #e5e5e5;
+  --secondView-popup-shadow: rgba(0, 0, 0, 0.3);
+  --secondView-popup-button-bg: #007bff;
+  --secondView-popup-button-hover-bg: #0056b3;
+  --secondView-input-bg: #ffffff;
+  --secondView-input-text: #0f0f0f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Mode Variables */
+    --secondView-bg-color: #1e1e1e;
+    --secondView-text-color: #f0f0f0;
+    --secondView-youtube-bg: #333333;
+    --secondView-youtube-hover-bg: #444444;
+    --secondView-popup-shadow: rgba(255, 255, 255, 0.1);
+    --secondView-popup-button-bg: #1e88e5;
+    --secondView-popup-button-hover-bg: #1565c0;
+    --secondView-input-bg: #2a2a2a;
+    --secondView-input-text: #ffffff;
+  }
+}
+
+#youtube-btn {
+  background-color: var(--secondView-youtube-bg);
+  color: var(--secondView-text-color);
+  font-size: 14px;
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  line-height: 36px;
+  border: none;
+  padding: 0 16px;
+  margin-right: 8px;
+  border-radius: 50vh;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+#youtube-btn:hover {
+  background-color: var(--secondView-youtube-hover-bg);
+}
+
+#youtube-btn:focus {
+  outline: none;
+}
+
+#secondView-popup {
+  display: none;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: var(--secondView-bg-color);
+  color: var(--secondView-text-color);
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 0 10px var(--secondView-popup-shadow);
+  z-index: 100;
+}
+
+#secondView-popup.open {
+  display: block;
+}
+
+#secondView-popup h2 {
+  margin-top: 0;
+}
+
+#secondView-popup label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+  color: var(--secondView-text-color);
+}
+
+#secondView-popup input,
+#secondView-popup textarea {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  box-sizing: border-box;
+  background-color: var(--secondView-input-bg);
+  color: var(--secondView-input-text);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#secondView-popup button {
+  margin-top: 15px;
+  padding: 10px;
+  width: 100%;
+  background-color: var(--secondView-popup-button-bg);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#secondView-popup button:hover {
+  background-color: var(--secondView-popup-button-hover-bg);
+}
