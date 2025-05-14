@@ -7,8 +7,13 @@ function createButton() {
   btn.innerText = "+ Add Note";
 
   btn.addEventListener("click", () => {
-    document.getElementById("secondView-popup").classList.toggle("open");
-    pauseVideo();
+    const popUpMenu = document.getElementById("secondView-popup");
+    if (popUpMenu) {
+      popUpMenu.classList.toggle("open");
+      pauseVideo();
+    } else {
+      insertPopup();
+    }
   });
 
   return btn;
@@ -24,6 +29,7 @@ function insertButton(container) {
 }
 function insertPopup(container) {
   const popUpInserted = document.getElementById("secondView-popup");
+  console.log(container);
   if (!popUpInserted) {
     container.appendChild(popup);
   } else {
@@ -34,7 +40,7 @@ function insertPopup(container) {
 function main() {
   const container = document.getElementById("actions");
   const videoPlayerContainer = document.querySelector(
-    "ytd-player#ytd-player #container div"
+    "#container .html5-video-player"
   );
 
   if (container) {
@@ -64,6 +70,7 @@ function createPopup() {
   </form`;
 
   popUpContainer.addEventListener("keydown", (e) => {
+    console.log(e);
     e.stopPropagation();
   });
 
