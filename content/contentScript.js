@@ -67,7 +67,7 @@ function createPopup() {
     <label for="note">Note</label>
     <textarea id="note" name="note" rows="4" placeholder="Write your note here..." required></textarea>
     <button type="submit">Submit</button>
-  </form`;
+  </form>`;
 
   popUpContainer.addEventListener("keydown", (e) => {
     console.log(e);
@@ -85,4 +85,16 @@ function pauseVideo() {
   video.pause();
 }
 
-// video.currentTime;
+function formatTime(time) {
+  let remainingSeconds;
+  const hours = Math.floor(time / 3600);
+  remainingSeconds = time - hours * 3600;
+  const minutes = Math.floor(remainingSeconds / 60);
+  remainingSeconds = remainingSeconds - minutes * 60;
+
+  return `${leftPad(hours)}:${leftPad(minutes)}:${remainingSeconds.toFixed()}`;
+}
+
+function leftPad(number) {
+  return String(number).padStart(2, "0");
+}
