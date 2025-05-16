@@ -16,7 +16,7 @@
     /* Dark Mode Variables */
     --secondView-bg-color: rgba(30, 30, 30, 0.9);
     --secondView-text-color: #f0f0f0;
-    --secondView-youtube-bg: #333333;
+    --secondView-youtube-bg: rgba(255, 255, 255, 0.1);
     --secondView-youtube-hover-bg: #444444;
     --secondView-popup-shadow: rgba(255, 255, 255, 0.1);
     --secondView-popup-button-bg: #1e88e5;

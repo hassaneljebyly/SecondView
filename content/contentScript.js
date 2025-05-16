@@ -40,8 +40,10 @@ function insertButton(container) {
 }
 function insertPopup(container) {
   const popUpInserted = document.getElementById("secondView-popup");
-  console.log(container);
-  if (!popUpInserted) {
+  if (
+    !popUpInserted ||
+    !document.querySelector("ytd-player#ytd-player #container")
+  ) {
     container.appendChild(popup);
   } else {
     setTimeout(insertPopup, 100);
@@ -51,13 +53,17 @@ function insertPopup(container) {
 function main() {
   const container = document.getElementById("actions");
   const videoPlayerContainer = document.querySelector(
-    "#container .html5-video-player"
+    "ytd-player#ytd-player #container"
   );
 
   if (container) {
     if (window.location.href.includes("://www.youtube.com/watch")) {
       insertPopup(videoPlayerContainer);
       insertButton(container);
+
+      chrome.storage.local.get([getVideoDetails().videoId], function (result) {
+        console.log("fetched from chrome.storage", result);
+      });
     }
   } else {
     setTimeout(main, 100);
@@ -80,10 +86,7 @@ function createPopup() {
     <button type="submit">Submit</button>
   </form>`;
 
-  popUpContainer.addEventListener("keydown", (e) => {
-    console.log(e);
-    e.stopPropagation();
-  });
+  popUpContainer.addEventListener("keydown", (e) => e.stopPropagation());
 
   popUpContainer
     .querySelector("#noteForm")
@@ -108,9 +111,29 @@ function handleSubmit(e) {
     }
   }
 
-  payload["notes"] = [noteData];
+  chrome.storage.local.get([payload.videoId], function (result) {
+    const video_data = result[payload.videoId];
+    if (video_data) {
+      const newVideoData = JSON.parse(
+        JSON.stringify({
+          ...video_data,
+          notes: [...video_data.notes, noteData],
+        })
+      );
 
-  console.log(payload); // ! save data to local storage for now
+      chrome.storage.local.set(
+        { [payload.videoId]: newVideoData },
+        function () {}
+      );
+    } else {
+      payload["notes"] = [noteData];
+      chrome.storage.local.set({ [payload.videoId]: payload }, function () {});
+    }
+  });
+
+  chrome.storage.local.get([getVideoDetails().videoId], function (result) {
+    console.log(result);
+  });
 }
 
 function pauseVideo() {
@@ -139,9 +162,12 @@ function leftPad(number) {
 
 function getVideoDetails() {
   const author = document.getElementById("channel-name")?.innerText || null;
-  const channelLink = document.querySelector("[href*='/channel/']");
-  const channelId =
-    channelLink?.getAttribute("href")?.split("/")?.at(-1) || null;
+  const url = document
+    .querySelector("[href*='/channel/']")
+    .getAttribute("href");
+  const regex = /channel\/([A-Za-z0-9_-]+)(?:\/|$)/;
+  const match = url.match(regex);
+  const channelId = match ? match[1] : null;
 
   const lengthSeconds = document.querySelector("video")?.duration || null;
   const title = document.querySelector("#title h1")?.innerText || null;
