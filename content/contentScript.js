@@ -50,6 +50,8 @@ function insertPopup(container) {
   }
 }
 
+let notesInStorage;
+
 function main() {
   const container = document.getElementById("actions");
   const videoPlayerContainer = document.querySelector(
@@ -61,8 +63,10 @@ function main() {
       insertPopup(videoPlayerContainer);
       insertButton(container);
 
+      checkTime();
+
       chrome.storage.local.get([getVideoDetails().videoId], function (result) {
-        console.log("fetched from chrome.storage", result);
+        notesInStorage = result;
       });
     }
   } else {
@@ -130,10 +134,6 @@ function handleSubmit(e) {
       chrome.storage.local.set({ [payload.videoId]: payload }, function () {});
     }
   });
-
-  chrome.storage.local.get([getVideoDetails().videoId], function (result) {
-    console.log(result);
-  });
 }
 
 function pauseVideo() {
@@ -177,4 +177,22 @@ function getVideoDetails() {
     document.querySelector("[video-id]")?.getAttribute("video-id");
 
   return { author, channelId, lengthSeconds, title, videoId };
+}
+
+function checkTime() {
+  const video = document.querySelector("video");
+
+  if (video) {
+    video.addEventListener("timeupdate", (e) => {
+      if (notesInStorage) {
+        const currentNote = Object.values(notesInStorage)[0].notes.filter(
+          (note) => note.start === Math.floor(video.currentTime)
+        );
+
+        console.log("currentNote", currentNote);
+      }
+    });
+  } else {
+    setTimeout(checkTime);
+  }
 }

@@ -106,3 +106,17 @@
 #secondView-popup button:hover {
   background-color: var(--secondView-popup-button-hover-bg);
 }
+
+#secondView-note {
+  border: 1px solid black;
+  border-radius: 12px;
+  overflow: hidden;
+  width: fit-content;
+}
+
+.secondView-note__container {
+  padding: 0.75em;
+}
+.secondView-note__text {
+  max-width: 30ch;
+}
