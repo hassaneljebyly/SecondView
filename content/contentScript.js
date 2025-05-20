@@ -1,5 +1,6 @@
 const btn = createButton();
 const popup = createPopup();
+const noteCardContainer = createNoteCard();
 
 const video = document.querySelector(
   "video[src*='blob:https://www.youtube.com/']"
@@ -45,6 +46,7 @@ function insertPopup(container) {
     !document.querySelector("ytd-player#ytd-player #container")
   ) {
     container.appendChild(popup);
+    container.appendChild(noteCardContainer);
   } else {
     setTimeout(insertPopup, 100);
   }
@@ -75,6 +77,15 @@ function main() {
 }
 
 main();
+
+function createNoteCard() {
+  const noteCardContainer = document.createElement("div");
+
+  noteCardContainer.setAttribute("id", "noteCardContainer");
+  const p = document.createElement("p");
+  noteCardContainer.appendChild(p);
+  return noteCardContainer;
+}
 
 function createPopup() {
   const popUpContainer = document.createElement("div");
@@ -184,12 +195,24 @@ function checkTime() {
 
   if (video) {
     video.addEventListener("timeupdate", (e) => {
-      if (notesInStorage) {
+      // notesInStorage returns {}
+      if (Object.values(notesInStorage)[0]) {
         const currentNote = Object.values(notesInStorage)[0].notes.filter(
           (note) => note.start === Math.floor(video.currentTime)
         );
 
-        console.log("currentNote", currentNote);
+        if (currentNote.length) {
+          const noteCardContainer =
+            document.getElementById("noteCardContainer");
+          const p = noteCardContainer.querySelector("p");
+          p.innerHTML = currentNote[0].note;
+          noteCardContainer.style.display = "block";
+
+          setTimeout(() => {
+            p.innerHTML = "";
+            noteCardContainer.style.display = "none";
+          }, 5000);
+        }
       }
     });
   } else {

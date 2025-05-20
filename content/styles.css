@@ -120,3 +120,24 @@
 .secondView-note__text {
   max-width: 30ch;
 }
+
+#noteCardContainer {
+  position: absolute;
+  /* width: 288px; */
+  /* height: 162px; */
+  left: 10%;
+  bottom: 20%;
+  color: white;
+  z-index: 1000;
+  background: #0f0f0f;
+  padding: 1em;
+  /* font: inherit; */
+  max-width: 40ch;
+  font-size: 14px;
+  line-height: 1.5;
+  border-radius: 12px;
+  border: 2px solid #ffffff;
+
+  /*  */
+  display: none;
+}
