@@ -1,6 +1,7 @@
 const btn = createButton();
 const popup = createPopup();
 const noteCardContainer = createNoteCard();
+const segmentsContainer = createSegmentsContainer();
 
 const video = document.querySelector(
   "video[src*='blob:https://www.youtube.com/']"
@@ -29,6 +30,17 @@ function createButton() {
   });
 
   return btn;
+}
+
+function insertSegmentsContainer() {
+  const ytpChapterHoverContainer = document.querySelector(
+    ".ytp-chapters-container"
+  );
+  if (ytpChapterHoverContainer) {
+    ytpChapterHoverContainer.appendChild(segmentsContainer);
+  } else {
+    setTimeout(insertSegmentsContainer);
+  }
 }
 
 function insertButton(container) {
@@ -64,11 +76,22 @@ function main() {
     if (window.location.href.includes("://www.youtube.com/watch")) {
       insertPopup(videoPlayerContainer);
       insertButton(container);
+      insertSegmentsContainer();
 
       checkTime();
 
       chrome.storage.local.get([getVideoDetails().videoId], function (result) {
         notesInStorage = result;
+        let listArray;
+        for (const [key, value] of Object.entries(result)) {
+          listArray = value.notes.map((note) => {
+            return createSegments(
+              formatSecondsToWidth(note.start, note.end, value.lengthSeconds)
+            );
+          });
+        }
+
+        insertSegments(listArray);
       });
     }
   } else {
@@ -217,5 +240,44 @@ function checkTime() {
     });
   } else {
     setTimeout(checkTime);
+  }
+}
+
+function createSegmentsContainer() {
+  const segmentsListContainer = document.createElement("ul");
+  segmentsListContainer.id = "secondView-segment-container";
+
+  return segmentsListContainer;
+}
+function createSegments({ segmentWidth, segmentXpos }) {
+  const segments = document.createElement("li");
+  segments.style.width = `${segmentWidth}%`;
+  segments.style.left = `${segmentXpos}%`;
+  return segments;
+}
+
+function formatSecondsToWidth(start, end, videoLength) {
+  const segmentLength = end - start;
+  const segmentWidth = (segmentLength * 100) / videoLength;
+  const segmentXpos = (start * 100) / videoLength;
+
+  return {
+    segmentWidth: +segmentWidth.toFixed(2),
+    segmentXpos: +segmentXpos.toFixed(2),
+  };
+}
+
+function insertSegments(segmentsArray) {
+  const parentUl = document.getElementById("secondView-segment-container");
+  if (parentUl) {
+    const frag = document.createDocumentFragment();
+    for (var i = 0; i < segmentsArray.length; ++i) {
+      frag.appendChild(segmentsArray[i]);
+    }
+    parentUl.appendChild(frag);
+  } else {
+    setTimeout(() => {
+      insertSegments(segmentsArray);
+    });
   }
 }
