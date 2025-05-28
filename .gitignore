@@ -7,6 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+legacy
 node_modules
 dist
 dist-ssr
@@ -23,5 +24,3 @@ dist-ssr
 *.sln
 *.sw?
 
-
-legacy
