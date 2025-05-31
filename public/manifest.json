@@ -5,7 +5,7 @@
   "description": "A Chrome extension using only a content script.",
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
+      "matches": ["*://*.youtube.com/*"],
       "js": ["content/index.js"],
       "run_at": "document_idle"
     }
