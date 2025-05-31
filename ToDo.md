@@ -22,49 +22,49 @@ This extension waits for a specific container on YouTube video pages, inserts a 
 
 ### 1. Listen for YouTube SPA Navigation
 
-- [ ] Use `yt-navigate-finish` event (fires on every video/page change)
-- [ ] On event fire:
+- ✅ Use `yt-navigate-finish` event (fires on every video/page change)
+- ✅ On event fire:
 
-  - [ ] Reset extension state if needed (e.g. `hasInjected = false`)
-  - [ ] Call the element polling function
+  - ✅ Reset extension state if needed (e.g. `hasInjected = false`)
+  - ✅ Call the element polling function
 
 ---
 
 ### 2. Wait for Target DOM Container
 
-- [ ] Define a polling function (`waitForElement`) using `setTimeout` or `requestAnimationFrame`
-- [ ] Query `document.querySelector(".your-target-selector")`
-- [ ] If element found:
+- ✅ Define a polling function (`waitForElement`) using `setTimeout` or `requestAnimationFrame`
+- ✅ Query `document.querySelector(".your-target-selector")`
+- ✅ If element found:
 
-  - [ ] Proceed to inject
+  - ✅ Proceed to inject
 
-- [ ] Else:
+- ✅ Else:
 
-  - [ ] Retry every 100ms
-  - [ ] Stop after max attempts (e.g. 50 = 5 seconds)
+  - ✅ Retry every 100ms
+  - ✅ Stop after max attempts (e.g. 50 = 5 seconds)
 
 ---
 
 ### 3. Inject Extension Container
 
-- [ ] Before injecting, check if your container already exists using an `#id` or `[data-extension]` attribute
-- [ ] If not present:
+- ✅ Before injecting, check if your container already exists using an `#id` or `[data-extension]` attribute
+- ✅ If not present:
 
-  - [ ] Create and insert a new `<div id="my-extension-container" />` into the target container
-  - [ ] Set a flag (`hasInjected = true`) to prevent duplication
+  - ✅ Create and insert a new `<div id="my-extension-container" />` into the target container
+  - ✅ Set a flag (`hasInjected = true`) to prevent duplication
 
 ---
 
 ### 4. Mount React Component
 
-- [ ] Use `ReactDOM.createRoot()` or `ReactDOM.render()` to mount your component into the injected container
+- ✅ Use `ReactDOM.createRoot()` or `ReactDOM.render()` to mount your component into the injected container
 
 ---
 
 ### 5. Handle Cleanup / Repeat
 
-- [ ] Repeat this process every time `yt-navigate-finish` fires
-- [ ] Optional: Unmount React and clean up container before reinjecting on new video
+- ✅ Repeat this process every time `yt-navigate-finish` fires
+- ✅ Optional: Unmount React and clean up container before reinjecting on new video
 
 ---
 
