@@ -1,6 +1,8 @@
 import { tasks, type InjectTask } from "../componentTasks";
 import { injectComponent, ROOTS } from "../injector";
 
+let pageId = Date.now();
+
 function cleanUp() {
   for (const [wrapperId, root] of ROOTS) {
     root.unmount();
@@ -11,13 +13,13 @@ function cleanUp() {
 }
 
 type Retries = { task: InjectTask; attempts: number };
-
 let queuedTasks: Retries[] = tasks.map((task) => ({
   task,
   attempts: 0,
 }));
 
 function init() {
+  const currentPageId = pageId;
   const retries: Retries[] = [];
 
   if (window.location.pathname !== "/watch") return;
@@ -35,9 +37,19 @@ function init() {
 
   if (retries.length) {
     queuedTasks = retries;
-    setTimeout(init, 300);
+    setTimeout(() => {
+      // page has changed no need to retry
+      if (currentPageId !== pageId) {
+        console.log("Page has changed");
+        return;
+      }
+      init();
+    }, 300);
   }
 }
 
-document.addEventListener("yt-navigate-start", cleanUp);
 document.addEventListener("yt-navigate-finish", init);
+document.addEventListener("yt-navigate-start", cleanUp);
+document.addEventListener("yt-navigate-start", () => {
+  pageId = Date.now(); // change page snapshot id on each navigation start
+});
