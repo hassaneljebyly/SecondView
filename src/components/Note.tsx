@@ -21,7 +21,6 @@ export default function Note() {
     const formEntries = new FormData(e.currentTarget).entries();
     const formData = Object.fromEntries(formEntries) as FormDataType;
     console.log(formData);
-    console.log(e.currentTarget.checkValidity());
   }
   return (
     <div className="sv-note" id="sv-note">
@@ -123,12 +122,14 @@ export default function Note() {
             <button
               className="sv-note__button sv-note__button--cancel"
               id="sv-cancel"
+              type="button"
             >
               Cancel
             </button>
             <button
               className="sv-note__button sv-note__button--submit"
               id="sv-submit"
+              type="submit"
             >
               Submit
             </button>
