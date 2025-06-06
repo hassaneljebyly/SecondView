@@ -1,13 +1,15 @@
 import type React from "react";
 import { validateNoteFormData } from "../utils/validation";
+import { useState } from "react";
 
 // TODO: input functionality
 // TODO: fix timeStamp regex, for now 01:70:90 is valid when it shouldn't
+// TODO: input validation must be shown in html https://www.w3.org/WAI/tutorials/forms/notifications/#inline:~:text=for%20such%20feedback.-,Binary%20messages,-In%20the%20following
 // TODO: make form accessible
-// TODO: input validation
 // TODO: make form pretty, basic styling
 // TODO change name of component
 // TODO: create utils/constant.ts directory for global constants
+// TODO: remove noValidate from form
 
 export type FormDataType = {
   start: string;
@@ -17,6 +19,7 @@ export type FormDataType = {
 };
 
 export default function Note() {
+  const [noteLength, setNoteLength] = useState(0);
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!(e.currentTarget instanceof HTMLFormElement)) {
@@ -134,7 +137,9 @@ export default function Note() {
               maxLength={500}
               minLength={5}
               required
+              onChange={(e) => setNoteLength(e.currentTarget.value.length)}
             />
+            <p>{noteLength}/500</p>
           </div>
           <div className="sv-note__actions">
             <button
