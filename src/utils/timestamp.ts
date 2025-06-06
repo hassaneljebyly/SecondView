@@ -19,3 +19,8 @@ export function timeStringToSeconds(
 
   return result as timeStringToSecondsType;
 }
+
+export function timeStringIsValid(timeStamp: string): boolean {
+  const testRegex = /^(\d{1,2})(:(\d{1,2}))?(:(\d{1,2}))?$/;
+  return testRegex.test(timeStamp);
+}

@@ -1,26 +1,43 @@
 import type React from "react";
+import { validateNoteFormData } from "../utils/validation";
 
 // TODO: input functionality
+// TODO: fix timeStamp regex, for now 01:70:90 is valid when it shouldn't
 // TODO: make form accessible
 // TODO: input validation
 // TODO: make form pretty, basic styling
 // TODO change name of component
+// TODO: create utils/constant.ts directory for global constants
 
-type FormDataType = {
+export type FormDataType = {
   start: string;
   end: string;
   category: string;
   note: string;
 };
 
-// function formDataValidator(formData: FormDataType) {}
-
 export default function Note() {
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!(e.currentTarget instanceof HTMLFormElement)) {
+      console.error("Form submit event missing a valid form target");
+      return;
+    }
     const formEntries = new FormData(e.currentTarget).entries();
-    const formData = Object.fromEntries(formEntries) as FormDataType;
-    console.log(formData);
+    // defaults in case something goes wrong
+    const formData = {
+      start: "",
+      end: "",
+      category: "",
+      note: "",
+      ...Object.fromEntries(formEntries),
+    } as FormDataType;
+    const error = validateNoteFormData(formData);
+    if (error.length) {
+      console.log(error);
+    } else {
+      console.log("Success, process form");
+    }
   }
   return (
     <div className="sv-note" id="sv-note">
@@ -28,6 +45,7 @@ export default function Note() {
         className="sv-note__form"
         id="sv-note__form"
         onSubmit={handleFormSubmit}
+        noValidate
       >
         <fieldset className="sv-note__fieldset" id="sv-note__fieldset">
           <legend className="sv-note__legend" id="sv-note__legend">
