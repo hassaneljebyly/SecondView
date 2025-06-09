@@ -1,8 +1,8 @@
 import type { FormDataType } from "../components/Note";
 import { timeStringIsValid } from "./timestamp";
 
-type NoteFormInputFields = keyof FormDataType;
-type ValidationError = {
+export type NoteFormInputFields = keyof FormDataType;
+export type ValidationError = {
   field: NoteFormInputFields;
   message: string;
 };
