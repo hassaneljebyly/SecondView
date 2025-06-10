@@ -16,6 +16,8 @@ import { validateNoteFormData } from "../../utils/validation";
 import { SegmentBoundInput } from "./SegmentBoundInput";
 import { CategorySelectOptions } from "./CategorySelectOptions";
 import { NoteTextArea } from "./NoteTextArea";
+import { useState } from "react";
+import SubmissionSuccessful from "./SubmissionSuccessful";
 
 export type FormDataType = {
   start: string;
@@ -36,6 +38,7 @@ export type NoteSubmissionData = VideoDetails & {
 };
 
 export default function NoteSubmissionForm() {
+  const [formIsValid, setFormIsValid] = useState(false);
   function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!(e.currentTarget instanceof HTMLFormElement)) {
@@ -69,62 +72,68 @@ export default function NoteSubmissionForm() {
         userId: "",
         timestamp: Date.now(),
       };
+      setFormIsValid(true);
       console.log("Success, process form", submissionData);
     }
   }
+
   return (
     <div className="sv-note" id="sv-note">
-      <form
-        className="sv-note__form"
-        id="sv-note__form"
-        onSubmit={handleFormSubmit}
-        noValidate
-      >
-        <fieldset className="sv-note__fieldset" id="sv-note__fieldset">
-          <legend className="sv-note__legend" id="sv-note__legend">
-            Add Context Note
-          </legend>
-          <SegmentBoundInput
-            name={"start"}
-            maxLength={TIME_STAMP_MAX_LENGTH}
-            pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
-          />
-          <SegmentBoundInput
-            name={"end"}
-            maxLength={TIME_STAMP_MAX_LENGTH}
-            pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
-          />
-          <CategorySelectOptions
-            name={"category"}
-            defaultSelect={NOTE_FORM_PLACEHOLDERS.CATEGORY_SELECT}
-            categoriesList={
-              NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string[]
-            }
-          />
-          <NoteTextArea
-            name={"note"}
-            placeholder={NOTE_FORM_PLACEHOLDERS.TEXTAREA}
-            maxLength={NOTE_LIMITS.MAX_LENGTH}
-            minLength={NOTE_LIMITS.MIN_LENGTH}
-          />
-          <div className="sv-note__actions">
-            <button
-              className="sv-note__button sv-note__button--cancel"
-              id="sv-cancel"
-              type="button"
-            >
-              Cancel
-            </button>
-            <button
-              className="sv-note__button sv-note__button--submit"
-              id="sv-submit"
-              type="submit"
-            >
-              Submit
-            </button>
-          </div>
-        </fieldset>
-      </form>
+      {formIsValid ? (
+        <SubmissionSuccessful />
+      ) : (
+        <form
+          className="sv-note__form"
+          id="sv-note__form"
+          onSubmit={handleFormSubmit}
+          noValidate
+        >
+          <fieldset className="sv-note__fieldset" id="sv-note__fieldset">
+            <legend className="sv-note__legend" id="sv-note__legend">
+              Add Context Note
+            </legend>
+            <SegmentBoundInput
+              name={"start"}
+              maxLength={TIME_STAMP_MAX_LENGTH}
+              pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
+            />
+            <SegmentBoundInput
+              name={"end"}
+              maxLength={TIME_STAMP_MAX_LENGTH}
+              pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
+            />
+            <CategorySelectOptions
+              name={"category"}
+              defaultSelect={NOTE_FORM_PLACEHOLDERS.CATEGORY_SELECT}
+              categoriesList={
+                NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string[]
+              }
+            />
+            <NoteTextArea
+              name={"note"}
+              placeholder={NOTE_FORM_PLACEHOLDERS.TEXTAREA}
+              maxLength={NOTE_LIMITS.MAX_LENGTH}
+              minLength={NOTE_LIMITS.MIN_LENGTH}
+            />
+            <div className="sv-note__actions">
+              <button
+                className="sv-note__button sv-note__button--cancel"
+                id="sv-cancel"
+                type="button"
+              >
+                Cancel
+              </button>
+              <button
+                className="sv-note__button sv-note__button--submit"
+                id="sv-submit"
+                type="submit"
+              >
+                Submit
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      )}
     </div>
   );
 }
