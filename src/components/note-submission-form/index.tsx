@@ -51,11 +51,14 @@ export default function NoteSubmissionForm() {
       note: "",
       ...Object.fromEntries(formEntries),
     } as FormDataType;
+
+    // validate and show errors if any
     cleanUpErrors(); // clean up previous errors if they exist
     const error = validateNoteFormData(formData);
     if (error.length) {
       showErrors(error);
     } else {
+      // transform data to submit format
       const { start, end, category, note } = formData;
       const submissionData: NoteSubmissionData = {
         startSeconds: timeStringToSeconds(start),
