@@ -1,5 +1,5 @@
 import Button from "../components/Button";
-import Note from "../components/Note";
+import NoteSubmissionForm from "../components/note-submission-form";
 
 export type InjectTask = {
   domTargetSelector: string; // Where to inject it in the DOM
@@ -19,6 +19,6 @@ export const tasks: InjectTask[] = [
     domTargetSelector: "ytd-player#ytd-player #container",
     rootWrapperId: "sv-note-container",
     componentId: "sv-note",
-    component: <Note />,
+    component: <NoteSubmissionForm />,
   },
 ];
