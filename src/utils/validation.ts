@@ -1,4 +1,5 @@
 import type { FormDataType } from "../components/Note";
+import { NOTE_FORM_PLACEHOLDERS, NOTE_LIMITS } from "./constant";
 import { timeStringIsValid } from "./timestamp";
 
 export type NoteFormInputFields = keyof FormDataType;
@@ -6,20 +7,6 @@ export type ValidationError = {
   field: NoteFormInputFields;
   message: string;
 };
-
-const categories = [
-  "SELECT_NOTE_CATEGORY",
-  "FABRICATED_CONTENT",
-  "MANIPULATED_CONTENT",
-  "IMPOSTER_CONTENT",
-  "MISLEADING_CONTENT",
-  "FALSE_CONTEXT",
-  "SATIRE_AND_PARODY",
-  "FALSE_CONNECTIONS",
-  "SPONSORED_CONTENT",
-  "PROPAGANDA",
-  "ERROR",
-];
 
 export function validateNoteFormData(
   formData: FormDataType
@@ -41,7 +28,9 @@ export function validateNoteFormData(
   }
 
   const { category } = formData;
-  if (!categories.includes(category.toUpperCase().replace("-", "_"))) {
+  if (
+    !(NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string).includes(category)
+  ) {
     errors.push({
       field: "category",
       message: category ? "Invalid input" : "Required Field",
@@ -49,20 +38,20 @@ export function validateNoteFormData(
   }
 
   const { note } = formData;
-  if (note.length < 5) {
+  if (note.length < NOTE_LIMITS.MIN_LENGTH) {
     errors.push({
       field: "note",
       message: note
-        ? "Note must be at least 5 characters long."
+        ? `Note must be at least ${NOTE_LIMITS.MIN_LENGTH} characters long.`
         : "Required Field",
     });
   }
 
-  if (note.length > 500) {
+  if (note.length > NOTE_LIMITS.MAX_LENGTH) {
     errors.push({
       field: "note",
       message: note
-        ? "Note must be no more than 500 characters long."
+        ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
         : "Required Field",
     });
   }

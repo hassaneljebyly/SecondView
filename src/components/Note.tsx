@@ -1,21 +1,46 @@
 import type React from "react";
 import { validateNoteFormData } from "../utils/validation";
 import { useState } from "react";
+import {
+  cleanUpErrors,
+  getVideoDetails,
+  showErrors,
+  type VideoDetails,
+} from "../utils/dom";
+import { timeStringToSeconds } from "../utils/timestamp";
+import {
+  NOTE_FORM_PLACEHOLDERS,
+  NOTE_LIMITS,
+  REGEX,
+  TIME_STAMP_MAX_LENGTH,
+} from "../utils/constant";
 
-// TODO: input functionality
 // TODO: fix timeStamp regex, for now 01:70:90 is valid when it shouldn't
+// TODO: input validation compare start and end, end must be bigger than start, also consider min and max segment length
 // TODO: input validation must be shown in html https://www.w3.org/WAI/tutorials/forms/notifications/#inline:~:text=for%20such%20feedback.-,Binary%20messages,-In%20the%20following
 // TODO: make form accessible
 // TODO: make form pretty, basic styling
 // TODO change name of component
-// TODO: create utils/constant.ts directory for global constants
 // TODO: remove noValidate from form
+// TODO: better error messages
+// TODO: timeStringToSeconds function feels too hacky
 
 export type FormDataType = {
   start: string;
   end: string;
   category: string;
   note: string;
+};
+
+export type NoteSubmissionData = VideoDetails & {
+  // form data (converted)
+  startSeconds: number;
+  endSeconds: number;
+  category: string;
+  note: string;
+  // submission metadata
+  userId: string; // generated ID
+  timestamp: number; // Date.now()
 };
 
 export default function Note() {
@@ -35,11 +60,22 @@ export default function Note() {
       note: "",
       ...Object.fromEntries(formEntries),
     } as FormDataType;
+    cleanUpErrors(); // clean up previous errors if they exist
     const error = validateNoteFormData(formData);
     if (error.length) {
-      console.log(error);
+      showErrors(error);
     } else {
-      console.log("Success, process form");
+      const { start, end, category, note } = formData;
+      const submissionData: NoteSubmissionData = {
+        startSeconds: timeStringToSeconds(start),
+        endSeconds: timeStringToSeconds(end),
+        category,
+        note,
+        ...getVideoDetails(),
+        userId: "",
+        timestamp: Date.now(),
+      };
+      console.log("Success, process form", submissionData);
     }
   }
   return (
@@ -62,10 +98,11 @@ export default function Note() {
               className="sv-note__input"
               id="sv-start"
               name="start"
-              maxLength={8}
-              pattern="^(\d{1,2})(:(\d{1,2}))?(:(\d{1,2}))?$"
+              maxLength={TIME_STAMP_MAX_LENGTH}
+              pattern={`${REGEX.TIME_STAMP_PATTERN}`}
               required
             />
+            <span></span>
           </div>
           <div className="sv-note__field">
             <label className="sv-note__label" htmlFor="sv-end">
@@ -75,10 +112,11 @@ export default function Note() {
               className="sv-note__input"
               id="sv-end"
               name="end"
-              maxLength={8}
-              pattern="^(\d{1,2})(:(\d{1,2}))?(:(\d{1,2}))?$"
+              maxLength={TIME_STAMP_MAX_LENGTH}
+              pattern={`${REGEX.TIME_STAMP_PATTERN}`}
               required
             />
+            <span></span>
           </div>
           <div className="sv-note__field">
             <label className="sv-note__label" htmlFor="sv-category">
@@ -91,39 +129,18 @@ export default function Note() {
               required
             >
               <option className="sv-note__option" value="">
-                Select note category
+                {NOTE_FORM_PLACEHOLDERS.CATEGORY_SELECT}
               </option>
-              <option className="sv-note__option" value="fabricated-content">
-                Fabricated content
-              </option>
-              <option className="sv-note__option" value="manipulated-content">
-                Manipulated content
-              </option>
-              <option className="sv-note__option" value="imposter-content">
-                Imposter content
-              </option>
-              <option className="sv-note__option" value="misleading-content">
-                Misleading content
-              </option>
-              <option className="sv-note__option" value="false-context">
-                False context
-              </option>
-              <option className="sv-note__option" value="satire-and-parody">
-                Satire and parody
-              </option>
-              <option className="sv-note__option" value="false-connections">
-                False connections
-              </option>
-              <option className="sv-note__option" value="sponsored-content">
-                Sponsored content
-              </option>
-              <option className="sv-note__option" value="propaganda">
-                Propaganda
-              </option>
-              <option className="sv-note__option" value="error">
-                Error
-              </option>
+              {NOTE_FORM_PLACEHOLDERS.CATEGORIES.map((cat) => {
+                const category = (cat as string).replaceAll("_", " ");
+                return (
+                  <option key={cat} className="sv-note__option" value={cat}>
+                    {category.charAt(0) + category.slice(1).toLowerCase()}
+                  </option>
+                );
+              })}
             </select>
+            <span></span>
           </div>
           <div className="sv-note__field">
             <label className="sv-note__label" htmlFor="sv-note-textarea">
@@ -133,13 +150,16 @@ export default function Note() {
               className="sv-note__textarea"
               id="sv-note-textarea"
               name="note"
-              placeholder="Explain what's incorrect or provide additional context..."
-              maxLength={500}
-              minLength={5}
+              placeholder={NOTE_FORM_PLACEHOLDERS.TEXTAREA}
+              maxLength={NOTE_LIMITS.MAX_LENGTH}
+              minLength={NOTE_LIMITS.MIN_LENGTH}
               required
               onChange={(e) => setNoteLength(e.currentTarget.value.length)}
             />
-            <p>{noteLength}/500</p>
+            <span></span>
+            <p>
+              {noteLength}/{NOTE_LIMITS.MAX_LENGTH}
+            </p>
           </div>
           <div className="sv-note__actions">
             <button

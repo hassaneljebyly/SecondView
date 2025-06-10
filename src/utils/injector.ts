@@ -1,8 +1,8 @@
 import { createRoot, type Root } from "react-dom/client";
 import type { InjectTask } from "./componentTasks";
 import { getOrCreateRootWrapper } from "./dom";
+import { MAX_ATTEMPTS } from "./constant";
 
-const MAX_ATTEMPTS = 5;
 export const ROOTS = new Map<string, Root>();
 
 type InjectComponentResult =
