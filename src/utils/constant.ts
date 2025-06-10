@@ -29,5 +29,5 @@ export const NOTE_FORM_PLACEHOLDERS = {
 } as const;
 
 export const REGEX = {
-  TIME_STAMP_PATTERN: "^(\\d{1,2})(:(\\d{1,2}))?(:(\\d{1,2}))?$",
+  TIME_STAMP_PATTERN: "^(\\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$",
 } as const;
