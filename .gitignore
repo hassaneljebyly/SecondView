@@ -25,4 +25,6 @@ dist-ssr
 *.sw?
 
 index.html
+
 main-test.tsx
+ToDo-Guide.md

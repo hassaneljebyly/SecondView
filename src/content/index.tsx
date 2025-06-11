@@ -1,5 +1,5 @@
-import { tasks, type InjectTask } from "../componentTasks";
-import { injectComponent, ROOTS } from "../injector";
+import { tasks, type InjectTask } from "../utils/componentTasks";
+import { injectComponent, ROOTS } from "../utils/injector";
 
 let pageId = Date.now();
 
@@ -48,8 +48,10 @@ function init() {
   }
 }
 
-document.addEventListener("yt-navigate-finish", init);
-document.addEventListener("yt-navigate-start", cleanUp);
+document.addEventListener("yt-navigate-finish", () => {
+  setTimeout(init);
+});
 document.addEventListener("yt-navigate-start", () => {
+  cleanUp();
   pageId = Date.now(); // change page snapshot id on each navigation start
 });
