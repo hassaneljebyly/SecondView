@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "Content Script Extension",
+  "version": "0.1.0",
+  "description": "A Chrome extension using only a content script.",
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/*"],
+      "js": ["content/index.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "permissions": [],
+  "host_permissions": ["<all_urls>"]
+}
