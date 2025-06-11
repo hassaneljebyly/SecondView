@@ -1,4 +1,5 @@
-import type { FormDataType } from "../components/note-submission-form";
+import type { FormDataType } from "../types/components";
+import type { ValidationError } from "../types/utils";
 import {
   NOTE_FORM_PLACEHOLDERS,
   NOTE_LIMITS,
@@ -6,11 +7,6 @@ import {
 } from "./constant";
 import { timeStringIsValid, timeStringToSeconds } from "./timestamp";
 
-export type NoteFormInputFields = keyof FormDataType;
-export type ValidationError = {
-  field: NoteFormInputFields;
-  message: string;
-};
 // !FIXME: case of end bound is bigger than video length is not covered yet
 export function validateNoteFormData(
   formData: FormDataType

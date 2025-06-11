@@ -1,8 +1,4 @@
-export type CategorySelectOptionsProp = {
-  name: string;
-  defaultSelect: string;
-  categoriesList: string[];
-};
+import type { CategorySelectOptionsProp } from "../../types/components";
 
 export function CategorySelectOptions(
   prop: CategorySelectOptionsProp

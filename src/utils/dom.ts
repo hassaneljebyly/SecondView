@@ -1,4 +1,5 @@
-import type { ValidationError } from "./validation";
+import type { VideoDetails } from "../types/utils";
+import type { ValidationError } from "../types/utils";
 
 export function getOrCreateRootWrapper(
   rootWrapperId: string,
@@ -43,14 +44,6 @@ export function cleanUpErrors() {
   });
 }
 
-export type VideoDetails = {
-  videoId: string | null;
-  channelId: string | null;
-  channelName: string | null;
-  videoTitle: string | null;
-  videoLength: number | null; // in seconds
-};
-
 export function getVideoDetails(): VideoDetails {
   try {
     const channelName =
@@ -87,4 +80,13 @@ export function getVideoDetails(): VideoDetails {
       videoLength: null,
     };
   }
+}
+
+export function handleFormToggle() {
+  const noteForm = document.getElementById("sv-note__form");
+  if (!noteForm) {
+    console.error("noteForm was not found");
+    return;
+  }
+  noteForm.classList.toggle("show-form");
 }

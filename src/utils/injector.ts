@@ -1,29 +1,9 @@
 import { createRoot, type Root } from "react-dom/client";
-import type { InjectTask } from "./componentTasks";
 import { getOrCreateRootWrapper } from "./dom";
 import { MAX_ATTEMPTS } from "./constant";
+import type { InjectComponentResult, InjectTask } from "../types/utils";
 
 export const ROOTS = new Map<string, Root>();
-
-type InjectComponentResult =
-  | {
-      maxAttemptsReached?: never;
-      success: true;
-      retryTask?: never;
-      attempts?: never;
-    }
-  | {
-      maxAttemptsReached?: never;
-      success: false;
-      retryTask: InjectTask;
-      attempts: number;
-    }
-  | {
-      maxAttemptsReached: true;
-      success?: never;
-      retryTask?: never;
-      attempts?: never;
-    };
 
 export function injectComponent(
   task: InjectTask,

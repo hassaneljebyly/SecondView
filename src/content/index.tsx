@@ -1,4 +1,5 @@
-import { tasks, type InjectTask } from "../utils/componentTasks";
+import type { Retries } from "../types/utils";
+import { tasks } from "../utils/componentTasks";
 import { injectComponent, ROOTS } from "../utils/injector";
 
 let pageId = Date.now();
@@ -12,7 +13,6 @@ function cleanUp() {
   }
 }
 
-type Retries = { task: InjectTask; attempts: number };
 let queuedTasks: Retries[] = tasks.map((task) => ({
   task,
   attempts: 0,

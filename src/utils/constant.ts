@@ -34,4 +34,7 @@ export const REGEX = {
 
 export const CUSTOM_EVENTS = {
   TOGGLE_NOTE_FORM: "toggleNoteForm",
+  CLOSE_NOTE_FORM: "closeNoteForm",
 } as const;
+
+export const SUCCESS_MESSAGE_DURATION = 1500;

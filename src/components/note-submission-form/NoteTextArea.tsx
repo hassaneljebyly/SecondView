@@ -1,11 +1,5 @@
 import { useState } from "react";
-
-export type NoteTextAreaProp = {
-  name: string;
-  placeholder: string;
-  maxLength: number;
-  minLength: number;
-};
+import type { NoteTextAreaProp } from "../../types/components";
 
 export function NoteTextArea(prop: NoteTextAreaProp): React.JSX.Element {
   const [noteLength, setNoteLength] = useState(0);

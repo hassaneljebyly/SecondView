@@ -1,12 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { SUCCESS_MESSAGE_DURATION } from "../../utils/constant";
 
-export default function SubmissionSuccessful() {
-  const [showSuccessMessage, setShowSuccessMessage] = useState(true);
+export default function SubmissionSuccessful({
+  restHandler,
+}: {
+  restHandler: () => void;
+}) {
   useEffect(() => {
-    const timeoutID = setTimeout(() => {
-      setShowSuccessMessage(false);
-    }, 1500);
-    return () => clearTimeout(timeoutID);
-  }, []);
-  return showSuccessMessage && <p>✓ Note submitted successfully</p>;
+    const timeOutID = setTimeout(() => {
+      restHandler();
+    }, SUCCESS_MESSAGE_DURATION);
+    return () => clearTimeout(timeOutID);
+  });
+  return <p>✓ Note submitted successfully</p>;
 }

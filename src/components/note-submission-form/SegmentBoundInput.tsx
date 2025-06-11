@@ -1,8 +1,5 @@
-export type SegmentBoundInputProp = {
-  name: string;
-  maxLength: number;
-  pattern: RegExp;
-};
+import type { SegmentBoundInputProp } from "../../types/components";
+
 // TODO: add a "now" button to automatically insert current time
 export function SegmentBoundInput(
   prop: SegmentBoundInputProp
