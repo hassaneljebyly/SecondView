@@ -1,11 +1,23 @@
 // import { useState } from "react";
-import { PREFIX } from "../../utils/constant";
+import {
+  NOTE_FORM_PLACEHOLDERS,
+  NOTE_LIMITS,
+  PREFIX,
+  SEGMENT_LIMITS,
+} from "../../utils/constant";
+import { timeStringIsValid, timeStringToSeconds } from "../../utils/timestamp";
 
 type FormDataType = {
   start: string;
   end: string;
   category: string;
   note: string;
+};
+
+type ValidationError = {
+  focus: boolean; // used to focus first error field
+  field: keyof FormDataType;
+  message: string;
 };
 
 function withPrefix(...classNames: string[]) {
@@ -54,7 +66,8 @@ export default function Form() {
     // normalize form data to desired format
     const formData = normalizeFormData(formDataObject);
     // validate data
-    console.log(formData);
+    const errors = validateFormData(formData);
+    console.log(errors);
   }
   return (
     <div
@@ -198,4 +211,93 @@ export default function Form() {
       </form>
     </div>
   );
+}
+
+// FIXME: case of end bound is bigger than video length is not covered yet
+function validateFormData(formData: FormDataType) {
+  const { start, end, category, note } = formData;
+  const errors: ValidationError[] = [];
+  // validate time bounds
+  const startBoundIsValid = timeStringIsValid(start);
+  const endBoundIsValid = timeStringIsValid(end);
+  if (!startBoundIsValid) {
+    errors.push({
+      focus: false,
+      field: "start",
+      message: start ? "Invalid Input (e.g. 02:40)" : "Required Field",
+    });
+  }
+  if (!endBoundIsValid) {
+    errors.push({
+      focus: false,
+      field: "end",
+      message: end ? "Invalid Input (e.g. 02:40)" : "Required Field",
+    });
+  }
+
+  if (startBoundIsValid && endBoundIsValid) {
+    const startBoundToSeconds = timeStringToSeconds(start);
+    const endBoundToSeconds = timeStringToSeconds(end);
+    const segmentLength = endBoundToSeconds - startBoundToSeconds;
+    let error: ValidationError | undefined;
+    if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
+      error = {
+        focus: false,
+        field: "end",
+        message: `Segment must be ≥${SEGMENT_LIMITS.MIN_SECONDS}s. Adjust start/end.`,
+      };
+    }
+    // too long
+    if (segmentLength > SEGMENT_LIMITS.MAX_SECONDS) {
+      error = {
+        focus: false,
+        field: "end",
+        message: `Segment must be ≤${SEGMENT_LIMITS.MAX_SECONDS}s. Adjust start/end.`,
+      };
+    }
+    // end bound bigger than start bound
+    if (segmentLength < 0) {
+      error = {
+        focus: false,
+        field: "end",
+        message: `End must come after start`,
+      };
+    }
+
+    if (error) errors.push(error);
+  }
+
+  // validate category
+  if (
+    !(NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string).includes(category)
+  ) {
+    errors.push({
+      focus: false,
+      field: "category",
+      message: category ? "Invalid input" : "Required Field",
+    });
+  }
+
+  // validate note
+  if (note.length < NOTE_LIMITS.MIN_LENGTH) {
+    errors.push({
+      focus: false,
+      field: "note",
+      message: note
+        ? `Note must be at least ${NOTE_LIMITS.MIN_LENGTH} characters long.`
+        : "Required Field",
+    });
+  }
+
+  if (note.length > NOTE_LIMITS.MAX_LENGTH) {
+    errors.push({
+      focus: false,
+      field: "note",
+      message: note
+        ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
+        : "Required Field",
+    });
+  }
+  // set element in focus(first input in error list)
+  return errors.map((error, index) => ({ ...error, focus: !index }));
 }
