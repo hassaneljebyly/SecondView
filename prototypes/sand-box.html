@@ -7,14 +7,17 @@
     <title>UI Prototypes</title>
   </head>
   <body>
-    <!-- top div is the react root wrapper -->
     <!-- use prefix "sv-" -->
-    <!-- form component -->
+    <!-- top div is the react root wrapper -->
     <div id="sv-form-root">
-      <div class="sv-form-wrapper">
-        <form class="sv-form" novalidate="">
-          <fieldset class="sv-form__fieldset">
-            <legend class="sv-form__legend">Add Context Note</legend>
+      <!-- form component -->
+      <div class="sv-form-wrapper sv-form-wrapper-grid">
+        <form class="sv-form sv-form-wrapper-grid__item" novalidate="">
+          <fieldset class="sv-form__fieldset sv-form-grid">
+            <legend class="sv-form__legend sv-form-grid-span-2">
+              Add Context Note
+            </legend>
+            <hr class="sv-form__divider sv-form-grid-span-2" />
             <div class="sv-form__group">
               <label class="sv-form__label" for="sv-start">Start</label>
               <!--
@@ -35,15 +38,12 @@
                   5. Event Handlers
                      - onclick, onchange, oninput, etc.
                 -->
-              <small id="sv-start-hint" class="sv-form__tooltip" role="tooltip"
-                >Format: 30 or 1:30 or 1:05:30</small
-              >
               <input
                 id="sv-start"
-                class="sv-form__input"
+                class="sv-form__input sv-form__field"
                 name="sv-start"
+                placeholder="(e.g. 1:05:30)"
                 aria-errormessage="sv-start-error"
-                aria-describedby="sv-start-hint"
                 aria-invalid="false"
                 autocomplete="off"
                 maxlength="8"
@@ -58,15 +58,12 @@
             </div>
             <div class="sv-form__group">
               <label class="sv-form__label" for="sv-end">End</label>
-              <small id="sv-end-hint" class="sv-form__tooltip" role="tooltip"
-                >Format: 30 or 1:30 or 1:05:30</small
-              >
               <input
                 id="sv-end"
-                class="sv-form__input"
+                class="sv-form__input sv-form__field"
                 name="sv-end"
+                placeholder="(e.g. 1:05:30)"
                 aria-errormessage="sv-end-error"
-                aria-describedby="sv-end-hint"
                 aria-invalid="false"
                 autocomplete="off"
                 maxlength="8"
@@ -79,11 +76,11 @@
                 aria-live="polite"
               ></em>
             </div>
-            <div class="sv-form__group">
+            <div class="sv-form__group sv-form-grid-span-2">
               <label class="sv-form__label" for="sv-category">Category</label>
               <select
                 id="sv-category"
-                class="sv-form__select"
+                class="sv-form__select sv-form__field"
                 name="sv-category"
                 aria-errormessage="sv-category-error"
                 aria-invalid="false"
@@ -107,15 +104,15 @@
                 aria-live="polite"
               ></em>
             </div>
-            <div class="sv-form__group">
+            <div class="sv-form__group sv-form-grid-span-2">
               <label class="sv-form__label" for="sv-note">Your note</label>
               <textarea
                 id="sv-note"
-                class="sv-form__textarea"
+                class="sv-form__textarea sv-form__field"
                 name="sv-note"
+                placeholder="Explain what's incorrect or provide additional context..."
                 aria-errormessage="sv-note-error"
                 aria-invalid="false"
-                placeholder="Explain what's incorrect or provide additional context..."
                 maxlength="500"
                 minlength="10"
                 required=""
@@ -127,11 +124,30 @@
               ></em>
               <p class="sv-form__char-counter" aria-live="polite">0/500</p>
             </div>
-            <div class="sv-form__action">
-              <button class="sv-form__submit-btn" type="submit">Submit</button>
+            <hr class="sv-form__divider sv-form-grid-span-2" />
+            <div class="sv-form__action sv-form-grid-span-2">
+              <button
+                class="sv-form__submit-btn sv-button sv-button--primary"
+                type="submit"
+              >
+                Submit
+              </button>
             </div>
           </fieldset>
         </form>
+        <div class="sv-success sv-form-wrapper-grid__item">
+          <!-- placeholder for the icon -->
+          <div class="sv-success__icon-wrapper">
+            <span class="sv-success__icon">✅</span>
+          </div>
+          <div class="sv-success__content">
+            <h4 class="sv-success__header">Success!</h4>
+            <p class="sv-success__body">
+              <!-- placeholder for actual message -->
+              Your changes have been saved successfully.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   </body>
