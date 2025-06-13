@@ -1,9 +1,11 @@
-// import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   NOTE_FORM_PLACEHOLDERS,
   NOTE_LIMITS,
   PREFIX,
+  REGEX,
   SEGMENT_LIMITS,
+  TIME_STAMP_MAX_LENGTH,
 } from "../../utils/constant";
 import { timeStringIsValid, timeStringToSeconds } from "../../utils/timestamp";
 
@@ -51,12 +53,13 @@ function normalizeFormData(formDataObject: {
 }
 
 export default function Form() {
-  // const [isSubmitting, setIsSubmitting] = useState();
+  const [errors, setErrors] = useState<ValidationError[]>([]);
 
   function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     // check if form in dom
+    // in a SPA environments(YouTube in this case) the form may be dynamically removed or replaced
     if (!(form instanceof HTMLFormElement)) {
       console.error("Form submit event missing a valid form target");
       return;
@@ -66,9 +69,21 @@ export default function Form() {
     // normalize form data to desired format
     const formData = normalizeFormData(formDataObject);
     // validate data
-    const errors = validateFormData(formData);
-    console.log(errors);
+    const validationErrors = validateFormData(formData);
+    setErrors(validationErrors);
+    if (!validationErrors.length) {
+      console.log("process data", formData);
+    }
   }
+
+  // focus first element
+  useEffect(() => {
+    const [targetField] = errors.filter((error) => error.focus);
+    const elementToFocus = document.querySelector(
+      `[name=${withPrefix(targetField?.field)}]`
+    ) as HTMLInputElement;
+    if (elementToFocus) elementToFocus.focus();
+  }, [errors]);
   return (
     <div
       id={withPrefix("form-wrapper")}
@@ -84,116 +99,35 @@ export default function Form() {
             Add Context Note
           </legend>
           <hr className={withPrefix("form__divider", "form-grid-span-2")} />
-          <div className={withPrefix("form__group")}>
-            <label
-              className={withPrefix("form__label")}
-              htmlFor={withPrefix("start")}
-            >
-              Start
-            </label>
-            <input
-              id={withPrefix("start")}
-              className={withPrefix("form__input", "form__field")}
-              name={withPrefix("start")}
-              placeholder="(e.g. 1:05:30)"
-              aria-errormessage={withPrefix("start-error")}
-              aria-invalid="false"
-              autoComplete="off"
-              maxLength={8}
-              pattern="^(\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$"
-              required
-            />
-            <em
-              id={withPrefix("start-error")}
-              className={withPrefix("form__error-message")}
-              aria-live="polite"
-            ></em>
-          </div>
-          <div className={withPrefix("form__group")}>
-            <label
-              className={withPrefix("form__label")}
-              htmlFor={withPrefix("end")}
-            >
-              End
-            </label>
-            <input
-              id={withPrefix("end")}
-              className={withPrefix("form__input", "form__field")}
-              name={withPrefix("end")}
-              placeholder="(e.g. 1:05:30)"
-              aria-errormessage={withPrefix("end-error")}
-              aria-invalid="false"
-              autoComplete="off"
-              maxLength={8}
-              pattern="^(\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$"
-              required
-            />
-            <em
-              id={withPrefix("end-error")}
-              className={withPrefix("form__error-message")}
-              aria-live="polite"
-            ></em>
-          </div>
-          <div className={withPrefix("form__group", "form-grid-span-2")}>
-            <label
-              className={withPrefix("form__label")}
-              htmlFor={withPrefix("category")}
-            >
-              Category
-            </label>
-            <select
-              id={withPrefix("category")}
-              className={withPrefix("form__select", "form__field")}
-              name={withPrefix("category")}
-              aria-errormessage={withPrefix("category-error")}
-              aria-invalid="false"
-              required
-            >
-              <option value="">Select note category</option>
-              <option value="FABRICATED_CONTENT">Fabricated content</option>
-              <option value="MANIPULATED_CONTENT">Manipulated content</option>
-              <option value="IMPOSTER_CONTENT">Imposter content</option>
-              <option value="MISLEADING_CONTENT">Misleading content</option>
-              <option value="FALSE_CONTEXT">False context</option>
-              <option value="SATIRE_AND_PARODY">Satire and parody</option>
-              <option value="FALSE_CONNECTIONS">False connections</option>
-              <option value="SPONSORED_CONTENT">Sponsored content</option>
-              <option value="PROPAGANDA">Propaganda</option>
-              <option value="ERROR">Error</option>
-            </select>
-            <em
-              id={withPrefix("category-error")}
-              className={withPrefix("form__error-message")}
-              aria-live="polite"
-            ></em>
-          </div>
-          <div className={withPrefix("form__group", "form-grid-span-2")}>
-            <label
-              className={withPrefix("form__label")}
-              htmlFor={withPrefix("note")}
-            >
-              Your note
-            </label>
-            <textarea
-              id={withPrefix("note")}
-              className={withPrefix("form__textarea", "form__field")}
-              name={withPrefix("note")}
-              placeholder="Explain what's incorrect or provide additional context..."
-              aria-errormessage={withPrefix("note-error")}
-              aria-invalid="false"
-              maxLength={50}
-              minLength={10}
-              required
-            ></textarea>
-            <em
-              id={withPrefix("note-error")}
-              className={withPrefix("form__error-message")}
-              aria-live="polite"
-            ></em>
-            <p className={withPrefix("form__char-counter")} aria-live="polite">
-              0/500
-            </p>
-          </div>
+          <FormSegmentTimeInput
+            name={"start"}
+            maxLength={TIME_STAMP_MAX_LENGTH}
+            pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
+            errors={errors}
+          />
+          <FormSegmentTimeInput
+            name={"end"}
+            maxLength={TIME_STAMP_MAX_LENGTH}
+            pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
+            errors={errors}
+          />
+          <CategorySelect
+            name={"category"}
+            defaultSelect={NOTE_FORM_PLACEHOLDERS.CATEGORY_SELECT}
+            categoriesList={
+              NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string[]
+            }
+            errors={errors}
+          />
+
+          <FormTextArea
+            name={"note"}
+            placeholder={NOTE_FORM_PLACEHOLDERS.TEXTAREA}
+            maxLength={NOTE_LIMITS.MAX_LENGTH}
+            minLength={NOTE_LIMITS.MIN_LENGTH}
+            errors={errors}
+          />
+
           <hr className={withPrefix("form__divider", "form-grid-span-2")} />
           <div className={withPrefix("form__action", "form-grid-span-2")}>
             <button
@@ -209,6 +143,137 @@ export default function Form() {
           </div>
         </fieldset>
       </form>
+    </div>
+  );
+}
+
+type FormInputProp = {
+  name: keyof FormDataType;
+  maxLength: number;
+  pattern: RegExp;
+  errors: ValidationError[];
+};
+
+function FormSegmentTimeInput(prop: FormInputProp) {
+  const { name, maxLength, pattern, errors } = prop;
+  const error = errors.filter((error) => error.field === name)[0];
+  return (
+    <div className={withPrefix("form__group")}>
+      <label
+        className={withPrefix("form__label")}
+        htmlFor={withPrefix(`${name}`)}
+      >
+        {name}
+      </label>
+      <input
+        id={withPrefix(`${name}`)}
+        className={withPrefix("form__input", "form__field")}
+        name={withPrefix(`${name}`)}
+        placeholder="(e.g. 1:05:30)"
+        aria-errormessage={withPrefix(`${name}-error`)}
+        aria-invalid={!!error}
+        autoComplete="off"
+        maxLength={maxLength}
+        pattern={`${pattern}`}
+        required
+      />
+      <em
+        id={withPrefix(`${name}-error`)}
+        className={withPrefix("form__error-message")}
+        aria-live="polite"
+      >
+        {error ? error.message : ""}
+      </em>
+    </div>
+  );
+}
+
+type SelectInputProp = {
+  name: keyof FormDataType;
+  defaultSelect: string;
+  categoriesList: string[];
+  errors: ValidationError[];
+};
+
+function CategorySelect(prop: SelectInputProp) {
+  const { name, defaultSelect, categoriesList, errors } = prop;
+  const error = errors.filter((error) => error.field === name)[0];
+  return (
+    <div className={withPrefix("form__group", "form-grid-span-2")}>
+      <label
+        className={withPrefix("form__label")}
+        htmlFor={withPrefix(`${name}`)}
+      >
+        Category
+      </label>
+      <select
+        id={withPrefix(`${name}`)}
+        className={withPrefix("form__select", "form__field")}
+        name={withPrefix(`${name}`)}
+        aria-errormessage={withPrefix(`${name}-error`)}
+        aria-invalid={!!error}
+        required
+      >
+        <option value="">{defaultSelect}</option>
+        {categoriesList.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
+        ))}
+      </select>
+      <em
+        id={withPrefix(`${name}-error`)}
+        className={withPrefix("form__error-message")}
+        aria-live="polite"
+      >
+        {error ? error.message : ""}
+      </em>
+    </div>
+  );
+}
+
+type FormTextAreaProp = {
+  name: keyof FormDataType;
+  placeholder: string;
+  maxLength: number;
+  minLength: number;
+  errors: ValidationError[];
+};
+
+function FormTextArea(prop: FormTextAreaProp) {
+  const [noteLength, setNoteLength] = useState(0);
+  const { name, placeholder, maxLength, minLength, errors } = prop;
+  const error = errors.filter((error) => error.field === name)[0];
+  return (
+    <div className={withPrefix("form__group", "form-grid-span-2")}>
+      <label
+        className={withPrefix("form__label")}
+        htmlFor={withPrefix(`${name}`)}
+      >
+        Your note
+      </label>
+      <textarea
+        id={withPrefix(`${name}`)}
+        className={withPrefix("form__textarea", "form__field")}
+        name={withPrefix(`${name}`)}
+        placeholder={placeholder}
+        aria-errormessage={withPrefix(`${name}-error`)}
+        aria-invalid={!!error}
+        maxLength={maxLength}
+        minLength={minLength}
+        required
+        onChange={(e) => setNoteLength(e.currentTarget.value.length)}
+      ></textarea>
+      <em
+        id={withPrefix(`${name}-error`)}
+        className={withPrefix("form__error-message")}
+        aria-live="polite"
+      >
+        {error ? error.message : ""}
+      </em>
+      <p className={withPrefix("form__char-counter")} aria-live="polite">
+        {`${noteLength}/${maxLength}`}
+      </p>
     </div>
   );
 }
