@@ -38,3 +38,4 @@ export const CUSTOM_EVENTS = {
 } as const;
 
 export const SUCCESS_MESSAGE_DURATION = 1500;
+export const PREFIX = "sv-" as const;
