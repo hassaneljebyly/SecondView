@@ -1,0 +1,7 @@
+/* prefix "sv-" */
+[class^="sv-"],
+[id^="sv-"] {
+  padding: 0;
+  border: 0;
+  appearance: none;
+}

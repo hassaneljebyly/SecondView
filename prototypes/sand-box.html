@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>UI Prototypes</title>
+  </head>
+  <body>
+    <!-- top div is the react root wrapper -->
+    <!-- use prefix "sv-" -->
+    <!-- form component -->
+    <div id="sv-form-root">
+      <div class="sv-form-wrapper">
+        <form class="sv-form" novalidate="">
+          <fieldset class="sv-form__fieldset">
+            <legend class="sv-form__legend">Add Context Note</legend>
+            <div class="sv-form__group">
+              <label class="sv-form__label" for="sv-start">Start</label>
+              <!--
+                  Recommended HTML Attribute Order for Consistency and Readability:
+
+                  1. Structural & Identifiers
+                     - id, class, name
+
+                  2. Behavioral / Data-related
+                     - type, href, src, value, placeholder, action, method, etc.
+
+                  3. Accessibility
+                     - role, aria-*, tabindex
+
+                  4. Validation & State
+                     - required, readonly, disabled, checked, maxlength, minlength, etc.
+
+                  5. Event Handlers
+                     - onclick, onchange, oninput, etc.
+                -->
+              <small id="sv-start-hint" class="sv-form__tooltip" role="tooltip"
+                >Format: 30 or 1:30 or 1:05:30</small
+              >
+              <input
+                id="sv-start"
+                class="sv-form__input"
+                name="sv-start"
+                aria-errormessage="sv-start-error"
+                aria-describedby="sv-start-hint"
+                aria-invalid="false"
+                autocomplete="off"
+                maxlength="8"
+                pattern="^(\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$"
+                required=""
+              />
+              <em
+                id="sv-start-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+            </div>
+            <div class="sv-form__group">
+              <label class="sv-form__label" for="sv-end">End</label>
+              <small id="sv-end-hint" class="sv-form__tooltip" role="tooltip"
+                >Format: 30 or 1:30 or 1:05:30</small
+              >
+              <input
+                id="sv-end"
+                class="sv-form__input"
+                name="sv-end"
+                aria-errormessage="sv-end-error"
+                aria-describedby="sv-end-hint"
+                aria-invalid="false"
+                autocomplete="off"
+                maxlength="8"
+                pattern="^(\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$"
+                required=""
+              />
+              <em
+                id="sv-end-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+            </div>
+            <div class="sv-form__group">
+              <label class="sv-form__label" for="sv-category">Category</label>
+              <select
+                id="sv-category"
+                class="sv-form__select"
+                name="sv-category"
+                aria-errormessage="sv-category-error"
+                aria-invalid="false"
+                required=""
+              >
+                <option value="">Select note category</option>
+                <option value="FABRICATED_CONTENT">Fabricated content</option>
+                <option value="MANIPULATED_CONTENT">Manipulated content</option>
+                <option value="IMPOSTER_CONTENT">Imposter content</option>
+                <option value="MISLEADING_CONTENT">Misleading content</option>
+                <option value="FALSE_CONTEXT">False context</option>
+                <option value="SATIRE_AND_PARODY">Satire and parody</option>
+                <option value="FALSE_CONNECTIONS">False connections</option>
+                <option value="SPONSORED_CONTENT">Sponsored content</option>
+                <option value="PROPAGANDA">Propaganda</option>
+                <option value="ERROR">Error</option>
+              </select>
+              <em
+                id="sv-category-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+            </div>
+            <div class="sv-form__group">
+              <label class="sv-form__label" for="sv-note">Your note</label>
+              <textarea
+                id="sv-note"
+                class="sv-form__textarea"
+                name="sv-note"
+                aria-errormessage="sv-note-error"
+                aria-invalid="false"
+                placeholder="Explain what's incorrect or provide additional context..."
+                maxlength="500"
+                minlength="10"
+                required=""
+              ></textarea>
+              <em
+                id="sv-note-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+              <p class="sv-form__char-counter" aria-live="polite">0/500</p>
+            </div>
+            <div class="sv-form__action">
+              <button class="sv-form__submit-btn" type="submit">Submit</button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

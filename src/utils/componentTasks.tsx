@@ -10,7 +10,8 @@ export const tasks: InjectTask[] = [
     component: <ToggleNoteFormButton />,
   },
   {
-    domTargetSelector: "ytd-player#ytd-player #container",
+    domTargetSelector: "#container",
+    // domTargetSelector: "ytd-player#ytd-player #container", // TODO: remove comments later
     rootWrapperId: "sv-note-container",
     componentId: "sv-note",
     component: <NoteSubmissionForm />,
