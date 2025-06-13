@@ -1,11 +1,61 @@
+// import { useState } from "react";
 import { PREFIX } from "../../utils/constant";
+
+type FormDataType = {
+  start: string;
+  end: string;
+  category: string;
+  note: string;
+};
 
 function withPrefix(...classNames: string[]) {
   // no white space
   return classNames.map((className) => PREFIX + className).join(" ");
 }
 
+function normalizeFormData(formDataObject: {
+  [k: string]: FormDataEntryValue;
+}) {
+  const dataDefault: FormDataType = {
+    start: "",
+    end: "",
+    category: "",
+    note: "",
+  };
+
+  for (const [key, value] of Object.entries(formDataObject)) {
+    const keyWithRemovedPrefix = key.replace(PREFIX, "") as keyof FormDataType; // remove prefix
+    if (
+      keyWithRemovedPrefix in dataDefault &&
+      typeof value === "string" // solves (Type 'File' is not assignable to type 'string') error
+    ) {
+      dataDefault[keyWithRemovedPrefix] = value;
+    } else {
+      console.error(`Invalid data entry`);
+    }
+  }
+
+  return dataDefault;
+}
+
 export default function Form() {
+  // const [isSubmitting, setIsSubmitting] = useState();
+
+  function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    // check if form in dom
+    if (!(form instanceof HTMLFormElement)) {
+      console.error("Form submit event missing a valid form target");
+      return;
+    }
+    const formEntries = new FormData(form).entries();
+    const formDataObject = Object.fromEntries(formEntries);
+    // normalize form data to desired format
+    const formData = normalizeFormData(formDataObject);
+    // validate data
+    console.log(formData);
+  }
   return (
     <div
       id={withPrefix("form-wrapper")}
@@ -13,6 +63,7 @@ export default function Form() {
     >
       <form
         className={withPrefix("form", "form-wrapper-grid__item")}
+        onSubmit={handelSubmit}
         noValidate
       >
         <fieldset className={withPrefix("form__fieldset", "form-grid")}>
