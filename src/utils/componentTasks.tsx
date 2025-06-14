@@ -1,20 +1,19 @@
 import Button from "../components/button";
 import Form from "../components/form";
+import { withPrefix } from "./class-names";
 import type { InjectTask } from "./injector";
 
 export const tasks: InjectTask[] = [
   {
-    // TODO: use withPrefix
     domTargetSelector: "#actions",
-    rootWrapperId: "sv-add-note-btn-container",
-    componentId: "sv-add-note-btn",
+    rootWrapperId: withPrefix("add-note-btn-container"),
+    componentId: withPrefix("add-note-btn"),
     component: <Button />,
   },
   {
-    // TODO: use withPrefix
     domTargetSelector: "ytd-player#ytd-player #container",
-    rootWrapperId: "sv-form-root",
-    componentId: "sv-form-wrapper",
+    rootWrapperId: withPrefix("form-root"),
+    componentId: withPrefix("form-wrapper"),
     component: <Form />,
   },
 ];
