@@ -5,6 +5,7 @@ import {
   PREFIX,
   REGEX,
   SEGMENT_LIMITS,
+  SUCCESS_MESSAGE_DURATION,
   TIME_STAMP_MAX_LENGTH,
 } from "../../utils/constant";
 import { timeStringIsValid, timeStringToSeconds } from "../../utils/timestamp";
@@ -28,6 +29,13 @@ type ValidationError = {
   focus: boolean; // used to focus first error field
   field: keyof FormData;
   message: string;
+};
+
+type ValidationErrorPayload = {
+  [K in keyof FormData]?: {
+    focus: boolean; // used to focus first error field
+    message: string;
+  };
 };
 
 type VideoData = {
@@ -99,9 +107,20 @@ function resetForm() {
   ) as HTMLFormElement;
   if (form) form.reset();
 }
+// custom errors
 
-export default function Form() {
-  const [errors, setErrors] = useState<ValidationError[]>([]);
+// TODO: rename later
+class ValidationErrorClass extends Error {
+  payload: ValidationErrorPayload;
+  constructor(payload: ValidationErrorPayload) {
+    super();
+    this.name = "ValidationError";
+    this.payload = payload;
+  }
+}
+
+function useForm() {
+  const [errors, setErrors] = useState<ValidationErrorPayload>({});
   // TODO: control form state styles via class
   const [formState, setFormState] = useState<FormState>("hidden");
 
@@ -114,46 +133,54 @@ export default function Form() {
       console.error("Form submit event missing a valid form target");
       return;
     }
-    const formEntries = new FormData(form).entries();
-    const formDataObject = Object.fromEntries(formEntries);
-    // normalize form data to desired format
-    const formData = normalizeFormData(formDataObject);
-    // TODO: convert this block to try catch
-    // validate data
-    const validationErrors = validateFormData(formData);
-    setErrors(validationErrors);
-    if (!validationErrors.length) {
+    try {
       setFormState("submitting");
+      const formEntries = new FormData(form).entries();
+      const formDataObject = Object.fromEntries(formEntries);
+      // normalize form data to desired format
+      const formData = normalizeFormData(formDataObject);
+      // validate data
       const submissionPayload = prepareSubmissionPayload(formData);
-      try {
-        const data = await submitNotePayload(submissionPayload);
-        if (data) {
-          console.log(data);
-          setFormState("success");
-          resetForm();
-        }
-      } catch (error) {
+      const dataValid = validateFormData(formData);
+      // reset error
+      if (dataValid) setErrors({});
+      const data = await submitNotePayload(submissionPayload);
+      if (data) {
+        console.log(data);
+        setFormState("success");
+      }
+    } catch (error) {
+      setFormState("idle");
+      if (error instanceof ValidationErrorClass) {
+        setErrors(error.payload);
+      } else {
         setFormState("error");
       }
     }
   }
+
+  return {
+    errors,
+    formState,
+    setErrors,
+    setFormState,
+    handelSubmit,
+  };
+}
+
+export default function Form() {
+  const { errors, formState, setFormState, handelSubmit } = useForm();
   useEffect(() => {
-    const [targetField] = errors.filter((error) => error.focus);
-    const elementToFocus = document.querySelector(
-      `[name=${withPrefix(targetField?.field)}]`
-    ) as HTMLInputElement;
     // focus first field with an error
-    if (elementToFocus) elementToFocus.focus();
-    // focus first field when form is mounted
-    if (formState === "idle" && !errors.length) {
-      const firstInputElement = document.querySelector(
-        `.${withPrefix("form__field")}`
-      ) as HTMLInputElement; // always returns first found element
-      firstInputElement!.focus();
+    if (Object.keys(errors).length) {
+      const firstErrorField = document.querySelector(
+        `.${withPrefix("form__field")}[aria-invalid="true"]`
+      ) as HTMLInputElement;
+      firstErrorField?.focus();
     }
 
     window.addEventListener("openForm", () => {
-      setFormState("idle");
+      setFormState(formState === "idle" ? "hidden" : "idle");
     });
   }, [errors, formState, setFormState]);
 
@@ -186,13 +213,13 @@ export default function Form() {
             name={"start"}
             maxLength={TIME_STAMP_MAX_LENGTH}
             pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
-            errors={errors}
+            error={errors["start"]}
           />
           <FormSegmentTimeInput
             name={"end"}
             maxLength={TIME_STAMP_MAX_LENGTH}
             pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
-            errors={errors}
+            error={errors["end"]}
           />
           <CategorySelect
             name={"category"}
@@ -200,7 +227,7 @@ export default function Form() {
             categoriesList={
               NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string[]
             }
-            errors={errors}
+            error={errors["category"]}
           />
 
           <FormTextArea
@@ -208,7 +235,7 @@ export default function Form() {
             placeholder={NOTE_FORM_PLACEHOLDERS.TEXTAREA}
             maxLength={NOTE_LIMITS.MAX_LENGTH}
             minLength={NOTE_LIMITS.MIN_LENGTH}
-            errors={errors}
+            error={errors["note"]}
           />
 
           <hr className={withPrefix("form__divider", "form-grid-span-2")} />
@@ -241,8 +268,12 @@ function FormSuccessAlert(prop: FormSuccessAlertProp) {
   const { formState, setFormState } = prop;
   useEffect(() => {
     const setTimeoutID = setTimeout(() => {
-      if (formState === "success") setFormState("hidden");
-    }, 3000);
+      if (formState === "success") {
+        // reset form fields
+        resetForm();
+        setFormState("hidden");
+      }
+    }, SUCCESS_MESSAGE_DURATION);
     return () => clearTimeout(setTimeoutID);
   });
   return (
@@ -269,12 +300,11 @@ type FormInputProp = {
   name: keyof FormData;
   maxLength: number;
   pattern: RegExp;
-  errors: ValidationError[];
+  error: ValidationErrorPayload[keyof ValidationErrorPayload];
 };
 
 function FormSegmentTimeInput(prop: FormInputProp) {
-  const { name, maxLength, pattern, errors } = prop;
-  const error = errors.filter((error) => error.field === name)[0];
+  const { name, maxLength, pattern, error } = prop;
   return (
     <div className={withPrefix("form__group")}>
       <label
@@ -289,7 +319,7 @@ function FormSegmentTimeInput(prop: FormInputProp) {
         name={withPrefix(`${name}`)}
         placeholder="(e.g. 1:05:30)"
         aria-errormessage={withPrefix(`${name}-error`)}
-        aria-invalid={!!error}
+        aria-invalid={Boolean(error)}
         autoComplete="off"
         maxLength={maxLength}
         pattern={`${pattern}`}
@@ -300,7 +330,7 @@ function FormSegmentTimeInput(prop: FormInputProp) {
         className={withPrefix("form__error-message")}
         aria-live="polite"
       >
-        {error ? error.message : ""}
+        {error?.message || ""}
       </em>
     </div>
   );
@@ -310,12 +340,11 @@ type SelectInputProp = {
   name: keyof FormData;
   defaultSelect: string;
   categoriesList: string[];
-  errors: ValidationError[];
+  error: ValidationErrorPayload[keyof ValidationErrorPayload];
 };
 
 function CategorySelect(prop: SelectInputProp) {
-  const { name, defaultSelect, categoriesList, errors } = prop;
-  const error = errors.filter((error) => error.field === name)[0];
+  const { name, defaultSelect, categoriesList, error } = prop;
   return (
     <div className={withPrefix("form__group", "form-grid-span-2")}>
       <label
@@ -329,7 +358,7 @@ function CategorySelect(prop: SelectInputProp) {
         className={withPrefix("form__select", "form__field")}
         name={withPrefix(`${name}`)}
         aria-errormessage={withPrefix(`${name}-error`)}
-        aria-invalid={!!error}
+        aria-invalid={Boolean(error)}
         required
       >
         <option value="">{defaultSelect}</option>
@@ -344,7 +373,7 @@ function CategorySelect(prop: SelectInputProp) {
         className={withPrefix("form__error-message")}
         aria-live="polite"
       >
-        {error ? error.message : ""}
+        {error?.message || ""}
       </em>
     </div>
   );
@@ -355,13 +384,12 @@ type FormTextAreaProp = {
   placeholder: string;
   maxLength: number;
   minLength: number;
-  errors: ValidationError[];
+  error: ValidationErrorPayload[keyof ValidationErrorPayload];
 };
 
 function FormTextArea(prop: FormTextAreaProp) {
   const [noteLength, setNoteLength] = useState(0);
-  const { name, placeholder, maxLength, minLength, errors } = prop;
-  const error = errors.filter((error) => error.field === name)[0];
+  const { name, placeholder, maxLength, minLength, error } = prop;
   return (
     <div className={withPrefix("form__group", "form-grid-span-2")}>
       <label
@@ -376,7 +404,7 @@ function FormTextArea(prop: FormTextAreaProp) {
         name={withPrefix(`${name}`)}
         placeholder={placeholder}
         aria-errormessage={withPrefix(`${name}-error`)}
-        aria-invalid={!!error}
+        aria-invalid={Boolean(error)}
         maxLength={maxLength}
         minLength={minLength}
         required
@@ -387,7 +415,7 @@ function FormTextArea(prop: FormTextAreaProp) {
         className={withPrefix("form__error-message")}
         aria-live="polite"
       >
-        {error ? error.message : ""}
+        {error?.message || ""}
       </em>
       <p className={withPrefix("form__char-counter")} aria-live="polite">
         {`${noteLength}/${maxLength}`}
@@ -397,92 +425,84 @@ function FormTextArea(prop: FormTextAreaProp) {
 }
 
 // FIXME: case of end bound is bigger than video length is not covered yet
-function validateFormData(formData: FormData) {
+function validateFormData(formData: FormData): true | never {
   const { start, end, category, note } = formData;
-  const errors: ValidationError[] = [];
+  const errorsPayload: ValidationErrorPayload = {};
   // validate time bounds
   const startBoundIsValid = timeStringIsValid(start);
   const endBoundIsValid = timeStringIsValid(end);
   if (!startBoundIsValid) {
-    errors.push({
+    errorsPayload["start"] = {
       focus: false,
-      field: "start",
       message: start ? "Invalid Input (e.g. 02:40)" : "Required Field",
-    });
+    };
   }
   if (!endBoundIsValid) {
-    errors.push({
+    errorsPayload["end"] = {
       focus: false,
-      field: "end",
       message: end ? "Invalid Input (e.g. 02:40)" : "Required Field",
-    });
+    };
   }
 
   if (startBoundIsValid && endBoundIsValid) {
     const startBoundToSeconds = timeStringToSeconds(start);
     const endBoundToSeconds = timeStringToSeconds(end);
     const segmentLength = endBoundToSeconds - startBoundToSeconds;
-    let error: ValidationError | undefined;
     if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
-      error = {
+      errorsPayload["end"] = {
         focus: false,
-        field: "end",
         message: `Segment must be ≥${SEGMENT_LIMITS.MIN_SECONDS}s. Adjust start/end.`,
       };
     }
     // too long
     if (segmentLength > SEGMENT_LIMITS.MAX_SECONDS) {
-      error = {
+      errorsPayload["end"] = {
         focus: false,
-        field: "end",
         message: `Segment must be ≤${SEGMENT_LIMITS.MAX_SECONDS}s. Adjust start/end.`,
       };
     }
     // end bound bigger than start bound
     if (segmentLength < 0) {
-      error = {
+      errorsPayload["end"] = {
         focus: false,
-        field: "end",
         message: `End must come after start`,
       };
     }
-
-    if (error) errors.push(error);
   }
 
   // validate category
   if (
     !(NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string).includes(category)
   ) {
-    errors.push({
+    errorsPayload["category"] = {
       focus: false,
-      field: "category",
       message: category ? "Invalid input" : "Required Field",
-    });
+    };
   }
 
   // validate note
   if (note.length < NOTE_LIMITS.MIN_LENGTH) {
-    errors.push({
+    errorsPayload["note"] = {
       focus: false,
-      field: "note",
       message: note
         ? `Note must be at least ${NOTE_LIMITS.MIN_LENGTH} characters long.`
         : "Required Field",
-    });
+    };
   }
 
   if (note.length > NOTE_LIMITS.MAX_LENGTH) {
-    errors.push({
+    errorsPayload["note"] = {
       focus: false,
-      field: "note",
       message: note
         ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
         : "Required Field",
-    });
+    };
   }
-  // set element in focus(first input in error list)
-  return errors.map((error, index) => ({ ...error, focus: !index }));
+
+  if (!Object.keys(errorsPayload).length) {
+    return true;
+  }
+  throw new ValidationErrorClass(errorsPayload);
 }
 
 function submitNotePayload(notePayload: NoteSubmissionPayload) {

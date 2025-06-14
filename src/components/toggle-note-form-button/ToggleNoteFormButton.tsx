@@ -4,7 +4,7 @@ import { CUSTOM_EVENTS } from "../../utils/constant";
 export function ToggleNoteFormButton() {
   const [formOpen, setFormOpen] = useState(false);
   function handleFormToggle() {
-    const toggleNoteFormEvent = new CustomEvent(CUSTOM_EVENTS.TOGGLE_NOTE_FORM);
+    const toggleNoteFormEvent = new CustomEvent(CUSTOM_EVENTS.TOGGLE_FORM);
     setFormOpen(!formOpen);
     window.dispatchEvent(toggleNoteFormEvent);
   }

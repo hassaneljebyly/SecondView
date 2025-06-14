@@ -202,6 +202,11 @@
   height: fit-content;
 }
 
+.sv-success__icon-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5em;
+}
 .sv-success__icon {
   width: 60px;
   aspect-ratio: 1;
