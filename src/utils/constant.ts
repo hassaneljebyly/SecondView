@@ -36,7 +36,8 @@ export const REGEX = {
 export const CUSTOM_EVENTS = {
   TOGGLE_NOTE_FORM: "toggleNoteForm", // remove later
   CLOSE_NOTE_FORM: "closeNoteForm", // remove later
-  TOGGLE_FORM: "openForm",
+  TOGGLE_FORM: "toggleForm",
+  CLOSE_FORM: "closeForm",
 } as const;
 
 export const SUCCESS_MESSAGE_DURATION = 1500;

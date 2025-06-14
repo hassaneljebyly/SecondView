@@ -1,17 +1,10 @@
-import type { Retries } from "../types/utils";
 import { tasks } from "../utils/componentTasks";
-import { injectComponent, ROOTS } from "../utils/injector";
+import { cleanUp } from "../utils/dom";
+import { injectComponent, ROOTS, type InjectTask } from "../utils/injector";
+
+export type Retries = { task: InjectTask; attempts: number };
 
 let pageId = Date.now();
-
-function cleanUp() {
-  for (const [wrapperId, root] of ROOTS) {
-    root.unmount();
-    const wrapper = document.getElementById(wrapperId);
-    if (wrapper) wrapper.remove();
-    ROOTS.delete(wrapperId);
-  }
-}
 
 let queuedTasks: Retries[] = tasks.map((task) => ({
   task,
@@ -52,6 +45,6 @@ document.addEventListener("yt-navigate-finish", () => {
   setTimeout(init);
 });
 document.addEventListener("yt-navigate-start", () => {
-  cleanUp();
+  cleanUp(ROOTS);
   pageId = Date.now(); // change page snapshot id on each navigation start
 });

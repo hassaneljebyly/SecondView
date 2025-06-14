@@ -1,96 +1,89 @@
-import type { FormDataType } from "../types/components";
-import type { ValidationError } from "../types/utils";
 import {
   NOTE_FORM_PLACEHOLDERS,
   NOTE_LIMITS,
   SEGMENT_LIMITS,
 } from "./constant";
+import type { FormData } from "./data";
+import { ValidationError, type ValidationErrorPayload } from "./error";
 import { timeStringIsValid, timeStringToSeconds } from "./timestamp";
 
-// !FIXME: case of end bound is bigger than video length is not covered yet
-export function validateNoteFormData(
-  formData: FormDataType
-): ValidationError[] | [] {
-  const errors: ValidationError[] = [];
-  // validate timestamp input
-  const { start, end } = formData;
-  const validStartTimeBound = timeStringIsValid(start);
-  const validEndTimeBound = timeStringIsValid(end);
-  if (!validStartTimeBound) {
-    errors.push({
-      field: "start",
-      message: start
-        ? "Time format: seconds (30), minutes:seconds (1:30), or hours:minutes:seconds (1:05:30)"
-        : "Required Field",
-    });
+// FIXME: case of end bound is bigger than video length is not covered yet
+export function validateFormData(formData: FormData): true | never {
+  const { start, end, category, note } = formData;
+  const errorsPayload: ValidationErrorPayload = {};
+  // validate time bounds
+  const startBoundIsValid = timeStringIsValid(start);
+  const endBoundIsValid = timeStringIsValid(end);
+  if (!startBoundIsValid) {
+    errorsPayload["start"] = {
+      focus: false,
+      message: start ? "Invalid Input (e.g. 02:40)" : "Required Field",
+    };
   }
-  if (!validEndTimeBound) {
-    errors.push({
-      field: "end",
-      message: end
-        ? "Time format: seconds (30), minutes:seconds (1:30), or hours:minutes:seconds (1:05:30)"
-        : "Required Field",
-    });
+  if (!endBoundIsValid) {
+    errorsPayload["end"] = {
+      focus: false,
+      message: end ? "Invalid Input (e.g. 02:40)" : "Required Field",
+    };
   }
 
-  if (validStartTimeBound && validEndTimeBound) {
+  if (startBoundIsValid && endBoundIsValid) {
     const startBoundToSeconds = timeStringToSeconds(start);
     const endBoundToSeconds = timeStringToSeconds(end);
     const segmentLength = endBoundToSeconds - startBoundToSeconds;
-    let error: ValidationError | null = null;
-    // too short
     if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
-      error = {
-        field: "end",
-        message: `Segment should be at least ${SEGMENT_LIMITS.MIN_SECONDS}s long, consider editing end or start`,
+      errorsPayload["end"] = {
+        focus: false,
+        message: `Segment must be ≥${SEGMENT_LIMITS.MIN_SECONDS}s. Adjust start/end.`,
       };
     }
     // too long
     if (segmentLength > SEGMENT_LIMITS.MAX_SECONDS) {
-      error = {
-        field: "end",
-        message: `Segment should be max ${SEGMENT_LIMITS.MAX_SECONDS}s long, consider editing end or start`,
+      errorsPayload["end"] = {
+        focus: false,
+        message: `Segment must be ≤${SEGMENT_LIMITS.MAX_SECONDS}s. Adjust start/end.`,
       };
     }
     // end bound bigger than start bound
     if (segmentLength < 0) {
-      error = {
-        field: "end",
-        message: `end must come after start`,
+      errorsPayload["end"] = {
+        focus: false,
+        message: `End must come after start`,
       };
     }
-
-    if (error) errors.push(error);
   }
 
-  const { category } = formData;
+  // validate category
   if (
     !(NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string).includes(category)
   ) {
-    errors.push({
-      field: "category",
+    errorsPayload["category"] = {
+      focus: false,
       message: category ? "Invalid input" : "Required Field",
-    });
+    };
   }
 
-  const { note } = formData;
+  // validate note
   if (note.length < NOTE_LIMITS.MIN_LENGTH) {
-    errors.push({
-      field: "note",
+    errorsPayload["note"] = {
+      focus: false,
       message: note
         ? `Note must be at least ${NOTE_LIMITS.MIN_LENGTH} characters long.`
         : "Required Field",
-    });
+    };
   }
 
   if (note.length > NOTE_LIMITS.MAX_LENGTH) {
-    errors.push({
-      field: "note",
+    errorsPayload["note"] = {
+      focus: false,
       message: note
         ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
         : "Required Field",
-    });
+    };
   }
 
-  return errors;
+  if (!Object.keys(errorsPayload).length) {
+    return true;
+  }
+  throw new ValidationError(errorsPayload);
 }

@@ -1,6 +1,12 @@
-import type { VideoDetails } from "../types/utils";
-import type { ValidationError } from "../types/utils";
+import type { Root } from "react-dom/client";
+import { withPrefix } from "./class-names";
 
+export function resetForm() {
+  const form = document.querySelector(
+    `.${withPrefix("form")}`
+  ) as HTMLFormElement;
+  if (form) form.reset();
+}
 export function getOrCreateRootWrapper(
   rootWrapperId: string,
   domTargetSelector: string
@@ -16,72 +22,6 @@ export function getOrCreateRootWrapper(
   }
   return rootWrapper;
 }
-
-export function showErrors(errors: ValidationError[]) {
-  errors.forEach(({ field, message }, index) => {
-    const input = document.querySelector(
-      `#sv-note__form [name="${field}"]`
-    ) as HTMLInputElement;
-    const errorHint = document.querySelector(
-      `#sv-note__form [name="${field}"] + span`
-    ) as HTMLSpanElement;
-
-    input?.classList.add("invalid");
-    errorHint.innerHTML = message;
-
-    if (index === 0) input.focus();
-  });
-}
-
-export function cleanUpErrors() {
-  const invalidInput = document.querySelectorAll("#sv-note__form .invalid");
-  const hintSpan = document.querySelectorAll("#sv-note__form .invalid + span");
-  invalidInput.forEach((input) => {
-    input.classList.remove("invalid");
-  });
-  hintSpan.forEach((span) => {
-    span.innerHTML = "";
-  });
-}
-
-export function getVideoDetails(): VideoDetails {
-  try {
-    const channelName =
-      (
-        document.querySelector(
-          '#upload-info a[href^="/@"]'
-        ) as HTMLAnchorElement
-      )?.innerText || null;
-
-    const url = document
-      .querySelector('[href*="/channel/"]')
-      ?.getAttribute("href");
-    const channelId = url?.match(/channel\/([A-Za-z0-9_-]+)/)?.[1] || null;
-
-    const videoLength = document.querySelector("video")?.duration || null;
-
-    const videoTitle =
-      (document.querySelector("#title h1") as HTMLHeadElement)?.innerText ||
-      null;
-
-    const videoId =
-      new URLSearchParams(window.location.search).get("v") ||
-      window.location.pathname.match(/\/watch\/([^/]+)/)?.[1] ||
-      null;
-
-    return { videoId, channelId, channelName, videoTitle, videoLength };
-  } catch (error) {
-    console.warn("Failed to scrape video details:", error);
-    return {
-      videoId: null,
-      channelId: null,
-      channelName: null,
-      videoTitle: null,
-      videoLength: null,
-    };
-  }
-}
-
 export function handleFormToggle() {
   const noteForm = document.getElementById("sv-note__form");
   if (!noteForm) {
@@ -89,4 +29,25 @@ export function handleFormToggle() {
     return;
   }
   noteForm.classList.toggle("show-form");
+}
+export function focusFirstElement(formOpen: boolean) {
+  // focus first form field
+  if (!formOpen) {
+    // ensures the field is focused after the form render
+    requestAnimationFrame(() => {
+      const field = document.querySelector(
+        `.${withPrefix("form__field")}`
+      ) as HTMLInputElement;
+      if (field) field.focus();
+    });
+  }
+}
+
+export function cleanUp(rootsMap: Map<string, Root>) {
+  for (const [wrapperId, root] of rootsMap) {
+    root.unmount();
+    const wrapper = document.getElementById(wrapperId);
+    if (wrapper) wrapper.remove();
+    rootsMap.delete(wrapperId);
+  }
 }
