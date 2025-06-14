@@ -96,6 +96,10 @@
   padding-block: 8px;
 }
 
+.sv-form__select {
+  text-transform: capitalize;
+}
+
 .sv-form__textarea {
   resize: vertical;
   min-height: 150px;
@@ -140,7 +144,7 @@
   border-color: red;
 }
 .sv-form__field:focus-visible[aria-invalid="true"] {
-  outline: red;
+  outline: 1px solid red;
 }
 
 /* button */

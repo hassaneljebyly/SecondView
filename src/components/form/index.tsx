@@ -8,19 +8,60 @@ import {
   TIME_STAMP_MAX_LENGTH,
 } from "../../utils/constant";
 import { timeStringIsValid, timeStringToSeconds } from "../../utils/timestamp";
+import { getVideoDetails } from "../../utils/dom";
 
-type FormDataType = {
+type FormData = {
   start: string;
   end: string;
   category: string;
   note: string;
 };
 
+type NoteData = {
+  start: number;
+  end: number;
+  category: string;
+  note: string;
+};
+
 type ValidationError = {
   focus: boolean; // used to focus first error field
-  field: keyof FormDataType;
+  field: keyof FormData;
   message: string;
 };
+
+type VideoData = {
+  videoId: string | null;
+  channelId: string | null;
+  channelName: string | null;
+  videoTitle: string | null;
+  videoLength: number | null;
+};
+
+type NoteSubmissionPayload = {
+  videoData: VideoData;
+  noteData: NoteData;
+  userId: string;
+  timestamp: number;
+};
+
+type FormState = "hidden" | "idle" | "submitting" | "success" | "error";
+
+function prepareSubmissionPayload(formData: FormData): NoteSubmissionPayload {
+  const videoData: VideoData = getVideoDetails();
+  const noteData: NoteData = {
+    ...formData,
+    start: timeStringToSeconds(formData.start),
+    end: timeStringToSeconds(formData.end),
+  };
+  // add userId
+  return {
+    videoData,
+    noteData,
+    userId: "",
+    timestamp: Date.now(),
+  };
+}
 
 function withPrefix(...classNames: string[]) {
   // no white space
@@ -30,7 +71,7 @@ function withPrefix(...classNames: string[]) {
 function normalizeFormData(formDataObject: {
   [k: string]: FormDataEntryValue;
 }) {
-  const dataDefault: FormDataType = {
+  const dataDefault: FormData = {
     start: "",
     end: "",
     category: "",
@@ -38,11 +79,11 @@ function normalizeFormData(formDataObject: {
   };
 
   for (const [key, value] of Object.entries(formDataObject)) {
-    const keyWithRemovedPrefix = key.replace(PREFIX, "") as keyof FormDataType; // remove prefix
-    if (
-      keyWithRemovedPrefix in dataDefault &&
-      typeof value === "string" // solves (Type 'File' is not assignable to type 'string') error
-    ) {
+    // remove prefix
+    const keyWithRemovedPrefix = key.replace(PREFIX, "") as keyof FormData;
+    // only accept predefined form fields to prevent malicious, accidental or intentional form tempering
+    // typeof value === "string" solves (Type 'File' is not assignable to type 'string') error
+    if (keyWithRemovedPrefix in dataDefault && typeof value === "string") {
       dataDefault[keyWithRemovedPrefix] = value;
     } else {
       console.error(`Invalid data entry`);
@@ -52,10 +93,19 @@ function normalizeFormData(formDataObject: {
   return dataDefault;
 }
 
+function resetForm() {
+  const form = document.querySelector(
+    `.${withPrefix("form")}`
+  ) as HTMLFormElement;
+  if (form) form.reset();
+}
+
 export default function Form() {
   const [errors, setErrors] = useState<ValidationError[]>([]);
+  // TODO: control form state styles via class
+  const [formState, setFormState] = useState<FormState>("hidden");
 
-  function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     // check if form in dom
@@ -68,33 +118,66 @@ export default function Form() {
     const formDataObject = Object.fromEntries(formEntries);
     // normalize form data to desired format
     const formData = normalizeFormData(formDataObject);
+    // TODO: convert this block to try catch
     // validate data
     const validationErrors = validateFormData(formData);
     setErrors(validationErrors);
     if (!validationErrors.length) {
-      console.log("process data", formData);
+      setFormState("submitting");
+      const submissionPayload = prepareSubmissionPayload(formData);
+      try {
+        const data = await submitNotePayload(submissionPayload);
+        if (data) {
+          console.log(data);
+          setFormState("success");
+          resetForm();
+        }
+      } catch (error) {
+        setFormState("error");
+      }
     }
   }
-
-  // focus first element
   useEffect(() => {
     const [targetField] = errors.filter((error) => error.focus);
     const elementToFocus = document.querySelector(
       `[name=${withPrefix(targetField?.field)}]`
     ) as HTMLInputElement;
+    // focus first field with an error
     if (elementToFocus) elementToFocus.focus();
-  }, [errors]);
+    // focus first field when form is mounted
+    if (formState === "idle" && !errors.length) {
+      const firstInputElement = document.querySelector(
+        `.${withPrefix("form__field")}`
+      ) as HTMLInputElement; // always returns first found element
+      firstInputElement!.focus();
+    }
+
+    window.addEventListener("openForm", () => {
+      setFormState("idle");
+    });
+  }, [errors, formState, setFormState]);
+
+  console.log("final state:", formState);
   return (
     <div
       id={withPrefix("form-wrapper")}
       className={withPrefix("form-wrapper", "form-wrapper-grid")}
     >
       <form
+        style={{
+          display:
+            formState === "hidden" || formState === "success"
+              ? "none"
+              : "block",
+        }}
         className={withPrefix("form", "form-wrapper-grid__item")}
         onSubmit={handelSubmit}
         noValidate
       >
-        <fieldset className={withPrefix("form__fieldset", "form-grid")}>
+        <fieldset
+          className={withPrefix("form__fieldset", "form-grid")}
+          disabled={formState === "submitting"}
+        >
           <legend className={withPrefix("form__legend", "form-grid-span-2")}>
             Add Context Note
           </legend>
@@ -138,17 +221,52 @@ export default function Form() {
               )}
               type="submit"
             >
-              Submit
+              {formState === "submitting" ? "Submitting" : "Submit"}
             </button>
           </div>
         </fieldset>
       </form>
+
+      <FormSuccessAlert {...{ formState, setFormState }} />
+    </div>
+  );
+}
+
+type FormSuccessAlertProp = {
+  formState: FormState;
+  setFormState: React.Dispatch<React.SetStateAction<FormState>>;
+};
+
+function FormSuccessAlert(prop: FormSuccessAlertProp) {
+  const { formState, setFormState } = prop;
+  useEffect(() => {
+    const setTimeoutID = setTimeout(() => {
+      if (formState === "success") setFormState("hidden");
+    }, 3000);
+    return () => clearTimeout(setTimeoutID);
+  });
+  return (
+    <div
+      style={{ display: formState === "success" ? "block" : "none" }}
+      className={withPrefix("success", "form-wrapper-grid__item")}
+    >
+      {/* placeholder for the icon  */}
+      <div className={withPrefix("success__icon-wrapper")}>
+        <span className={withPrefix("success__icon")}>✅</span>
+      </div>
+      <div className={withPrefix("success__content")}>
+        <h4 className={withPrefix("success__header")}>Success!</h4>
+        <p className={withPrefix("success__body")}>
+          {/* placeholder for actual message  */}
+          Your changes have been saved successfully.
+        </p>
+      </div>
     </div>
   );
 }
 
 type FormInputProp = {
-  name: keyof FormDataType;
+  name: keyof FormData;
   maxLength: number;
   pattern: RegExp;
   errors: ValidationError[];
@@ -189,7 +307,7 @@ function FormSegmentTimeInput(prop: FormInputProp) {
 }
 
 type SelectInputProp = {
-  name: keyof FormDataType;
+  name: keyof FormData;
   defaultSelect: string;
   categoriesList: string[];
   errors: ValidationError[];
@@ -217,7 +335,7 @@ function CategorySelect(prop: SelectInputProp) {
         <option value="">{defaultSelect}</option>
         {categoriesList.map((cat) => (
           <option key={cat} value={cat}>
-            {cat}
+            {cat.replaceAll("_", " ").toLowerCase()}
           </option>
         ))}
       </select>
@@ -233,7 +351,7 @@ function CategorySelect(prop: SelectInputProp) {
 }
 
 type FormTextAreaProp = {
-  name: keyof FormDataType;
+  name: keyof FormData;
   placeholder: string;
   maxLength: number;
   minLength: number;
@@ -279,7 +397,7 @@ function FormTextArea(prop: FormTextAreaProp) {
 }
 
 // FIXME: case of end bound is bigger than video length is not covered yet
-function validateFormData(formData: FormDataType) {
+function validateFormData(formData: FormData) {
   const { start, end, category, note } = formData;
   const errors: ValidationError[] = [];
   // validate time bounds
@@ -365,4 +483,12 @@ function validateFormData(formData: FormDataType) {
   }
   // set element in focus(first input in error list)
   return errors.map((error, index) => ({ ...error, focus: !index }));
+}
+
+function submitNotePayload(notePayload: NoteSubmissionPayload) {
+  return new Promise((res) => {
+    setTimeout(() => {
+      res(JSON.stringify(notePayload));
+    }, 3000);
+  });
 }
