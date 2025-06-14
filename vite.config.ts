@@ -14,6 +14,12 @@ export default defineConfig({
           if (chunk.name === "content") return `${chunk.name}/index.js`;
           return "[name]/[name].js";
         },
+        assetFileNames: ({ name }) => {
+          if (name && name.endsWith(".css")) {
+            return `content/index.css`; // TODO: adjust for options, and popup styles
+          }
+          return `[name]`;
+        },
       },
     },
     outDir: "dist",
