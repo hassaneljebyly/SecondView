@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import {
+  CUSTOM_EVENTS,
   NOTE_FORM_PLACEHOLDERS,
   NOTE_LIMITS,
   PREFIX,
@@ -23,12 +24,6 @@ type NoteData = {
   end: number;
   category: string;
   note: string;
-};
-
-type ValidationError = {
-  focus: boolean; // used to focus first error field
-  field: keyof FormData;
-  message: string;
 };
 
 type ValidationErrorPayload = {
@@ -110,7 +105,7 @@ function resetForm() {
 // custom errors
 
 // TODO: rename later
-class ValidationErrorClass extends Error {
+class ValidationError extends Error {
   payload: ValidationErrorPayload;
   constructor(payload: ValidationErrorPayload) {
     super();
@@ -151,7 +146,7 @@ function useForm() {
       }
     } catch (error) {
       setFormState("idle");
-      if (error instanceof ValidationErrorClass) {
+      if (error instanceof ValidationError) {
         setErrors(error.payload);
       } else {
         setFormState("error");
@@ -179,9 +174,15 @@ export default function Form() {
       firstErrorField?.focus();
     }
 
-    window.addEventListener("openForm", () => {
+    function toggleForm() {
       setFormState(formState === "idle" ? "hidden" : "idle");
-    });
+    }
+
+    window.addEventListener(CUSTOM_EVENTS.TOGGLE_FORM, toggleForm);
+
+    return () => {
+      window.removeEventListener(CUSTOM_EVENTS.TOGGLE_FORM, toggleForm);
+    };
   }, [errors, formState, setFormState]);
 
   console.log("final state:", formState);
@@ -502,7 +503,7 @@ function validateFormData(formData: FormData): true | never {
   if (!Object.keys(errorsPayload).length) {
     return true;
   }
-  throw new ValidationErrorClass(errorsPayload);
+  throw new ValidationError(errorsPayload);
 }
 
 function submitNotePayload(notePayload: NoteSubmissionPayload) {
