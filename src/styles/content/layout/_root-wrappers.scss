@@ -8,3 +8,7 @@
   min-width: 370px;
   max-width: 370px;
 }
+
+#sv-add-note-btn-container {
+  margin-inline: var(--#{var.$prefix}spacing-8);
+}

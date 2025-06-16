@@ -25,8 +25,10 @@ export default function FormSuccessAlert(prop: FormSuccessAlertProp) {
   });
   return (
     <div
-      style={{ display: formState === "success" ? "block" : "none" }}
-      className={withPrefix("success", "form-wrapper-grid__item")}
+      className={
+        withPrefix("success", "form-wrapper-grid__item") +
+        ` ${formState === "success" ? withPrefix("success--open") : ""}`
+      }
     >
       {/* placeholder for the icon  */}
       <div className={withPrefix("success__icon-wrapper")}>

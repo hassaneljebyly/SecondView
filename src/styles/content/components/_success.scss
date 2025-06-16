@@ -1,0 +1,45 @@
+@use "../base/variables" as var;
+
+.sv-success {
+  --_sv-px: var(--#{var.$prefix}spacing-24);
+  --_sv-py: var(--#{var.$prefix}spacing-24);
+  --_sv-display: none;
+  padding-inline: var(--_sv-px);
+  padding-block: var(--_sv-py);
+  border: 1px solid var(--#{var.$prefix}border-color-popup);
+  border-radius: var(--#{var.$prefix}border-radius-popup);
+  box-shadow: var(--#{var.$prefix}shadow-popup);
+  display: var(--_sv-display);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--#{var.$prefix}spacing-16);
+  background-color: var(--#{var.$prefix}color-white);
+  z-index: 1;
+  height: fit-content;
+
+  &--open {
+    --_sv-display: flex;
+  }
+
+  &__icon-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: var(--#{var.$prefix}spacing-8);
+  }
+  &__icon {
+    width: 60px;
+    aspect-ratio: 1;
+    display: grid;
+    place-items: center;
+    background-color: var(--#{var.$prefix}color-gray-95);
+    border-radius: var(--#{var.$prefix}radius-round);
+  }
+  &__header {
+    font-size: var(--#{var.$prefix}font-size-xl);
+    margin-bottom: var(--#{var.$prefix}spacing-8);
+  }
+  &__body {
+    font-size: var(--#{var.$prefix}font-size-md);
+  }
+}
