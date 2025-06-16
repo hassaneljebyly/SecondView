@@ -1,0 +1,10 @@
+@use "../base/variables" as var;
+
+##{var.$prefix}form-root {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  z-index: 999;
+  min-width: 370px;
+  max-width: 370px;
+}

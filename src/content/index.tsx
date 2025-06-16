@@ -1,6 +1,7 @@
 import { tasks } from "../utils/componentTasks";
 import { cleanUp } from "../utils/dom";
 import { injectComponent, ROOTS, type InjectTask } from "../utils/injector";
+import "../styles/content/index.scss";
 
 export type Retries = { task: InjectTask; attempts: number };
 

@@ -1,0 +1,19 @@
+@use "../base/variables" as var;
+
+.#{var.$prefix}form-wrapper-grid {
+  display: grid;
+  grid-template-areas: "stack";
+
+  &-grid__item {
+    grid-area: stack;
+  }
+}
+
+.#{var.$prefix}form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  &-span-2 {
+    grid-column: span 2;
+  }
+}

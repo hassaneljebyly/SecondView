@@ -7,6 +7,7 @@
     {
       "matches": ["*://*.youtube.com/*"],
       "js": ["content/index.js"],
+      "css": ["content/index.css"],
       "run_at": "document_idle"
     }
   ],
