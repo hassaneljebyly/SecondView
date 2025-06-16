@@ -1,15 +1,15 @@
 @use "../base/variables" as var;
 
-.sv-success {
-  --_sv-px: var(--#{var.$prefix}spacing-24);
-  --_sv-py: var(--#{var.$prefix}spacing-24);
-  --_sv-display: none;
-  padding-inline: var(--_sv-px);
-  padding-block: var(--_sv-py);
+.#{var.$prefix}success {
+  --_#{var.$prefix}px: var(--#{var.$prefix}spacing-24);
+  --_#{var.$prefix}py: var(--#{var.$prefix}spacing-24);
+  --_#{var.$prefix}display: none;
+  padding-inline: var(--_#{var.$prefix}px);
+  padding-block: var(--_#{var.$prefix}py);
   border: 1px solid var(--#{var.$prefix}border-color-popup);
   border-radius: var(--#{var.$prefix}border-radius-popup);
   box-shadow: var(--#{var.$prefix}shadow-popup);
-  display: var(--_sv-display);
+  display: var(--_#{var.$prefix}display);
   flex-direction: column;
   align-items: center;
   text-align: center;
@@ -19,7 +19,7 @@
   height: fit-content;
 
   &--open {
-    --_sv-display: flex;
+    --_#{var.$prefix}display: flex;
   }
 
   &__icon-wrapper {
