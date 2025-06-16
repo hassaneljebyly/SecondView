@@ -1,0 +1,36 @@
+@use "../base/variables" as var;
+
+.#{var.$prefix}button {
+  --_sv-bg-color: var(--#{var.$prefix}color-white);
+  --_sv-text-color: var(--#{var.$prefix}text-primary);
+  background-color: var(--_sv-bg-color);
+  color: var(--_sv-text-color);
+  padding: 0 var(--#{var.$prefix}spacing-16);
+  height: 36px;
+  min-height: 36px;
+  font-size: var(--#{var.$prefix}font-size-md);
+  font-weight: var(--#{var.$prefix}font-weight-500);
+  line-height: var(--#{var.$prefix}line-height-2);
+  border-radius: var(--#{var.$prefix}radius-pill);
+  min-width: 100px;
+  cursor: pointer;
+  &:focus-visible {
+    background-color: var(--#{var.$prefix}color-white);
+    color: var(--#{var.$prefix}color-black);
+    outline: 2px solid var(--#{var.$prefix}color-black);
+  }
+  &--primary {
+    --_sv-text-color: var(--#{var.$prefix}color-white);
+    --_sv-bg-color: var(--#{var.$prefix}color-black);
+  }
+  &--primary:hover {
+    --_sv-bg-color: var(--#{var.$prefix}color-gray-20);
+  }
+  &--secondary {
+    --_sv-text-color: var(--#{var.$prefix}color-black);
+    --_sv-bg-color: var(--#{var.$prefix}color-black-alpha-5);
+  }
+  &--secondary:hover {
+    --_sv-bg-color: var(--#{var.$prefix}color-black-alpha-10);
+  }
+}
