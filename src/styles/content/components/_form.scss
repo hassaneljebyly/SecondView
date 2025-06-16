@@ -1,4 +1,5 @@
 @use "../base/variables" as var;
+// TODO: remove hover states when form is disabled
 
 .#{var.$prefix}form {
   --_#{var.$prefix}form-px: var(--#{var.$prefix}spacing-16);

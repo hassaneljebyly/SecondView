@@ -218,3 +218,164 @@
 .sv-success__header {
   margin-bottom: 0.5em;
 }
+/* ==================================================== */
+
+.sv-note {
+  padding-inline: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 12px;
+  box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  position: absolute;
+  bottom: 1em;
+  left: 50%;
+  translate: -50%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 0fr 0fr 0fr 0fr;
+  transition: grid-template-rows 1s;
+  overflow: hidden;
+  animation: dismiss 250ms 3s forwards linear;
+}
+
+.sv-note.sv-note--open {
+  animation-play-state: paused;
+}
+.sv-note.sv-note--open .sv-note__dismiss-btn {
+  animation-play-state: paused;
+}
+
+@keyframes dismiss {
+  100% {
+    opacity: 0%;
+    visibility: hidden;
+  }
+}
+
+.sv-note__list,
+.sv-note-segment__list {
+  position: relative;
+  width: 100%;
+}
+
+.sv-note-segment {
+  position: absolute;
+  background-image: linear-gradient(
+    to top,
+    rgb(255, 115, 0.25),
+    rgba(255, 115, 0, 0.5)
+  );
+  width: 10%;
+  height: 10px;
+  left: 0%;
+  bottom: 0;
+  overflow: hidden;
+}
+.sv-note--open {
+  grid-template-rows: auto auto auto auto auto;
+}
+
+.sv-note__header {
+  font-size: 16px;
+  font-weight: 500;
+  padding-block: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  cursor: pointer;
+}
+.sv-note__title {
+  position: relative;
+  padding-left: 18px;
+}
+
+.sv-note__title::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  width: 8px;
+  aspect-ratio: 1;
+  left: 0;
+  top: 50%;
+  translate: 0% -50%;
+  background-color: rgb(255, 115, 0);
+}
+
+.sv-note__timestamp {
+  display: flex;
+  gap: 0.5em;
+}
+
+.sv-note__timestamp-bound {
+  display: block;
+  font-weight: 400;
+  color: rgb(53, 147, 230);
+  font-size: 12px;
+  padding: 0 4px;
+  background-color: rgb(219, 238, 255);
+  border-radius: 2px;
+}
+.sv-note__title {
+  font-size: 16px;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+.sv-note__content {
+  overflow: hidden;
+}
+.sv-note__body {
+  max-width: 35ch;
+  font-size: 14px;
+  line-height: 1.5;
+  padding-block: 16px;
+}
+.sv-note__action {
+  display: flex;
+  justify-content: end;
+  padding-block: 10px;
+  overflow: hidden;
+}
+
+.sv-note__divider {
+  border: 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  margin-inline: -1em;
+}
+
+@property --percentage {
+  initial-value: 0%;
+  inherits: false;
+  syntax: "<percentage>";
+}
+
+.sv-note__dismiss-btn {
+  background: conic-gradient(rgba(0, 0, 0, 0.13) var(--percentage), white 0);
+  background-repeat: no-repeat;
+  animation: timer 3s forwards linear;
+  overflow: hidden;
+}
+
+@keyframes timer {
+  to {
+    --percentage: 100%;
+  }
+}
+#sv-note-display-root {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: red;
+}
+
+.sv-note__dismiss-btn {
+  background-color: transparent;
+  border-radius: 50%;
+  padding: 0.75em;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+}
+.sv-note__dismiss-btn span {
+  line-height: 0;
+}

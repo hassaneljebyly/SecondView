@@ -1,4 +1,5 @@
 @use "../base/variables" as var;
+// TODO-FIXME button not showing in dark mode and line hight too big
 
 .#{var.$prefix}button {
   --_sv-bg-color: var(--#{var.$prefix}color-white);

@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="style.css" />
     <title>UI Prototypes</title>
   </head>
-  <body>
+  <body style="min-height: 100vh">
     <!-- use prefix "sv-" -->
     <!-- top div is the react root wrapper -->
     <div id="sv-form-root">
@@ -148,6 +148,52 @@
             </p>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- use prefix "sv-" -->
+    <!-- top div is the react root wrapper -->
+    <!-- root wrapper container ".ytp-progress-bar-container" -->
+    <div
+      class="ytp-progress-bar-container"
+      style="margin-top: 50vh; width: 50vw; position: relative"
+    >
+      <div id="sv-note-display-root">
+        <ul class="sv-note-segment__list">
+          <li class="sv-note-segment"></li>
+        </ul>
+        <ul class="sv-note__list">
+          <li class="sv-note">
+            <div class="sv-note__header">
+              <h2 class="sv-note__title">fabricated content</h2>
+              <p class="sv-note__timestamp" style="display: none;">
+                <span class="sv-note__timestamp-bound sv-note__timestamp--start">16:15</span>
+                <span class="sv-note__timestamp-bound sv-note__timestamp--end">18:18</span>
+              </p>
+              <button class="sv-note__dismiss-btn close">
+                <span>X</span>
+              </button>
+            </div>
+            <hr class="sv-note__divider"></hr>
+            <div class="sv-note__content">
+              <p class="sv-note__body">
+                This popular myth is false. Scientific studies have shown that
+                goldfish have a memory span that can last weeks or even months.
+                Researchers have trained goldfish to respond to certain sounds
+                and even recognize feeding times, proving they can retain
+                information far beyond just a few seconds.
+              </p>
+            </div>
+            <hr class="sv-note__divider"></hr>
+            <div class="sv-note__action">
+              <button
+                class="sv-form__submit-btn sv-button sv-button--primary"
+                type="submit"
+              >
+                Rate It
+              </button>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </body>
