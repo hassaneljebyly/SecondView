@@ -26,6 +26,8 @@ export default function Button() {
       id={withPrefix("add-note-btn")}
       className={withPrefix("button", "button--secondary")}
       type="button"
+      aria-controls={withPrefix("form")}
+      aria-expanded={formOpen}
       onClick={handleButtonClick}
     >
       {btnText}

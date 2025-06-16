@@ -15,7 +15,6 @@ import useForm from "../../hooks/useForm";
 
 export default function Form() {
   const { errors, formState, setFormState, handelSubmit } = useForm();
-  console.log(errors, formState);
   useEffect(() => {
     // focus first field with an error
     if (Object.keys(errors).length) {
@@ -42,14 +41,10 @@ export default function Form() {
       className={withPrefix("form-wrapper", "form-wrapper-grid")}
     >
       <form
-        style={{
-          display:
-            formState === "hidden" || formState === "success"
-              ? "none"
-              : "block",
-        }}
+        id={withPrefix("form")}
         className={withPrefix("form", "form-wrapper-grid__item")}
         onSubmit={handelSubmit}
+        aria-hidden={formState === "hidden" || formState === "success"}
         noValidate
       >
         <fieldset

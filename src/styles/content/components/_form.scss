@@ -1,9 +1,113 @@
 @use "../base/variables" as var;
 
-// .sv-form {
-//   padding-inline: var(--yt-spacing-lg);
-//   padding-block: var(--yt-spacing-lg);
-//   border: 1px solid var(--yt-border-color);
-//   border-radius: 12px;
-//   box-shadow: 0 4px 32px 0 rgba(0, 0, 0, 0.1);
-// }
+:root {
+  // font sizes
+  --sv-font-size-xsm: 1.2rem;
+  --sv-font-size-sm: 1.3rem;
+  --sv-font-size-md: 1.4rem;
+  --sv-font-size-lg: 1.6rem;
+  --sv-font-size-xl: 1.8rem;
+  --sv-font-size-base: 10px; /* base */
+
+  // font weights
+  --sv-font-weight-500: 500;
+  --sv-font-weight-400: 400;
+  // TODO: typography spacing
+  // TODO: typography line hight
+
+  // colors
+  --sv-color-white: hsl(0, 0%, 100%);
+  --sv-color-gray-100: hsl(0, 0%, 95%);
+  --sv-color-gray-200: hsl(0, 0%, 90%);
+  --sv-color-gray-300: hsl(0, 0%, 85%);
+  --sv-color-gray-400: hsl(0, 0%, 75%);
+  --sv-color-gray-500: hsl(0, 0%, 60%);
+  --sv-color-gray-600: hsl(0, 0%, 45%);
+  --sv-color-gray-700: hsl(0, 0%, 30%);
+  --sv-color-gray-800: hsl(0, 0%, 20%);
+  --sv-color-gray-900: hsl(0, 0%, 10%);
+  --sv-color-black: hsl(0, 0%, 6%);
+  // transparent colors
+  --sv-color-white-alpha-10: hsla(0, 0%, 100%, 10%);
+  --sv-color-white-alpha-20: hsla(0, 0%, 100%, 20%);
+  --sv-color-white-alpha-30: hsla(0, 0%, 100%, 30%);
+  --sv-color-white-alpha-40: hsla(0, 0%, 100%, 40%);
+  --sv-color-white-alpha-50: hsla(0, 0%, 100%, 50%);
+  --sv-color-white-alpha-60: hsla(0, 0%, 100%, 60%);
+  --sv-color-white-alpha-70: hsla(0, 0%, 100%, 70%);
+  --sv-color-white-alpha-80: hsla(0, 0%, 100%, 80%);
+  --sv-color-white-alpha-90: hsla(0, 0%, 100%, 90%);
+  --sv-color-black-alpha-10: hsla(0, 0%, 0%, 10%);
+  --sv-color-black-alpha-20: hsla(0, 0%, 0%, 20%);
+  --sv-color-black-alpha-30: hsla(0, 0%, 0%, 30%);
+  --sv-color-black-alpha-40: hsla(0, 0%, 0%, 40%);
+  --sv-color-black-alpha-50: hsla(0, 0%, 0%, 50%);
+  --sv-color-black-alpha-60: hsla(0, 0%, 0%, 60%);
+  --sv-color-black-alpha-70: hsla(0, 0%, 0%, 70%);
+  --sv-color-black-alpha-80: hsla(0, 0%, 0%, 80%);
+  --sv-color-black-alpha-90: hsla(0, 0%, 0%, 90%);
+
+  // states
+  --sv-color-hover-bg: hsla(0, 0%, 0%, 0.05);
+  --sv-color-focus-ring: hsl(210, 100%, 56%);
+  --sv-color-error-text: hsl(348, 100%, 38%);
+  --sv-color-error-bg: hsla(0, 80%, 60%, 0.1);
+  --sv-color-disabled: hsl(0, 0%, 60%);
+
+  // spacing
+  --sv-spacing-8: 8px;
+  --sv-spacing-12: 12px;
+  --sv-spacing-16: 16px;
+  --sv-spacing-20: 20px;
+  --sv-spacing-24: 24px;
+  --sv-spacing-28: 28px;
+
+  // border radius
+  --sv-radius-2: 2px;
+  --sv-radius-4: 4px;
+  --sv-radius-6: 6px;
+  --sv-radius-8: 8px;
+  --sv-radius-12: 12px;
+  --sv-radius-14: 14px;
+  --sv-radius-16: 16px;
+  --sv-radius-18: 18px;
+  --sv-radius-20: 20px;
+  --sv-radius-round: 50%;
+  --sv-radius-pill: 100vh;
+
+  // border
+  --sv-border-radius-popup: var(--sv-ra);
+  --sv-border-color-popup: var(--sv-color-black-alpha-20);
+
+  // shadows
+  --sv-shadow-popup: 0 4px 32px 0 var(--sv-color-black-alpha-10);
+
+  // z-index levels
+  --sv-z-index-dropdown: 1000;
+  --sv-z-index-modal: 2000;
+  --sv-z-index-tooltip: 3000;
+
+  // transitions
+  --sv-transition-duration: 0.2s;
+  --sv-transition-ease: ease-in-out;
+
+  // line height
+  --sv-line-height-base: 1.5;
+  --sv-line-height-tight: 1.25;
+}
+
+.#{var.$prefix}form {
+  --_sv-form-px: var(--sv-spacing-16);
+  --_sv-form-py: var(--sv-spacing-16);
+  --_sv-form-toggle-display: block;
+  display: var(--_sv-form-toggle-display);
+  padding-inline: var(--_sv-form-px);
+  padding-block: var(--_sv-form-py);
+  border: 1px solid var(--sv-border-color-popup);
+  border-radius: var(--sv-radius-12);
+  box-shadow: var(--sv-shadow-popup);
+  // states
+  &[aria-hidden="true"] {
+    --_sv-form-toggle-display: none;
+  }
+}
