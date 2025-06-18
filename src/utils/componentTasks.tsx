@@ -1,5 +1,6 @@
 import Button from "../components/button";
 import Form from "../components/form";
+import NoteDisplay from "../components/note-display";
 import { withPrefix } from "./class-names";
 import type { InjectTask } from "./injector";
 
@@ -15,5 +16,11 @@ export const tasks: InjectTask[] = [
     rootWrapperId: withPrefix("form-root"),
     componentId: withPrefix("form-wrapper"),
     component: <Form />,
+  },
+  {
+    domTargetSelector: ".ytp-progress-bar-container",
+    rootWrapperId: withPrefix("note-display-root"),
+    componentId: withPrefix("note-display"),
+    component: <NoteDisplay />,
   },
 ];

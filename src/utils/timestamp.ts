@@ -12,6 +12,20 @@ export function timeStringToSeconds(segmentBound: string) {
   return result;
 }
 
+export function getSegmentPercentRange({
+  videoLength,
+  start,
+  end,
+}: {
+  videoLength: number;
+  start: number;
+  end: number;
+}) {
+  const segmentWidth = `${Math.floor(((end - start) * 100) / videoLength)}%`;
+  const segmentLeftPos = `${Math.floor((start * 100) / videoLength)}%`;
+  return { segmentWidth, segmentLeftPos };
+}
+
 export function timeStringIsValid(timeStamp: string): boolean {
   const testRegex = new RegExp(REGEX.TIME_STAMP_PATTERN);
   return testRegex.test(timeStamp);
