@@ -165,15 +165,9 @@
           <li class="sv-note">
             <div class="sv-note__header">
               <h2 class="sv-note__title">fabricated content</h2>
-              <p class="sv-note__timestamp" style="display: none;">
-                <span class="sv-note__timestamp-bound sv-note__timestamp--start">16:15</span>
-                <span class="sv-note__timestamp-bound sv-note__timestamp--end">18:18</span>
-              </p>
-              <button class="sv-note__dismiss-btn close">
-                <span>X</span>
-              </button>
             </div>
-            <hr class="sv-note__divider"></hr>
+
+            <hr class="sv-note__divider" />
             <div class="sv-note__content">
               <p class="sv-note__body">
                 This popular myth is false. Scientific studies have shown that
@@ -183,7 +177,7 @@
                 information far beyond just a few seconds.
               </p>
             </div>
-            <hr class="sv-note__divider"></hr>
+            <hr class="sv-note__divider" />
             <div class="sv-note__action">
               <button
                 class="sv-form__submit-btn sv-button sv-button--primary"
@@ -196,5 +190,48 @@
         </ul>
       </div>
     </div>
+    <video id="video" width="640" height="360" controls>
+      <source
+        src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+        type="video/mp4"
+      />
+      Your browser does not support the video tag.
+    </video>
+
+    <script>
+      const exampleNotes = [
+        {
+          start: 45, // 0:45
+          end: 78, // 1:18
+          category: "ERROR",
+          note: "The presenter states that penguins live in the Arctic, but penguins are actually found in the Antarctic and Southern Hemisphere. Polar bears live in the Arctic.",
+        },
+        {
+          start: 234, // 3:54
+          end: 267, // 4:27
+          category: "MISLEADING_CONTENT",
+          note: "This statistic is from 2015 and is outdated. According to recent 2024 data from the same organization, this number has actually decreased by 40%.",
+        },
+        {
+          start: 445, // 7:25
+          end: 490, // 8:10
+          category: "FALSE_CONTEXT",
+          note: "This quote is real but taken out of context. The speaker was referring to a hypothetical scenario, not making a factual claim about current events.",
+        },
+      ];
+      const shownNotes = new Map();
+      const video = document.getElementById("video");
+      let nextNoteIndex = 0;
+      video.addEventListener("timeupdate", (e) => {
+        const current = Math.floor(video.currentTime);
+        if (
+          current === exampleNotes[nextNoteIndex].end - 3 &&
+          nextNoteIndex !== exampleNotes.length
+        ) {
+          console.log(exampleNotes[nextNoteIndex]);
+          nextNoteIndex++;
+        }
+      });
+    </script>
   </body>
 </html>
