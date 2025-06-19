@@ -21,8 +21,8 @@ export function getSegmentPercentRange({
   start: number;
   end: number;
 }) {
-  const segmentWidth = `${Math.floor(((end - start) * 100) / videoLength)}%`;
-  const segmentLeftPos = `${Math.floor((start * 100) / videoLength)}%`;
+  const segmentWidth = `${(((end - start) * 100) / videoLength).toFixed(2)}%`;
+  const segmentLeftPos = `${((start * 100) / videoLength).toFixed(2)}%`;
   return { segmentWidth, segmentLeftPos };
 }
 

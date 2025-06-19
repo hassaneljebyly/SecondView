@@ -61,6 +61,6 @@ export type VideoNotesResponse = {
   totalCount: number;
 };
 
-export function getNotes(videoId?: string) {
+export function getNotes() {
   return data;
 }

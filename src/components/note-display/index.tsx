@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { getNotes } from "../../api";
 import { withPrefix } from "../../utils/class-names";
+import { getSegmentPercentRange } from "../../utils/timestamp";
 
 const segmentListStyles: React.CSSProperties = {
   listStyle: "none",
@@ -9,28 +11,45 @@ const segmentListStyles: React.CSSProperties = {
   translate: "13% 38vh",
   background: "red",
   height: "2px",
-  width: "369p",
+  width: "369px",
 };
 
 export default function NoteDisplay() {
+  useEffect(() => {
+    const notesList = getNotes().notes;
+    let nextNoteIndex = 0;
+    //
+    const video = document.querySelector("video");
+    if (video) {
+      video.addEventListener("timeupdate", () => {
+        const nextNote = notesList[nextNoteIndex];
+        const currentPlayTime = Math.floor(video.currentTime);
+        if (
+          currentPlayTime === nextNote.end - 3 &&
+          nextNoteIndex < notesList.length
+        ) {
+          console.log(nextNote);
+          nextNoteIndex++;
+        }
+      });
+    } else {
+      console.error("Could not locate video element");
+    }
+  });
   return (
     <div id={withPrefix("note-display")}>
       <ul style={segmentListStyles}>
-        {getNotes().notes.map((note) => {
-          const widthPercent = (
-            ((note.end - note.start) * 100) /
-            note.videoLength
-          ).toFixed(2);
-          const leftPositionPercent = (
-            (note.start * 100) /
-            note.videoLength
-          ).toFixed(2);
+        {getNotes().notes.map(({ videoLength, start, end }) => {
+          const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
+            ...{ videoLength, start, end },
+          });
           return (
             <li
+              key={segmentLeftPos}
               style={{
                 position: "absolute",
-                width: `${widthPercent}%`,
-                left: `${leftPositionPercent}%`,
+                width: segmentWidth,
+                left: segmentLeftPos,
                 height: "10px",
                 bottom: 0,
                 background:
