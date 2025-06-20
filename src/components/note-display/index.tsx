@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { getNotes } from "../../api";
 import { withPrefix } from "../../utils/class-names";
 import { getSegmentPercentRange } from "../../utils/timestamp";
+import { CUSTOM_EVENTS } from "../../utils/constant";
 
 const segmentListStyles: React.CSSProperties = {
   listStyle: "none",
@@ -14,27 +15,41 @@ const segmentListStyles: React.CSSProperties = {
   width: "369px",
 };
 
+type Note = {
+  id: string;
+  start: number;
+  end: number;
+  videoLength: number;
+  category: string;
+  note: string;
+  timestamp: number;
+};
+
 export default function NoteDisplay() {
   useEffect(() => {
+    const video = document.querySelector("video");
+    if (!video) {
+      console.error("Could not locate video element");
+      return;
+    }
+    //! must be sorted nextNoteIndex assumes It's sorted
     const notesList = getNotes().notes;
     let nextNoteIndex = 0;
     //
-    const video = document.querySelector("video");
-    if (video) {
-      video.addEventListener("timeupdate", () => {
-        const nextNote = notesList[nextNoteIndex];
-        const currentPlayTime = Math.floor(video.currentTime);
-        if (
-          currentPlayTime === nextNote.end - 3 &&
-          nextNoteIndex < notesList.length
-        ) {
-          console.log(nextNote);
-          nextNoteIndex++;
-        }
-      });
-    } else {
-      console.error("Could not locate video element");
+    function handleTimeUpdate() {
+      if (nextNoteIndex > notesList.length) {
+        video!.removeEventListener("timeupdate", handleTimeUpdate);
+        return;
+      }
+      const nextNote = notesList[nextNoteIndex];
+      const currentPlayTime = Math.floor(video!.currentTime);
+      if (currentPlayTime === nextNote.end - 3) {
+        dispatchShowNoteEvent(nextNote);
+        nextNoteIndex++;
+      }
     }
+    video.addEventListener("timeupdate", handleTimeUpdate);
+    return () => video!.removeEventListener("timeupdate", handleTimeUpdate);
   });
   return (
     <div id={withPrefix("note-display")}>
@@ -61,6 +76,13 @@ export default function NoteDisplay() {
       </ul>
     </div>
   );
+}
+
+function dispatchShowNoteEvent(note: Note) {
+  const customEvent = new CustomEvent(CUSTOM_EVENTS.DISPLAY_NOTE, {
+    detail: note,
+  });
+  window.dispatchEvent(customEvent);
 }
 
 // template

@@ -38,6 +38,7 @@ export const CUSTOM_EVENTS = {
   CLOSE_NOTE_FORM: "closeNoteForm", // remove later
   TOGGLE_FORM: "toggleForm",
   CLOSE_FORM: "closeForm",
+  DISPLAY_NOTE: "displayNote",
 } as const;
 
 export const SUCCESS_MESSAGE_DURATION = 1500;
