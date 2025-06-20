@@ -1,6 +1,7 @@
 import Button from "../components/button";
 import Form from "../components/form";
 import NoteDisplay from "../components/note-display";
+import NotePopup from "../components/note-popup";
 import { withPrefix } from "./class-names";
 import type { InjectTask } from "./injector";
 
@@ -22,5 +23,11 @@ export const tasks: InjectTask[] = [
     rootWrapperId: withPrefix("note-display-root"),
     componentId: withPrefix("note-display"),
     component: <NoteDisplay />,
+  },
+  {
+    domTargetSelector: "#player-container",
+    rootWrapperId: withPrefix("note-popup-root"),
+    componentId: withPrefix("note-popup"),
+    component: <NotePopup />,
   },
 ];

@@ -15,7 +15,7 @@ const segmentListStyles: React.CSSProperties = {
   width: "369px",
 };
 
-type Note = {
+export type Note = {
   id: string;
   start: number;
   end: number;
@@ -32,12 +32,12 @@ export default function NoteDisplay() {
       console.error("Could not locate video element");
       return;
     }
-    //! must be sorted nextNoteIndex assumes It's sorted
+    // NOTE must be sorted nextNoteIndex assumes It's sorted
     const notesList = getNotes().notes;
     let nextNoteIndex = 0;
     //
     function handleTimeUpdate() {
-      if (nextNoteIndex > notesList.length) {
+      if (nextNoteIndex >= notesList.length) {
         video!.removeEventListener("timeupdate", handleTimeUpdate);
         return;
       }
