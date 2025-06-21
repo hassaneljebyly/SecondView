@@ -69,7 +69,10 @@ export default function NoteDisplay() {
     }
     video.addEventListener("seeked", handleUnSeeNote);
     video.addEventListener("timeupdate", handleTimeUpdate);
-    return () => video!.removeEventListener("timeupdate", handleTimeUpdate);
+    return () => {
+      video.removeEventListener("seeked", handleUnSeeNote);
+      video.removeEventListener("timeupdate", handleTimeUpdate);
+    };
   });
   return (
     <div id={withPrefix("note-display")}>
