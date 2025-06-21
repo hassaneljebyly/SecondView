@@ -47,20 +47,27 @@ export default function NoteDisplay() {
       return;
     }
     const notesMap = buildNotesMap(getNotes().notes);
-    const previousDisplayedNotesSet = new Set();
+    const seenNotes = new Set<Note>();
     //
     function handleTimeUpdate() {
       const currentPlayTime = Math.floor(video!.currentTime);
       const currentNote = notesMap.get(currentPlayTime);
-      if (
-        currentNote !== undefined &&
-        !previousDisplayedNotesSet.has(currentNote)
-      ) {
+      if (currentNote !== undefined && !seenNotes.has(currentNote)) {
         dispatchShowNoteEvent(currentNote);
         // guarantees event is dispatched only once
-        previousDisplayedNotesSet.add(currentNote);
+        seenNotes.add(currentNote);
       }
     }
+    // when seeking beyond an already seen note, remove it
+    function handleUnSeeNote() {
+      if (seenNotes.size) {
+        const currentTime = Math.floor(video!.currentTime);
+        seenNotes.forEach((note) => {
+          if (currentTime <= note.end) seenNotes.delete(note);
+        });
+      }
+    }
+    video.addEventListener("seeked", handleUnSeeNote);
     video.addEventListener("timeupdate", handleTimeUpdate);
     return () => video!.removeEventListener("timeupdate", handleTimeUpdate);
   });
