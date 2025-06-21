@@ -11,7 +11,7 @@ export const NOTE_LIMITS = {
   MAX_LENGTH: 500,
   MIN_LENGTH: 10,
 } as const;
-
+// [🧠 IDEA]:  revise these categories, check whatsapp last text
 export const NOTE_FORM_PLACEHOLDERS = {
   CATEGORIES: [
     "FABRICATED_CONTENT",
@@ -34,8 +34,10 @@ export const REGEX = {
 } as const;
 
 export const CUSTOM_EVENTS = {
-  TOGGLE_NOTE_FORM: "toggleNoteForm", // remove later
-  CLOSE_NOTE_FORM: "closeNoteForm", // remove later
+  // [🧹 CLEANUP]: unused, remove later
+  TOGGLE_NOTE_FORM: "toggleNoteForm",
+  // [🧹 CLEANUP]:  unused, remove later
+  CLOSE_NOTE_FORM: "closeNoteForm",
   TOGGLE_FORM: "toggleForm",
   CLOSE_FORM: "closeForm",
   DISPLAY_NOTE: "displayNote",

@@ -7,7 +7,7 @@ import type { FormData } from "./data";
 import { ValidationError, type ValidationErrorPayload } from "./error";
 import { timeStringIsValid, timeStringToSeconds } from "./timestamp";
 
-// FIXME: case of end bound is bigger than video length is not covered yet
+// [🛑 BLOCKER]: case of end bound is bigger than video length is not covered yet
 export function validateFormData(formData: FormData): true | never {
   const { start, end, category, note } = formData;
   const errorsPayload: ValidationErrorPayload = {};
@@ -52,6 +52,8 @@ export function validateFormData(formData: FormData): true | never {
       };
     }
   }
+
+  // [🐞 BUG]: segments overlap is not yet validated
 
   // validate category
   if (

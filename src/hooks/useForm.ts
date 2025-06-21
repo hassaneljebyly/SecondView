@@ -11,14 +11,15 @@ export type FormState = "hidden" | "idle" | "submitting" | "success" | "error";
 
 export default function useForm() {
   const [errors, setErrors] = useState<ValidationErrorPayload>({});
-  // TODO: control form state styles via css class
+  // [🧱 REFACTOR]:  control form state styles via css class
   const [formState, setFormState] = useState<FormState>("hidden");
 
   async function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     // check if form in dom
-    // in a SPA environments(YouTube in this case) the form may be dynamically removed or replaced
+    // in a SPA environments(YouTube in this case)
+    //  the form may be dynamically removed or replaced
     if (!(form instanceof HTMLFormElement)) {
       console.error("Form submit event missing a valid form target");
       return;

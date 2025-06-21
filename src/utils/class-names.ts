@@ -1,6 +1,6 @@
 import { PREFIX } from "./constant";
 
 export function withPrefix(...classNames: string[]) {
-  // no white space
+  // [🛑 BLOCKER]:  no white space, and possible empty strings
   return classNames.map((className) => PREFIX + className).join(" ");
 }

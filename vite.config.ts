@@ -16,7 +16,8 @@ export default defineConfig({
         },
         assetFileNames: ({ name }) => {
           if (name && name.endsWith(".css")) {
-            return `content/index.css`; // TODO: adjust for options, and popup styles
+            // [📐 ARCHITECTURE]:  adjust for options, and popup styles
+            return `content/index.css`;
           }
           return `[name]`;
         },

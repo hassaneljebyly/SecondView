@@ -1,7 +1,7 @@
 import { withPrefix } from "../../utils/class-names";
 import type { Note as NoteType } from "../note-display";
 
-// TODO make it accessible
+// [🔒 ACCESSIBILITY]: add and improve accessibility
 export default function Note({ note: noteData }: { note: NoteType | null }) {
   if (!noteData) {
     return;

@@ -8,7 +8,7 @@ type FormInputProp = {
   pattern: RegExp;
   error: ValidationErrorPayload[keyof ValidationErrorPayload];
 };
-// TODO: add a "now" button to automatically insert current time
+// [🚀 FEATURE]: add a "now" button to automatically insert current time
 export default function FormSegmentTimeInput(prop: FormInputProp) {
   const { name, maxLength, pattern, error } = prop;
   return (

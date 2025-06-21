@@ -1,3 +1,8 @@
+// [🐞 BUG]:  Trim input from wite space then
+// [⚙️ TECH DEBT]:  don't let utils become too big
+// [📐 ARCHITECTURE]:  add no console.logs rule
+// [📐 ARCHITECTURE]:  add proper ts config
+
 import { tasks } from "../utils/componentTasks";
 import { cleanUp } from "../utils/dom";
 import { injectComponent, ROOTS, type InjectTask } from "../utils/injector";
@@ -47,5 +52,6 @@ document.addEventListener("yt-navigate-finish", () => {
 });
 document.addEventListener("yt-navigate-start", () => {
   cleanUp(ROOTS);
-  pageId = Date.now(); // change page snapshot id on each navigation start
+  // change page snapshot id on each navigation start
+  pageId = Date.now();
 });

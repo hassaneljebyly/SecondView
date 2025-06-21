@@ -9,6 +9,7 @@ type FormSuccessAlertProp = {
   setFormState: React.Dispatch<React.SetStateAction<FormState>>;
 };
 
+// [📋 COPY]:  make input place constants instead of hard code
 export default function FormSuccessAlert(prop: FormSuccessAlertProp) {
   const { formState, setFormState } = prop;
   useEffect(() => {
@@ -30,14 +31,12 @@ export default function FormSuccessAlert(prop: FormSuccessAlertProp) {
         ` ${formState === "success" ? withPrefix("success--open") : ""}`
       }
     >
-      {/* placeholder for the icon  */}
       <div className={withPrefix("success__icon-wrapper")}>
         <span className={withPrefix("success__icon")}>✅</span>
       </div>
       <div className={withPrefix("success__content")}>
         <h4 className={withPrefix("success__header")}>Success!</h4>
         <p className={withPrefix("success__body")}>
-          {/* placeholder for actual message  */}
           Your changes have been saved successfully.
         </p>
       </div>

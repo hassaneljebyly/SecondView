@@ -32,7 +32,6 @@ export type Note = {
 
 function buildNotesMap(notes: Note[]): Map<number, Note> {
   const notesMap = new Map<number, Note>();
-
   notes.forEach((note) => {
     notesMap.set(note.end, note);
   });
@@ -100,7 +99,7 @@ export default function NoteDisplay() {
     </div>
   );
 }
-
+// [⚙️ TECH DEBT]:  refactor all events into a centralized custom event handler
 function dispatchShowNoteEvent(note: Note) {
   const customEvent = new CustomEvent(CUSTOM_EVENTS.DISPLAY_NOTE, {
     detail: note,

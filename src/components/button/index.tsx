@@ -20,7 +20,7 @@ export default function Button() {
     return () =>
       window.removeEventListener(CUSTOM_EVENTS.CLOSE_FORM, handleCloseForm);
   });
-  // TODO stack button text variations using grid
+  // [🎨 UI/UX]: stack button text variations using grid
   return (
     <button
       id={withPrefix("add-note-btn")}

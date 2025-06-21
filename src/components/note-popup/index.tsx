@@ -3,7 +3,7 @@ import { withPrefix } from "../../utils/class-names";
 import { CUSTOM_EVENTS } from "../../utils/constant";
 import type { Note as NoteType } from "../note-display";
 import Note from "../note";
-// TODO make it accessible
+// [🔒 ACCESSIBILITY]: add and improve accessibility
 export default function NotePopup() {
   const [note, setNote] = useState<NoteType | null>(null);
   useEffect(() => {

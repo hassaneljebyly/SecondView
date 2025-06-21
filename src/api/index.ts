@@ -1,5 +1,6 @@
 import type { NOTE_FORM_PLACEHOLDERS } from "../utils/constant";
-// TODO: update where this is used
+
+// [🧹 CLEANUP]: update where this is used
 type Category = (typeof NOTE_FORM_PLACEHOLDERS.CATEGORIES)[number];
 
 const data = {

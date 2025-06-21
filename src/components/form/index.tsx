@@ -16,7 +16,6 @@ import useForm from "../../hooks/useForm";
 export default function Form() {
   const { errors, formState, setFormState, handelSubmit } = useForm();
   useEffect(() => {
-    // focus first field with an error
     if (Object.keys(errors).length) {
       const firstErrorField = document.querySelector(
         `.${withPrefix("form__field")}[aria-invalid="true"]`
