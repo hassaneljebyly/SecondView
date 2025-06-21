@@ -25,6 +25,20 @@ export type Note = {
   timestamp: number;
 };
 
+// This allows O(1) lookup on each timeupdate event instead of looping over all notes
+// or using the old approach of nextNoteIndex which need the notes to be sorted based on end time
+// also when user skips or seek forwards or backward there's no need to reset the nextNoteIndex
+// also will make it easier to add optimistic UI later when a note is added, deleted or edited
+
+function buildNotesMap(notes: Note[]): Map<number, Note> {
+  const notesMap = new Map<number, Note>();
+
+  notes.forEach((note) => {
+    notesMap.set(note.end, note);
+  });
+  return notesMap;
+}
+
 export default function NoteDisplay() {
   useEffect(() => {
     const video = document.querySelector("video");
@@ -32,20 +46,19 @@ export default function NoteDisplay() {
       console.error("Could not locate video element");
       return;
     }
-    // NOTE must be sorted nextNoteIndex assumes It's sorted
-    const notesList = getNotes().notes;
-    let nextNoteIndex = 0;
+    const notesMap = buildNotesMap(getNotes().notes);
+    const previousDisplayedNotesSet = new Set();
     //
     function handleTimeUpdate() {
-      if (nextNoteIndex >= notesList.length) {
-        video!.removeEventListener("timeupdate", handleTimeUpdate);
-        return;
-      }
-      const nextNote = notesList[nextNoteIndex];
       const currentPlayTime = Math.floor(video!.currentTime);
-      if (currentPlayTime === nextNote.end - 3) {
-        dispatchShowNoteEvent(nextNote);
-        nextNoteIndex++;
+      const currentNote = notesMap.get(currentPlayTime);
+      if (
+        currentNote !== undefined &&
+        !previousDisplayedNotesSet.has(currentNote)
+      ) {
+        dispatchShowNoteEvent(currentNote);
+        // guarantees event is dispatched only once
+        previousDisplayedNotesSet.add(currentNote);
       }
     }
     video.addEventListener("timeupdate", handleTimeUpdate);
