@@ -50,6 +50,9 @@ export function injectComponent(
     const root = createRoot(rootWrapper);
     ROOTS.set(rootWrapperId, root);
     root.render(component);
+    return {
+      success: true,
+    };
   }
   // retry polling until MAX_ATTEMPTS is reached
   if (attempts < MAX_ATTEMPTS) {
