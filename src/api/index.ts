@@ -3,7 +3,7 @@ import type { NOTE_FORM_PLACEHOLDERS } from "../utils/constant";
 // [🧹 CLEANUP]: update where this is used
 type Category = (typeof NOTE_FORM_PLACEHOLDERS.CATEGORIES)[number];
 
-const data = {
+const data2 = {
   videoId: "dQw4w9WgXcQ",
   notes: [
     {
@@ -44,6 +44,60 @@ const data = {
     },
   ],
   totalCount: 4,
+};
+
+console.log(data2);
+
+const data = {
+  videoId: "iranAttackUSBase123",
+  notes: [
+    {
+      id: "note1",
+      start: 10,
+      end: 90,
+      videoLength: 1355,
+      category: "FABRICATED_CONTENT",
+      note: "The footage shown is actually from a 2019 explosion in Beirut and not related to any recent incident involving Iran or a US base.",
+      timestamp: 1718800000,
+    },
+    {
+      id: "note2",
+      start: 150,
+      end: 210,
+      videoLength: 1355,
+      category: "MISLEADING_CONTENT",
+      note: "The video implies that a full-scale war has begun, but official sources confirm no military escalation has occurred.",
+      timestamp: 1718800100,
+    },
+    {
+      id: "note3",
+      start: 300,
+      end: 320,
+      videoLength: 1355,
+      category: "SATIRE_AND_PARODY",
+      note: "This segment uses overlaid audio and edited visuals for comedic effect, not actual reporting.",
+      timestamp: 1718800200,
+    },
+    {
+      id: "note4",
+      start: 450,
+      end: 490,
+      videoLength: 1355,
+      category: "PROPAGANDA",
+      note: "This portion features commentary that heavily favors one side and omits key facts from the opposing perspective.",
+      timestamp: 1718800300,
+    },
+    {
+      id: "note5",
+      start: 600,
+      end: 640,
+      videoLength: 1355,
+      category: "UNVERIFIED_CLAIM",
+      note: "Claims about casualties and damage are not backed by any verifiable sources as of the time of publication.",
+      timestamp: 1718800400,
+    },
+  ],
+  totalCount: 5,
 };
 
 export type NoteResponse = {

@@ -3,33 +3,45 @@ import { withPrefix } from "../../utils/class-names";
 import { CUSTOM_EVENTS } from "../../utils/constant";
 import type { Note as NoteType } from "../note-display";
 import Note from "../note";
+import { getNotes } from "../../api";
 // [🔒 ACCESSIBILITY]: add and improve accessibility
 export default function NotePopup() {
-  const [note, setNote] = useState<NoteType | null>(null);
+  console.log("note container rendered");
+  const [note, setNote] = useState<NoteType | null>(getNotes().notes[0]);
   useEffect(() => {
+    // let timeoutId: ReturnType<typeof setTimeout>;
     function handleNoteDisplay(e: Event) {
       const displayNoteEvent = e as CustomEvent<NoteType>;
       if (displayNoteEvent.type === CUSTOM_EVENTS.DISPLAY_NOTE) {
+        console.log("note displayed");
         setNote(displayNoteEvent.detail);
       }
     }
-
-    let timeoutId: number;
-    if (note) {
-      console.log("note displayed");
-      timeoutId = setTimeout(() => {
-        setNote(null);
-      }, 3000);
-    }
+    // if (note) {
+    //   timeoutId = setTimeout(() => {
+    //     console.log("note removed");
+    //     setNote(null);
+    //   }, 8000);
+    // }
     window.addEventListener(CUSTOM_EVENTS.DISPLAY_NOTE, handleNoteDisplay);
+
     return () => {
-      clearTimeout(timeoutId);
+      // if (!isNaN(timeoutId)) clearTimeout(timeoutId);
       window.removeEventListener(CUSTOM_EVENTS.DISPLAY_NOTE, handleNoteDisplay);
     };
   });
+
   return (
-    <div id={withPrefix("note-popup")} style={{ position: "relative" }}>
-      <Note note={note} />
+    <div
+      id={withPrefix("note-popup")}
+      style={{
+        position: "absolute",
+        bottom: "20%",
+        zIndex: 999,
+        translate: "12px",
+      }}
+    >
+      <Note note={note} collapsable={true} />
     </div>
   );
 }

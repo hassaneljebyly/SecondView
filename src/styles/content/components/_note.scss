@@ -1,0 +1,94 @@
+@use "../base/variables" as var;
+
+.#{var.$prefix}note {
+  --_sv-px: var(--sv-spacing-16);
+  --_sv-py: var(--sv-spacing-12);
+  border-radius: var(--sv-radius-8);
+  background-color: var(--sv-color-white);
+  border: 1px solid var(--sv-color-gray-85);
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 0fr;
+  transition: grid-template-rows 150ms ease-in-out;
+  overflow: hidden;
+  &:has(&__header[aria-expanded="true"]) {
+    grid-template-rows: auto 1fr;
+  }
+
+  &__body {
+    overflow: hidden;
+  }
+
+  &__header {
+    padding-inline: var(--_sv-px);
+    padding-block: var(--_sv-py);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--sv-bg-divider);
+    position: relative;
+    isolation: isolate;
+    cursor: pointer;
+    &::after {
+      content: "";
+      background-color: var(--sv-color-black-alpha-10);
+      position: absolute;
+      height: 100%;
+      left: 0;
+      z-index: -1;
+      animation: countDown 3000ms forwards linear;
+    }
+  }
+
+  &__close {
+    cursor: pointer;
+    width: 20px;
+    aspect-ratio: 1;
+    border-radius: var(--sv-radius-round);
+    border: 1px solid var(--sv-color-gray-60);
+    background: transparent;
+    position: relative;
+    &::after,
+    &::before {
+      content: "";
+      position: absolute;
+      width: 50%;
+      height: 2px;
+      background-color: var(--sv-color-black-alpha-70);
+      top: 50%;
+      left: 50%;
+      translate: -50% -50%;
+    }
+    &::after {
+      rotate: 45deg;
+    }
+    &::before {
+      rotate: -45deg;
+    }
+  }
+  &__category {
+    font-size: var(--sv-font-size-md);
+    font-weight: var(--sv-font-weight-500);
+    line-height: var(--sv-line-height-4);
+    text-transform: capitalize;
+  }
+  &__content {
+    padding-inline: var(--_sv-px);
+  }
+  &__text {
+    font-size: var(--sv-font-size-md);
+    line-height: var(--sv-line-height-5);
+    padding-block: var(--_sv-py);
+    width: 100%;
+    max-width: 30ch;
+  }
+}
+
+@keyframes countDown {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}

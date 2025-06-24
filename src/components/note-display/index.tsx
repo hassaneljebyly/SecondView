@@ -6,13 +6,7 @@ import { CUSTOM_EVENTS } from "../../utils/constant";
 
 const segmentListStyles: React.CSSProperties = {
   listStyle: "none",
-  padding: "0px",
-  margin: "0px",
   position: "relative",
-  translate: "13% 38vh",
-  background: "red",
-  height: "2px",
-  width: "369px",
 };
 
 export type Note = {
@@ -52,6 +46,7 @@ export default function NoteDisplay() {
       const currentPlayTime = Math.floor(video!.currentTime);
       const currentNote = notesMap.get(currentPlayTime);
       if (currentNote !== undefined && !seenNotes.has(currentNote)) {
+        console.log("event dispatched:", currentNote);
         dispatchShowNoteEvent(currentNote);
         // guarantees event is dispatched only once
         seenNotes.add(currentNote);
@@ -74,29 +69,27 @@ export default function NoteDisplay() {
     };
   });
   return (
-    <div id={withPrefix("note-display")}>
-      <ul style={segmentListStyles}>
-        {getNotes().notes.map(({ videoLength, start, end }) => {
-          const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
-            ...{ videoLength, start, end },
-          });
-          return (
-            <li
-              key={segmentLeftPos}
-              style={{
-                position: "absolute",
-                width: segmentWidth,
-                left: segmentLeftPos,
-                height: "10px",
-                bottom: 0,
-                background:
-                  "linear-gradient(to top, #00ff88c2 40%, transparent 100%)",
-              }}
-            ></li>
-          );
-        })}
-      </ul>
-    </div>
+    <ul id={withPrefix("note-display")} style={segmentListStyles}>
+      {getNotes().notes.map(({ videoLength, start, end }) => {
+        const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
+          ...{ videoLength, start, end },
+        });
+        return (
+          <li
+            key={segmentLeftPos}
+            style={{
+              position: "absolute",
+              width: segmentWidth,
+              left: segmentLeftPos,
+              height: "10px",
+              bottom: 0,
+              background:
+                "linear-gradient(to top, #00ff88c2 40%, transparent 100%)",
+            }}
+          ></li>
+        );
+      })}
+    </ul>
   );
 }
 // [⚙️ TECH DEBT]:  refactor all events into a centralized custom event handler
