@@ -49,6 +49,7 @@ export default function Note({
             detail: noteData.id,
           });
           window.dispatchEvent(event);
+          setCollapse(true);
         }}
         aria-expanded={!collapsable || expanded}
         ref={noteHeaderRef}
