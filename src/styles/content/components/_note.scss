@@ -11,8 +11,16 @@
   grid-template-rows: auto 0fr;
   transition: grid-template-rows 150ms ease-in-out;
   overflow: hidden;
+
   &:has(&__header[aria-expanded="true"]) {
     grid-template-rows: auto 1fr;
+  }
+  // reset closing animation if note is hover or expanded
+  // use is interacting with it
+  &:hover &__header::after,
+  &__header[aria-expanded="true"]::after {
+    animation: none;
+    opacity: 0;
   }
 
   &__body {

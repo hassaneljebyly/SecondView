@@ -46,7 +46,6 @@ export default function NoteDisplay() {
       const currentPlayTime = Math.floor(video!.currentTime);
       const currentNote = notesMap.get(currentPlayTime);
       if (currentNote !== undefined && !seenNotes.has(currentNote)) {
-        console.log("event dispatched:", currentNote);
         dispatchShowNoteEvent(currentNote);
         // guarantees event is dispatched only once
         seenNotes.add(currentNote);

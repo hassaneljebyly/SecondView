@@ -11,17 +11,20 @@ export default function Note({
   note: NoteType | null;
   collapsable: boolean;
 }) {
-  const [hideNote, setHideNote] = useState(false);
+  // const [hideNote, setHideNote] = useState(false);
   const [expanded, setCollapse] = useState(false);
   const noteHeaderRef = useRef(null);
+  function dispatchClearNoteEvent(
+    e: AnimationEvent | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    if (e instanceof MouseEvent) e.stopPropagation();
+    const clearNotePopUpEvent = new CustomEvent(CUSTOM_EVENTS.CLEAR_NOTE, {
+      detail: noteData?.id,
+    });
+    window.dispatchEvent(clearNotePopUpEvent);
+  }
   useEffect(() => {
     const noteHeader = noteHeaderRef.current as HTMLDivElement | null;
-    function dispatchClearNoteEvent() {
-      const clearNotePopUpEvent = new CustomEvent(
-        CUSTOM_EVENTS.CLEAR_NOTE_NOTE
-      );
-      window.dispatchEvent(clearNotePopUpEvent);
-    }
     if (noteHeader) {
       noteHeader.addEventListener("animationend", dispatchClearNoteEvent);
     }
@@ -33,16 +36,20 @@ export default function Note({
   }
   const { category, note } = noteData;
   return (
-    <div
-      className={withPrefix("note")}
-      style={{ visibility: hideNote ? "hidden" : "visible" }}
-    >
+    <div className={withPrefix("note")}>
       <div
         className={withPrefix("note__header")}
         role={collapsable ? "button" : "none"}
         tabIndex={collapsable ? 0 : -1}
         aria-label={category.replaceAll("_", " ").toLowerCase()}
-        onClick={() => setCollapse(!collapsable || !expanded)}
+        onClick={() => {
+          setCollapse(!collapsable || !expanded);
+          // [🛑 BLOCKER]:  clean all of this dispatch removing bottom note
+          const event = new CustomEvent(CUSTOM_EVENTS.NOTE_OPENED, {
+            detail: noteData.id,
+          });
+          window.dispatchEvent(event);
+        }}
         aria-expanded={!collapsable || expanded}
         ref={noteHeaderRef}
       >
@@ -54,7 +61,7 @@ export default function Note({
             className={withPrefix("note__close")}
             aria-label="Close Note"
             type="button"
-            onClick={() => setHideNote(true)}
+            onClick={dispatchClearNoteEvent}
           ></button>
         )}
       </div>

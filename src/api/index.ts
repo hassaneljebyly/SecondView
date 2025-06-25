@@ -54,7 +54,7 @@ const data = {
     {
       id: "note1",
       start: 10,
-      end: 90,
+      end: 120,
       videoLength: 1355,
       category: "FABRICATED_CONTENT",
       note: "The footage shown is actually from a 2019 explosion in Beirut and not related to any recent incident involving Iran or a US base.",
@@ -63,7 +63,7 @@ const data = {
     {
       id: "note2",
       start: 150,
-      end: 210,
+      end: 240,
       videoLength: 1355,
       category: "MISLEADING_CONTENT",
       note: "The video implies that a full-scale war has begun, but official sources confirm no military escalation has occurred.",

@@ -8,6 +8,6 @@ export default function StrictModeWrapper({
   return import.meta.env.DEV ? (
     <React.StrictMode>{children}</React.StrictMode>
   ) : (
-    <>children</>
+    <>{children}</>
   );
 }
