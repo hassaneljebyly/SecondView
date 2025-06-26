@@ -1,7 +1,7 @@
 import Button from "../components/button";
 import Form from "../components/form";
 import NoteDisplay from "../components/note-display";
-import NotePopup from "../components/note-popup";
+import NoteQueuePopUp from "../components/note-queue-popup";
 import { withPrefix } from "./class-names";
 import type { InjectTask } from "./injector";
 import StrictModeWrapper from "./StrictModeWrapper";
@@ -43,7 +43,7 @@ export const tasks: InjectTask[] = [
     componentId: withPrefix("note-popup"),
     component: (
       <StrictModeWrapper>
-        <NotePopup />
+        <NoteQueuePopUp />
       </StrictModeWrapper>
     ),
   },

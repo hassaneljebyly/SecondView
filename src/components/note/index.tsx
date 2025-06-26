@@ -1,68 +1,73 @@
 import { useEffect, useRef, useState } from "react";
 import { withPrefix } from "../../utils/class-names";
 import type { Note as NoteType } from "../note-display";
-import { CUSTOM_EVENTS } from "../../utils/constant";
+import type { BufferType } from "../note-queue-popup";
+import { removeNote } from "../note-queue-popup/utils";
 
-// [🔒 ACCESSIBILITY]: add and improve accessibility
-export default function Note({
-  collapsable,
-  note: noteData,
-}: {
-  note: NoteType | null;
-  collapsable: boolean;
-}) {
-  // const [hideNote, setHideNote] = useState(false);
-  const [expanded, setCollapse] = useState(false);
-  const noteHeaderRef = useRef(null);
-  function dispatchClearNoteEvent(
-    e: AnimationEvent | React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
-    if (e instanceof MouseEvent) e.stopPropagation();
-    const clearNotePopUpEvent = new CustomEvent(CUSTOM_EVENTS.CLEAR_NOTE, {
-      detail: noteData?.id,
-    });
-    window.dispatchEvent(clearNotePopUpEvent);
-  }
-  useEffect(() => {
-    const noteHeader = noteHeaderRef.current as HTMLDivElement | null;
-    if (noteHeader) {
-      noteHeader.addEventListener("animationend", dispatchClearNoteEvent);
+type NoteOptions =
+  | {
+      noteData: NoteType;
+      expandable: true;
+      setNoteQueue: React.Dispatch<React.SetStateAction<BufferType>>;
     }
-    return () =>
-      noteHeader?.removeEventListener("animationend", dispatchClearNoteEvent);
-  });
-  if (!noteData) {
-    return null;
-  }
-  const { category, note } = noteData;
+  | {
+      noteData: NoteType;
+      expandable: false;
+      setNoteQueue?: never;
+    };
+// [🎨 UI/UX]: make expandable note keyboard accessible
+export default function Note({
+  noteData: { category, note, id },
+  expandable,
+  setNoteQueue,
+}: NoteOptions) {
+  const [expanded, setExpanded] = useState(false);
+  const noteHeaderRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const noteHeader = noteHeaderRef.current;
+    function dismissNote() {
+      setNoteQueue!((prev) => removeNote(id, prev));
+    }
+    if (noteHeader && expandable) {
+      // only runs if note has expandable = true
+      noteHeader.addEventListener("animationend", dismissNote);
+    }
+    return () => {
+      noteHeader?.removeEventListener("animationend", dismissNote);
+    };
+  }, [expandable, id, setNoteQueue]);
   return (
-    <div className={withPrefix("note")}>
+    <div className={withPrefix("note", expandable ? "note--expandable" : "")}>
       <div
         className={withPrefix("note__header")}
-        role={collapsable ? "button" : "none"}
-        tabIndex={collapsable ? 0 : -1}
-        aria-label={category.replaceAll("_", " ").toLowerCase()}
-        onClick={() => {
-          setCollapse(!collapsable || !expanded);
-          // [🛑 BLOCKER]:  clean all of this dispatch removing bottom note
-          const event = new CustomEvent(CUSTOM_EVENTS.NOTE_OPENED, {
-            detail: noteData.id,
-          });
-          window.dispatchEvent(event);
-          setCollapse(true);
-        }}
-        aria-expanded={!collapsable || expanded}
+        role={expandable ? "button" : "none"}
+        aria-expanded={!expandable || expanded}
         ref={noteHeaderRef}
+        onClick={() => {
+          if (!expanded) setExpanded(true);
+          // remove bottom note in buffer if user interacts with top note in buffer
+          if (setNoteQueue && !expanded) {
+            setNoteQueue(([topNote, bottomNote]) => {
+              if (topNote) {
+                return [null, topNote];
+              }
+              return [topNote, bottomNote];
+            });
+          }
+        }}
       >
         <h2 className={withPrefix("note__category")}>
           {category.replaceAll("_", " ").toLowerCase()}
         </h2>
-        {collapsable && (
+
+        {expandable && (
           <button
             className={withPrefix("note__close")}
             aria-label="Close Note"
             type="button"
-            onClick={dispatchClearNoteEvent}
+            onClick={() => {
+              if (setNoteQueue) setNoteQueue((prev) => removeNote(id, prev));
+            }}
           ></button>
         )}
       </div>

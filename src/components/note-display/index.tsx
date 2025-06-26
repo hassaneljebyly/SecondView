@@ -4,10 +4,32 @@ import { withPrefix } from "../../utils/class-names";
 import { getSegmentPercentRange } from "../../utils/timestamp";
 import { CUSTOM_EVENTS } from "../../utils/constant";
 
-const segmentListStyles: React.CSSProperties = {
-  listStyle: "none",
-  position: "relative",
+// [🧱 REFACTOR]: temporary for now, redo categories
+const misinformationColors = {
+  FABRICATED_CONTENT: "#8E44AD",
+  MANIPULATED_CONTENT: "#D35400",
+  IMPOSTER_CONTENT: "#2980B9",
+  MISLEADING_CONTENT: "#F39C12",
+  FALSE_CONTEXT: "#16A085",
+  SATIRE_AND_PARODY: "#95A5A6",
+  FALSE_CONNECTIONS: "#2ECC71",
+  SPONSORED_CONTENT: "#3498DB",
+  PROPAGANDA: "#9B59B6",
+  ERROR: "#BDC3C7",
 };
+// [🧹 CLEANUP]: move to read me file
+// | **Category**         | **Hex Color** | **Rationale**                                |
+// | -------------------- | ------------- | -------------------------------------------- |
+// | FABRICATED\_CONTENT  | `#8E44AD`     | Deep purple → serious deception              |
+// | MANIPULATED\_CONTENT | `#D35400`     | Burnt orange → visual distortion             |
+// | IMPOSTER\_CONTENT    | `#2980B9`     | Bold blue → impersonation/trust issues       |
+// | MISLEADING\_CONTENT  | `#F39C12`     | Amber → partially true, but deceptive        |
+// | FALSE\_CONTEXT       | `#16A085`     | Teal → contextually shifted, moderate risk   |
+// | SATIRE\_AND\_PARODY  | `#95A5A6`     | Gray → low severity, humorous intent         |
+// | FALSE\_CONNECTIONS   | `#2ECC71`     | Green → clickbait, but not fully false       |
+// | SPONSORED\_CONTENT   | `#3498DB`     | Blue → commercial, less misleading intent    |
+// | PROPAGANDA           | `#9B59B6`     | Violet → ideological, emotionally charged    |
+// | ERROR                | `#BDC3C7`     | Light gray → neutral, unintentional mistakes |
 
 export type Note = {
   id: string;
@@ -68,22 +90,21 @@ export default function NoteDisplay() {
     };
   });
   return (
-    <ul id={withPrefix("note-display")} style={segmentListStyles}>
-      {getNotes().notes.map(({ videoLength, start, end }) => {
+    <ul id={withPrefix("note-display")} className={withPrefix("note-display")}>
+      {getNotes().notes.map(({ videoLength, start, end, id, category }) => {
         const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
           ...{ videoLength, start, end },
         });
         return (
           <li
-            key={segmentLeftPos}
+            // [🧹 CLEANUP]: rename to note segment list
+            className={withPrefix("note-display__segment")}
+            key={id}
             style={{
-              position: "absolute",
               width: segmentWidth,
               left: segmentLeftPos,
-              height: "10px",
-              bottom: 0,
-              background:
-                "linear-gradient(to top, #00ff88c2 40%, transparent 100%)",
+              // @ts-expect-error find a way to better type misinformationColors && NOTE_FORM_PLACEHOLDERS.CATEGORIES
+              background: `linear-gradient(to top, ${misinformationColors[category]} 40%, transparent 100%)`,
             }}
           ></li>
         );
@@ -98,12 +119,3 @@ function dispatchShowNoteEvent(note: Note) {
   });
   window.dispatchEvent(customEvent);
 }
-
-// template
-//<div style="width: 100%;position: relative;"> //? root
-//  <div> // ?component
-//    <ul style="list-style: none;padding: 0;margin: 0;position: relative;">
-//      <li style="position: absolute;width: 20%;height: 10px;bottom: 0;background: linear-gradient(to top, #00ff88c2 40%, transparent 100%);"></li>
-//    </ul>
-//  <div>
-//</div>;

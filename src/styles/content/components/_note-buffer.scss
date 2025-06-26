@@ -1,0 +1,24 @@
+@use "../base/variables" as var;
+
+.#{var.$prefix}note-buffer {
+  position: absolute;
+  bottom: 20%;
+  z-index: 999;
+  // padding of the progress bar on youtube
+  translate: 12px;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 0fr 0fr;
+  transition: grid-template-rows 250ms ease;
+  list-style: none;
+  overflow: hidden;
+
+  &:not(&__item:last-child:empty) {
+    grid-template-rows: 0fr auto;
+  }
+
+  &:not(&:has(&__item:first-child:empty), &:has(&__item:first-child:empty)) {
+    row-gap: 1em;
+    grid-template-rows: auto auto;
+  }
+}
