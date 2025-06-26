@@ -20,29 +20,41 @@ export default function NoteQueuePopUp() {
       });
     });
   }, [noteQueue]);
+  const noteQueueLength = noteQueue.filter(Boolean).length;
   return (
-    <div
+    <ul
       style={{
         position: "absolute",
         bottom: "20%",
         zIndex: 999,
         translate: "12px",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1em",
+        display: "grid",
+        gridTemplateColumns: "1fr",
+        gridTemplateRows:
+          noteQueueLength === 2
+            ? "1fr 1fr"
+            : noteQueueLength === 1
+            ? "1fr 0fr"
+            : "0fr 0fr",
+        transition: "grid-template-rows 0.3s ease",
+        gap: noteQueueLength === 2 ? "1em" : "0",
       }}
+      aria-hidden={!noteQueueLength}
     >
-      {noteQueue.map((note) =>
+      {noteQueue.map((note, index) =>
         note ? (
-          <Note
-            key={note.id}
-            setNoteQueue={setNoteQueue}
-            expandable={true}
-            noteData={note}
-          />
-        ) : null
+          <li style={{ alignSelf: "end" }} key={note.id}>
+            <Note
+              setNoteQueue={setNoteQueue}
+              expandable={true}
+              noteData={note}
+            />
+          </li>
+        ) : (
+          <li style={{ alignSelf: "end" }} key={index}></li>
+        )
       )}
-    </div>
+    </ul>
   );
 }
 
@@ -69,7 +81,6 @@ function Note({
     const noteHeader = noteHeaderRef.current;
     function dismissNote() {
       setNoteQueue!(([topNote, bottomNote]) => {
-        console.log([topNote, bottomNote]);
         return [
           topNote?.id === id ? null : topNote,
           bottomNote?.id === id ? null : bottomNote,
@@ -108,10 +119,20 @@ function Note({
         </h2>
 
         {expandable && (
-          <button // continue here
+          <button
             className={withPrefix("note__close")}
             aria-label="Close Note"
             type="button"
+            onClick={() => {
+              if (setNoteQueue) {
+                setNoteQueue(([topNote, bottomNote]) => {
+                  return [
+                    topNote?.id === id ? null : topNote,
+                    bottomNote?.id === id ? null : bottomNote,
+                  ];
+                });
+              }
+            }}
           ></button>
         )}
       </div>
@@ -123,3 +144,9 @@ function Note({
     </div>
   );
 }
+
+// class TempBuffer {
+//   constructor(buffer: null[]) {
+//     this.buffer = [null, null]
+//   }
+// }
