@@ -12,10 +12,18 @@ import CategorySelect from "./CategorySelect";
 import FormTextArea from "./FormTextArea";
 import FormSuccessAlert from "./FormSuccessAlert";
 import useForm from "../../hooks/useForm";
+import { resetForm } from "../../utils/dom";
 
 export default function Form() {
-  const { globalErrors, errors, formState, setFormState, handelSubmit } =
-    useForm();
+  const {
+    globalErrors,
+    setGlobalErrors,
+    setErrors,
+    errors,
+    formState,
+    setFormState,
+    handelSubmit,
+  } = useForm();
 
   useEffect(() => {
     if (Object.keys(errors).length) {
@@ -26,6 +34,11 @@ export default function Form() {
     }
 
     function toggleForm() {
+      if (formState === "idle") {
+        resetForm();
+        setGlobalErrors({});
+        setErrors({});
+      }
       setFormState(formState === "idle" ? "hidden" : "idle");
     }
 
@@ -34,7 +47,7 @@ export default function Form() {
     return () => {
       window.removeEventListener(CUSTOM_EVENTS.TOGGLE_FORM, toggleForm);
     };
-  }, [errors, formState, setFormState]);
+  }, [errors, setGlobalErrors, setErrors, formState, setFormState]);
 
   return (
     <div

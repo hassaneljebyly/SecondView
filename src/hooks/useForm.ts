@@ -69,6 +69,7 @@ export default function useForm() {
     globalErrors,
     errors,
     formState,
+    setGlobalErrors,
     setErrors,
     setFormState,
     handelSubmit,
