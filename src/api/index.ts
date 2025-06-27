@@ -48,7 +48,7 @@ const data2 = {
 
 console.log(data2);
 
-const data = {
+const data: VideoNotesResponse = {
   videoId: "iranAttackUSBase123",
   notes: [
     {
@@ -92,7 +92,16 @@ const data = {
       start: 600,
       end: 640,
       videoLength: 1355,
-      category: "UNVERIFIED_CLAIM",
+      category: "FALSE_CONTEXT",
+      note: "Claims about casualties and damage are not backed by any verifiable sources as of the time of publication.",
+      timestamp: 1718800400,
+    },
+    {
+      id: "note6",
+      start: 1115,
+      end: 1355,
+      videoLength: 1355,
+      category: "IMPOSTER_CONTENT",
       note: "Claims about casualties and damage are not backed by any verifiable sources as of the time of publication.",
       timestamp: 1718800400,
     },
@@ -116,6 +125,6 @@ export type VideoNotesResponse = {
   totalCount: number;
 };
 
-export function getNotes() {
+export function getNotes(): VideoNotesResponse {
   return data;
 }

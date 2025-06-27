@@ -1,4 +1,3 @@
-// [🐞 BUG]:  Trim input from wite space then
 // [⚙️ TECH DEBT]:  don't let utils become too big
 // [📐 ARCHITECTURE]:  add no console.logs rule
 // [📐 ARCHITECTURE]:  add proper ts config

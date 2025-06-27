@@ -53,7 +53,7 @@ function buildNotesMap(notes: Note[]): Map<number, Note> {
   });
   return notesMap;
 }
-
+// [🚀 FEATURE]: make displaying note segments dynamic, use notesMap as state
 export default function NoteDisplay() {
   useEffect(() => {
     const video = document.querySelector("video");
@@ -65,9 +65,8 @@ export default function NoteDisplay() {
     const seenNotes = new Set<Note>();
     //
     function handleTimeUpdate() {
-      const noteDisplayOffset = 3; // seconds
       const currentPlayTime = Math.floor(video!.currentTime);
-      const currentNote = notesMap.get(currentPlayTime + noteDisplayOffset);
+      const currentNote = notesMap.get(currentPlayTime);
       if (currentNote !== undefined && !seenNotes.has(currentNote)) {
         dispatchShowNoteEvent(currentNote);
         // guarantees event is dispatched only once
@@ -104,7 +103,6 @@ export default function NoteDisplay() {
             style={{
               width: segmentWidth,
               left: segmentLeftPos,
-              // @ts-expect-error find a way to better type misinformationColors && NOTE_FORM_PLACEHOLDERS.CATEGORIES
               background: `linear-gradient(to top, ${misinformationColors[category]} 40%, transparent 100%)`,
             }}
           ></li>

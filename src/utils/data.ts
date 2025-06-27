@@ -57,7 +57,7 @@ export function normalizeFormData(formDataObject: {
     // only accept predefined form fields to prevent malicious, accidental or intentional form tempering
     // typeof value === "string" solves (Type 'File' is not assignable to type 'string') error
     if (keyWithRemovedPrefix in dataDefault && typeof value === "string") {
-      dataDefault[keyWithRemovedPrefix] = value;
+      dataDefault[keyWithRemovedPrefix] = value.trim();
     } else {
       console.error(`Invalid data entry`);
     }
