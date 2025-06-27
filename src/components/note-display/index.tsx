@@ -65,8 +65,9 @@ export default function NoteDisplay() {
     const seenNotes = new Set<Note>();
     //
     function handleTimeUpdate() {
+      const noteDisplayOffset = 3; // seconds
       const currentPlayTime = Math.floor(video!.currentTime);
-      const currentNote = notesMap.get(currentPlayTime);
+      const currentNote = notesMap.get(currentPlayTime + noteDisplayOffset);
       if (currentNote !== undefined && !seenNotes.has(currentNote)) {
         dispatchShowNoteEvent(currentNote);
         // guarantees event is dispatched only once
