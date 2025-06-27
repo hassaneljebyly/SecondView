@@ -25,7 +25,7 @@ export default function useForm() {
     const form = e.currentTarget;
     // check if form in dom
     // in a SPA environments(YouTube in this case)
-    //  the form may be dynamically removed or replaced
+    // the form may be dynamically removed or replaced
     if (!(form instanceof HTMLFormElement)) {
       console.error("Form submit event missing a valid form target");
       return;
