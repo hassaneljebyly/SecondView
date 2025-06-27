@@ -13,7 +13,7 @@ import FormTextArea from "./FormTextArea";
 import FormSuccessAlert from "./FormSuccessAlert";
 import useForm from "../../hooks/useForm";
 import { resetForm } from "../../utils/dom";
-
+// [🚀 FEATURE]: add soft close when Esc button clicked
 export default function Form() {
   const {
     globalErrors,
@@ -106,11 +106,17 @@ export default function Form() {
               className={withPrefix(
                 "form__submit-btn",
                 "button",
-                "button--primary"
+                "button--primary",
+                `${formState === "submitting" ? "button--waiting" : ""}`
               )}
               type="submit"
             >
-              {formState === "submitting" ? "Submitting" : "Submit"}
+              {/* {formState === "submitting" ? "Submitting" : "Submit"} */}
+              <span className={withPrefix("button__text")}>Submit</span>
+              <span
+                aria-label="submitting"
+                className={withPrefix("button__loader")}
+              ></span>
             </button>
           </div>
         </fieldset>

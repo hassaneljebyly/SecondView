@@ -20,7 +20,6 @@ export default function Button() {
     return () =>
       window.removeEventListener(CUSTOM_EVENTS.CLOSE_FORM, handleCloseForm);
   });
-  // [🎨 UI/UX]: stack button text variations using grid
   return (
     <button
       id={withPrefix("add-note-btn")}
@@ -30,7 +29,11 @@ export default function Button() {
       aria-expanded={formOpen}
       onClick={handleButtonClick}
     >
-      {btnText}
+      <span className={withPrefix("button__text")}>{btnText}</span>
+      <span
+        aria-label="submitting"
+        className={withPrefix("button__loader")}
+      ></span>
     </button>
   );
 }

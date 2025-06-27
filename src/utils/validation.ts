@@ -23,7 +23,7 @@ export function validateFormData(formData: FormData): true | never {
   const noteList = getNotes().notes;
   const errorsPayload: ValidationErrorPayload = {};
   const globalErrorPayload: GlobalErrorPayload = {};
-  // [🐞 BUG]: deal with videoLength = 0 if getVideoDetails failed to get data
+  // [🐞 BUG]: account for fetch failure, deal with videoLength = 0 if getVideoDetails failed to get data
   const videoLength = Math.floor(getVideoDetails().videoLength || 0);
   // validate time bounds
   const startBoundIsValid = timeStringIsValid(start);

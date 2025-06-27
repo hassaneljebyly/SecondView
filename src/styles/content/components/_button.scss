@@ -2,36 +2,84 @@
 // TODO-FIXME button not showing in dark mode and line hight too big
 
 .#{var.$prefix}button {
-  --_sv-bg-color: var(--#{var.$prefix}color-white);
-  --_sv-text-color: var(--#{var.$prefix}text-primary);
-  background-color: var(--_sv-bg-color);
-  color: var(--_sv-text-color);
+  --_#{var.$prefix}loader-visibility: hidden;
+  --_#{var.$prefix}text-visibility: visible;
+  --_#{var.$prefix}button-hight: 36px;
+  --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-white);
+  --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-white);
+  --_#{var.$prefix}text-color: var(--#{var.$prefix}text-primary);
+  background-color: var(--_#{var.$prefix}bg-color);
   padding: 0 var(--#{var.$prefix}spacing-16);
-  height: 36px;
-  min-height: 36px;
-  font-size: var(--#{var.$prefix}font-size-md);
-  font-weight: var(--#{var.$prefix}font-weight-500);
-  line-height: var(--#{var.$prefix}line-height-2);
+  height: var(--_#{var.$prefix}button-hight);
+  min-height: var(--_#{var.$prefix}button-hight);
+  display: grid;
+  grid-template-areas: "stack";
   border-radius: var(--#{var.$prefix}radius-pill);
   min-width: 100px;
   cursor: pointer;
+  &--waiting {
+    --_#{var.$prefix}loader-visibility: visible;
+    --_#{var.$prefix}text-visibility: hidden;
+  }
   &:focus-visible {
     background-color: var(--#{var.$prefix}color-white);
     color: var(--#{var.$prefix}color-black);
     outline: 2px solid var(--#{var.$prefix}color-black);
   }
   &--primary {
-    --_sv-text-color: var(--#{var.$prefix}color-white);
-    --_sv-bg-color: var(--#{var.$prefix}color-black);
+    --_#{var.$prefix}text-color: var(--#{var.$prefix}color-white);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-black);
   }
   &--primary:hover {
-    --_sv-bg-color: var(--#{var.$prefix}color-gray-20);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-gray-20);
   }
   &--secondary {
-    --_sv-text-color: var(--#{var.$prefix}color-black);
-    --_sv-bg-color: var(--#{var.$prefix}color-black-alpha-5);
+    --_#{var.$prefix}text-color: var(--#{var.$prefix}color-black);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-black-alpha-5);
   }
+
   &--secondary:hover {
-    --_sv-bg-color: var(--#{var.$prefix}color-black-alpha-10);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-black-alpha-10);
+  }
+
+  & span {
+    place-self: center;
+    grid-area: stack;
+  }
+
+  &__loader {
+    visibility: var(--_#{var.$prefix}loader-visibility);
+  }
+
+  &__text {
+    font-size: var(--#{var.$prefix}font-size-md);
+    font-weight: var(--#{var.$prefix}font-weight-500);
+    line-height: var(--#{var.$prefix}line-height-2);
+    color: var(--_#{var.$prefix}text-color);
+    visibility: var(--_#{var.$prefix}text-visibility);
+  }
+
+  /* thanks to https://css-loaders.com/ */
+  &__loader {
+    --_#{var.$prefix}loader-width: 5px;
+    width: calc(var(--_#{var.$prefix}button-hight) - 10px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(farthest-side, #ffffff 94%, #0000)
+        top/var(--_#{var.$prefix}loader-width)
+        var(--_#{var.$prefix}loader-width) no-repeat,
+      conic-gradient(#0000 30%, #ffffff);
+    mask: radial-gradient(
+      farthest-side,
+      #0000 calc(100% - var(--_#{var.$prefix}loader-width)),
+      #000 0
+    );
+    animation: Spin-It 1s infinite linear;
+  }
+}
+
+@keyframes Spin-It {
+  100% {
+    transform: rotate(1turn);
   }
 }
