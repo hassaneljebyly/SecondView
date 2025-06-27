@@ -22,8 +22,9 @@ export function getOrCreateRootWrapper(
   }
   return rootWrapper;
 }
+// [🧹 CLEANUP]: remove, not used
 export function handleFormToggle() {
-  const noteForm = document.getElementById("sv-note__form");
+  const noteForm = document.getElementById("note__form");
   if (!noteForm) {
     console.error("noteForm was not found");
     return;

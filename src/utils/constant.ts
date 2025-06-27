@@ -1,6 +1,6 @@
 // TODO: refactor for clarity
 export const SEGMENT_LIMITS = {
-  MIN_SECONDS: 60,
+  MIN_SECONDS: 10,
   MAX_SECONDS: 180,
 } as const;
 

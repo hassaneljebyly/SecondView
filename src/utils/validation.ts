@@ -1,16 +1,30 @@
+import { getNotes } from "../api";
 import {
   NOTE_FORM_PLACEHOLDERS,
   NOTE_LIMITS,
   SEGMENT_LIMITS,
 } from "./constant";
 import type { FormData } from "./data";
-import { ValidationError, type ValidationErrorPayload } from "./error";
-import { timeStringIsValid, timeStringToSeconds } from "./timestamp";
+import {
+  GlobalError,
+  ValidationError,
+  type GlobalErrorPayload,
+  type ValidationErrorPayload,
+} from "./error";
+import {
+  secondsToTimeString,
+  timeStringIsValid,
+  timeStringToSeconds,
+} from "./timestamp";
+import { getVideoDetails } from "./youtube";
 
-// [🛑 BLOCKER]: case of end bound is bigger than video length is not covered yet
 export function validateFormData(formData: FormData): true | never {
   const { start, end, category, note } = formData;
+  const noteList = getNotes().notes;
   const errorsPayload: ValidationErrorPayload = {};
+  const globalErrorPayload: GlobalErrorPayload = {};
+  // [🐞 BUG]: deal with videoLength = 0 if getVideoDetails failed to get data
+  const videoLength = Math.floor(getVideoDetails().videoLength || 0);
   // validate time bounds
   const startBoundIsValid = timeStringIsValid(start);
   const endBoundIsValid = timeStringIsValid(end);
@@ -32,6 +46,7 @@ export function validateFormData(formData: FormData): true | never {
     const endBoundToSeconds = timeStringToSeconds(end);
     const segmentLength = endBoundToSeconds - startBoundToSeconds;
     if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
+      console.log(startBoundToSeconds === 0);
       errorsPayload["end"] = {
         focus: false,
         message: `Segment must be ≥${SEGMENT_LIMITS.MIN_SECONDS}s. Adjust start/end.`,
@@ -51,9 +66,44 @@ export function validateFormData(formData: FormData): true | never {
         message: `End must come after start`,
       };
     }
-  }
+    // [🧱 REFACTOR]: create functions to get current times or video duration
+    // [🧱 REFACTOR]: remove videoLength from notes and move it to parent object
+    // [🧱 REFACTOR]: best to use video.duration, cause some videos might not have notes
+    const endTimeOutOfVideoBound = endBoundToSeconds > videoLength;
+    if (endTimeOutOfVideoBound) {
+      errorsPayload["end"] = {
+        focus: false,
+        message: `Segment end cannot exceed video length (${secondsToTimeString(
+          videoLength
+        )})`,
+      };
+    }
+    /*
+       check if new segment overlaps with existing segments
+       visual representation of overlap scenarios:
+       e = endBoundToSeconds, s = startBoundToSeconds
+      
+                          start                end
+      --------------------|====================|-----------------
+        s      e       s      e
+      --|======|-------|======|---|======|---|======|---|======|--
+        no-overlap     overlap    overlap    overlap    no-overlap
+    */
 
-  // [🐞 BUG]: segments overlap is not yet validated
+    if (noteList.length) {
+      const overlappedSegment = noteList.find(({ start, end }) => {
+        return startBoundToSeconds < end && endBoundToSeconds > start;
+      });
+      if (overlappedSegment) {
+        const overlapStart = secondsToTimeString(overlappedSegment.start);
+        const overlapEnd = secondsToTimeString(overlappedSegment.end);
+        globalErrorPayload["global"] = {
+          target: "form",
+          message: `Someone already added a note for ${overlapStart}-${overlapEnd} and your note overlaps with it - choose a different time range or check the existing note.`,
+        };
+      }
+    }
+  }
 
   // validate category
   if (
@@ -84,8 +134,14 @@ export function validateFormData(formData: FormData): true | never {
     };
   }
 
-  if (!Object.keys(errorsPayload).length) {
+  if (!Object.keys(errorsPayload).length && !globalErrorPayload["global"]) {
     return true;
+  }
+  // segment overlap is a global error
+  // since it concerns how more than one input influence each other (end and start input)
+  // handle global errors separately to avoid overwhelming users
+  if (globalErrorPayload["global"] && !Object.keys(errorsPayload).length) {
+    throw new GlobalError(globalErrorPayload);
   }
   throw new ValidationError(errorsPayload);
 }

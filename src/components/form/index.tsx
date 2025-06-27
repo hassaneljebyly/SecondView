@@ -14,7 +14,9 @@ import FormSuccessAlert from "./FormSuccessAlert";
 import useForm from "../../hooks/useForm";
 
 export default function Form() {
-  const { errors, formState, setFormState, handelSubmit } = useForm();
+  const { globalErrors, errors, formState, setFormState, handelSubmit } =
+    useForm();
+
   useEffect(() => {
     if (Object.keys(errors).length) {
       const firstErrorField = document.querySelector(
@@ -44,6 +46,8 @@ export default function Form() {
         className={withPrefix("form", "form-wrapper-grid__item")}
         onSubmit={handelSubmit}
         aria-hidden={formState === "hidden" || formState === "success"}
+        aria-errormessage={withPrefix(`form-global-error`)}
+        aria-invalid={Boolean(globalErrors.global?.target)}
         noValidate
       >
         <fieldset
@@ -97,6 +101,13 @@ export default function Form() {
             </button>
           </div>
         </fieldset>
+        <em
+          id={withPrefix(`form-global-error`)}
+          className={withPrefix("form__error-message", "form-grid-span-2")}
+          aria-live="polite"
+        >
+          {globalErrors.global?.message || ""}
+        </em>
       </form>
 
       <FormSuccessAlert {...{ formState, setFormState }} />

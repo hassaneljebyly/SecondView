@@ -5,12 +5,18 @@ import {
   submitNotePayload,
 } from "../utils/data";
 import { validateFormData } from "../utils/validation";
-import { ValidationError, type ValidationErrorPayload } from "../utils/error";
+import {
+  GlobalError,
+  ValidationError,
+  type GlobalErrorPayload,
+  type ValidationErrorPayload,
+} from "../utils/error";
 
 export type FormState = "hidden" | "idle" | "submitting" | "success" | "error";
 
 export default function useForm() {
   const [errors, setErrors] = useState<ValidationErrorPayload>({});
+  const [globalErrors, setGlobalErrors] = useState<GlobalErrorPayload>({});
   // [🧱 REFACTOR]:  control form state styles via css class
   const [formState, setFormState] = useState<FormState>("hidden");
 
@@ -31,11 +37,13 @@ export default function useForm() {
       // normalize form data to desired format
       const formData = normalizeFormData(formDataObject);
       // validate data
-      const submissionPayload = prepareSubmissionPayload(formData);
       const dataValid = validateFormData(formData);
       // reset error
-      console.log(dataValid);
-      if (dataValid) setErrors({});
+      if (dataValid) {
+        setErrors({});
+        setGlobalErrors({});
+      }
+      const submissionPayload = prepareSubmissionPayload(formData);
       const data = await submitNotePayload(submissionPayload);
       if (data) {
         console.log(data);
@@ -45,6 +53,8 @@ export default function useForm() {
       setFormState("idle");
       if (error instanceof ValidationError) {
         setErrors(error.payload);
+      } else if (error instanceof GlobalError) {
+        setGlobalErrors(error.payload);
       } else {
         console.error(error);
         setFormState("error");
@@ -52,6 +62,7 @@ export default function useForm() {
     }
   }
   return {
+    globalErrors,
     errors,
     formState,
     setErrors,

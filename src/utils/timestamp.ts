@@ -12,6 +12,20 @@ export function timeStringToSeconds(segmentBound: string) {
   return result;
 }
 
+export function secondsToTimeString(seconds: number): string {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  const timeParts = [
+    hours > 0 ? String(hours).padStart(2, "0") : null,
+    hours > 0 ? String(minutes).padStart(2, "0") : String(minutes),
+    String(secs).padStart(2, "0"),
+  ].filter(Boolean);
+
+  return timeParts.join(":");
+}
+
 export function getSegmentPercentRange({
   videoLength,
   start,
