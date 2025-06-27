@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { Note as NoteType } from "../note-display";
+import type { Note as NoteType } from "../segments-list";
 import { CUSTOM_EVENTS } from "../../utils/constant";
 import Note from "../note";
 import { addNewNote } from "./utils";
@@ -8,7 +8,6 @@ import { withPrefix } from "../../utils/class-names";
 export type BufferType = [NoteType | null, NoteType | null];
 export default function NoteQueuePopUp() {
   const [noteQueue, setNoteQueue] = useState<BufferType>([null, null]);
-  console.count("render");
 
   useEffect(() => {
     function displayNoteHandler(e: unknown) {

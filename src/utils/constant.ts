@@ -34,10 +34,6 @@ export const REGEX = {
 } as const;
 
 export const CUSTOM_EVENTS = {
-  // [🧹 CLEANUP]: unused, remove later
-  TOGGLE_NOTE_FORM: "toggleNoteForm",
-  // [🧹 CLEANUP]:  unused, remove later
-  CLOSE_NOTE_FORM: "closeNoteForm",
   TOGGLE_FORM: "toggleForm",
   CLOSE_FORM: "closeForm",
   DISPLAY_NOTE: "displayNote",

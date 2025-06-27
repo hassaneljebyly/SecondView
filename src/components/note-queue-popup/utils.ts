@@ -1,5 +1,5 @@
 import type { BufferType } from ".";
-import type { Note as NoteType } from "../note-display";
+import type { Note as NoteType } from "../segments-list";
 
 export function addNewNote(note: NoteType, noteBuffer: BufferType): BufferType {
   const [topSlot, bottomSlot] = noteBuffer;

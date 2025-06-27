@@ -1,9 +1,8 @@
 import type { NOTE_FORM_PLACEHOLDERS } from "../utils/constant";
 
-// [🧹 CLEANUP]: update where this is used
-type Category = (typeof NOTE_FORM_PLACEHOLDERS.CATEGORIES)[number];
+export type Categories = (typeof NOTE_FORM_PLACEHOLDERS.CATEGORIES)[number];
 
-const data2 = {
+const localTestData: VideoNotesResponse = {
   videoId: "dQw4w9WgXcQ",
   notes: [
     {
@@ -46,9 +45,7 @@ const data2 = {
   totalCount: 4,
 };
 
-console.log(data2);
-
-const data: VideoNotesResponse = {
+const youtubeTestData: VideoNotesResponse = {
   videoId: "iranAttackUSBase123",
   notes: [
     {
@@ -114,7 +111,7 @@ export type NoteResponse = {
   start: number;
   end: number;
   videoLength: number;
-  category: Category;
+  category: Categories;
   note: string;
   timestamp: number;
 };
@@ -126,5 +123,7 @@ export type VideoNotesResponse = {
 };
 
 export function getNotes(): VideoNotesResponse {
-  return data;
+  return window.location.pathname === "/watch"
+    ? youtubeTestData
+    : localTestData;
 }

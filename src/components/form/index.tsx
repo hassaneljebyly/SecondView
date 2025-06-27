@@ -13,6 +13,7 @@ import FormTextArea from "./FormTextArea";
 import FormSuccessAlert from "./FormSuccessAlert";
 import useForm from "../../hooks/useForm";
 import { resetForm } from "../../utils/dom";
+import type { Categories } from "../../api";
 // [🚀 FEATURE]: add soft close when Esc button clicked
 export default function Form() {
   const {
@@ -87,7 +88,7 @@ export default function Form() {
             name={"category"}
             defaultSelect={NOTE_FORM_PLACEHOLDERS.CATEGORY_SELECT}
             categoriesList={
-              NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string[]
+              NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as Categories[]
             }
             error={errors["category"]}
           />

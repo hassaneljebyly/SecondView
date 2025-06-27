@@ -1,3 +1,4 @@
+import type { Categories } from "../api";
 import { PREFIX } from "./constant";
 import { timeStringToSeconds } from "./timestamp";
 import { getVideoDetails, type VideoData } from "./youtube";
@@ -5,7 +6,7 @@ import { getVideoDetails, type VideoData } from "./youtube";
 export type FormData = {
   start: string;
   end: string;
-  category: string;
+  category: Categories;
   note: string;
 };
 
@@ -47,6 +48,7 @@ export function normalizeFormData(formDataObject: {
   const dataDefault: FormData = {
     start: "",
     end: "",
+    // @ts-expect-error: empty string used as placeholder, validated later
     category: "",
     note: "",
   };
@@ -57,6 +59,7 @@ export function normalizeFormData(formDataObject: {
     // only accept predefined form fields to prevent malicious, accidental or intentional form tempering
     // typeof value === "string" solves (Type 'File' is not assignable to type 'string') error
     if (keyWithRemovedPrefix in dataDefault && typeof value === "string") {
+      // @ts-expect-error: allow empty string placeholder will be validated later
       dataDefault[keyWithRemovedPrefix] = value.trim();
     } else {
       console.error(`Invalid data entry`);

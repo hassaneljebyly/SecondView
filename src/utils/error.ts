@@ -7,7 +7,6 @@ export type GlobalErrorPayload = {
 };
 export type ValidationErrorPayload = {
   [K in keyof FormData]?: {
-    focus: boolean; // used to focus first error field // [🧹 CLEANUP]: don't think this is used anymore
     message: string;
   };
 };

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { withPrefix } from "../../utils/class-names";
-import type { Note as NoteType } from "../note-display";
+import type { Note as NoteType } from "../segments-list";
 import type { BufferType } from "../note-queue-popup";
 import { removeNote } from "../note-queue-popup/utils";
 

@@ -1,6 +1,6 @@
 import Button from "../components/button";
 import Form from "../components/form";
-import NoteDisplay from "../components/note-display";
+import NoteSegmentsList from "../components/segments-list";
 import NoteQueuePopUp from "../components/note-queue-popup";
 import { withPrefix } from "./class-names";
 import type { InjectTask } from "./injector";
@@ -30,10 +30,10 @@ export const tasks: InjectTask[] = [
   {
     domTargetSelector: ".ytp-progress-bar-container",
     rootWrapperId: withPrefix("note-display-root"),
-    componentId: withPrefix("note-display"),
+    componentId: withPrefix("segments-list"),
     component: (
       <StrictModeWrapper>
-        <NoteDisplay />
+        <NoteSegmentsList />
       </StrictModeWrapper>
     ),
   },

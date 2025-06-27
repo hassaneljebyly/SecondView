@@ -1,11 +1,11 @@
 import { useEffect } from "react";
-import { getNotes } from "../../api";
+import { getNotes, type Categories } from "../../api";
 import { withPrefix } from "../../utils/class-names";
 import { getSegmentPercentRange } from "../../utils/timestamp";
 import { CUSTOM_EVENTS } from "../../utils/constant";
 
 // [🧱 REFACTOR]: temporary for now, redo categories
-const misinformationColors = {
+const misinformationColors: Record<Categories, string> = {
   FABRICATED_CONTENT: "#8E44AD",
   MANIPULATED_CONTENT: "#D35400",
   IMPOSTER_CONTENT: "#2980B9",
@@ -17,19 +17,6 @@ const misinformationColors = {
   PROPAGANDA: "#9B59B6",
   ERROR: "#BDC3C7",
 };
-// [🧹 CLEANUP]: move to read me file
-// | **Category**         | **Hex Color** | **Rationale**                                |
-// | -------------------- | ------------- | -------------------------------------------- |
-// | FABRICATED\_CONTENT  | `#8E44AD`     | Deep purple → serious deception              |
-// | MANIPULATED\_CONTENT | `#D35400`     | Burnt orange → visual distortion             |
-// | IMPOSTER\_CONTENT    | `#2980B9`     | Bold blue → impersonation/trust issues       |
-// | MISLEADING\_CONTENT  | `#F39C12`     | Amber → partially true, but deceptive        |
-// | FALSE\_CONTEXT       | `#16A085`     | Teal → contextually shifted, moderate risk   |
-// | SATIRE\_AND\_PARODY  | `#95A5A6`     | Gray → low severity, humorous intent         |
-// | FALSE\_CONNECTIONS   | `#2ECC71`     | Green → clickbait, but not fully false       |
-// | SPONSORED\_CONTENT   | `#3498DB`     | Blue → commercial, less misleading intent    |
-// | PROPAGANDA           | `#9B59B6`     | Violet → ideological, emotionally charged    |
-// | ERROR                | `#BDC3C7`     | Light gray → neutral, unintentional mistakes |
 
 export type Note = {
   id: string;
@@ -54,7 +41,7 @@ function buildNotesMap(notes: Note[]): Map<number, Note> {
   return notesMap;
 }
 // [🚀 FEATURE]: make displaying note segments dynamic, use notesMap as state
-export default function NoteDisplay() {
+export default function NoteSegmentsList() {
   useEffect(() => {
     const video = document.querySelector("video");
     if (!video) {
@@ -90,15 +77,17 @@ export default function NoteDisplay() {
     };
   });
   return (
-    <ul id={withPrefix("note-display")} className={withPrefix("note-display")}>
+    <ul
+      id={withPrefix("segments-list")}
+      className={withPrefix("segments-list")}
+    >
       {getNotes().notes.map(({ videoLength, start, end, id, category }) => {
         const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
           ...{ videoLength, start, end },
         });
         return (
           <li
-            // [🧹 CLEANUP]: rename to note segment list
-            className={withPrefix("note-display__segment")}
+            className={withPrefix("segments-list__segment")}
             key={id}
             style={{
               width: segmentWidth,

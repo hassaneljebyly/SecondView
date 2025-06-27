@@ -1,3 +1,4 @@
+import type { Categories } from "../../api";
 import { withPrefix } from "../../utils/class-names";
 import type { FormData } from "../../utils/data";
 import type { ValidationErrorPayload } from "../../utils/error";
@@ -5,7 +6,7 @@ import type { ValidationErrorPayload } from "../../utils/error";
 type SelectInputProp = {
   name: keyof FormData;
   defaultSelect: string;
-  categoriesList: string[];
+  categoriesList: Categories[];
   error: ValidationErrorPayload[keyof ValidationErrorPayload];
 };
 

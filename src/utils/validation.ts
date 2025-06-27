@@ -30,13 +30,11 @@ export function validateFormData(formData: FormData): true | never {
   const endBoundIsValid = timeStringIsValid(end);
   if (!startBoundIsValid) {
     errorsPayload["start"] = {
-      focus: false,
       message: start ? "Invalid Input (e.g. 02:40)" : "Required Field",
     };
   }
   if (!endBoundIsValid) {
     errorsPayload["end"] = {
-      focus: false,
       message: end ? "Invalid Input (e.g. 02:40)" : "Required Field",
     };
   }
@@ -48,21 +46,18 @@ export function validateFormData(formData: FormData): true | never {
     if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
       console.log(startBoundToSeconds === 0);
       errorsPayload["end"] = {
-        focus: false,
         message: `Segment must be ≥${SEGMENT_LIMITS.MIN_SECONDS}s. Adjust start/end.`,
       };
     }
     // too long
     if (segmentLength > SEGMENT_LIMITS.MAX_SECONDS) {
       errorsPayload["end"] = {
-        focus: false,
         message: `Segment must be ≤${SEGMENT_LIMITS.MAX_SECONDS}s. Adjust start/end.`,
       };
     }
     // end bound bigger than start bound
     if (segmentLength < 0) {
       errorsPayload["end"] = {
-        focus: false,
         message: `End must come after start`,
       };
     }
@@ -72,7 +67,6 @@ export function validateFormData(formData: FormData): true | never {
     const endTimeOutOfVideoBound = endBoundToSeconds > videoLength;
     if (endTimeOutOfVideoBound) {
       errorsPayload["end"] = {
-        focus: false,
         message: `Segment end cannot exceed video length (${secondsToTimeString(
           videoLength
         )})`,
@@ -107,11 +101,8 @@ export function validateFormData(formData: FormData): true | never {
   }
 
   // validate category
-  if (
-    !(NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as string).includes(category)
-  ) {
+  if (!NOTE_FORM_PLACEHOLDERS.CATEGORIES.includes(category)) {
     errorsPayload["category"] = {
-      focus: false,
       message: category ? "Invalid input" : "Required Field",
     };
   }
@@ -119,7 +110,6 @@ export function validateFormData(formData: FormData): true | never {
   // validate note
   if (note.length < NOTE_LIMITS.MIN_LENGTH) {
     errorsPayload["note"] = {
-      focus: false,
       message: note
         ? `Note must be at least ${NOTE_LIMITS.MIN_LENGTH} characters long.`
         : "Required Field",
@@ -128,7 +118,6 @@ export function validateFormData(formData: FormData): true | never {
 
   if (note.length > NOTE_LIMITS.MAX_LENGTH) {
     errorsPayload["note"] = {
-      focus: false,
       message: note
         ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
         : "Required Field",

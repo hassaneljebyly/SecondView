@@ -1,8 +1,6 @@
 @use "../base/variables" as var;
 
-// [🧹 CLEANUP]: rename to note segment list
-
-.#{var.$prefix}note-display {
+.#{var.$prefix}segments-list {
   list-style: none;
   position: "relative";
 
