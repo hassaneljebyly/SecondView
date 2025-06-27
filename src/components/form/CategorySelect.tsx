@@ -26,13 +26,16 @@ export default function CategorySelect(prop: SelectInputProp) {
         aria-errormessage={withPrefix(`${name}-error`)}
         aria-invalid={Boolean(error)}
         required
+        onChange={(e) => console.log(e.currentTarget.value)}
       >
         <option value="">{defaultSelect}</option>
-        {categoriesList.map((cat) => (
-          <option key={cat} value={cat}>
-            {cat.replaceAll("_", " ").toLowerCase()}
-          </option>
-        ))}
+        {categoriesList.map((cat) => {
+          return (
+            <option key={cat} value={cat}>
+              {cat.replaceAll("_", " ").toLowerCase()}
+            </option>
+          );
+        })}
       </select>
       <em
         id={withPrefix(`${name}-error`)}

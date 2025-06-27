@@ -2,7 +2,6 @@
 
 .#{var.$prefix}note {
   --_#{var.$prefix}dismiss-popup-duration: 4000ms;
-  --_#{var.$prefix}display-popup-duration: 250ms;
   --_#{var.$prefix}px: var(--#{var.$prefix}spacing-16);
   --_#{var.$prefix}py: var(--#{var.$prefix}spacing-12);
   border-radius: var(--#{var.$prefix}radius-8);
@@ -12,11 +11,11 @@
   grid-template-columns: 1fr;
   grid-template-rows: auto auto;
   transition: grid-template-rows
-    calc(var(--_#{var.$prefix}display-popup-duration) / 2) ease-in-out;
+    calc(var(--#{var.$prefix}display-popup-duration) / 2) ease-in-out;
   overflow: hidden;
   &--expandable {
     grid-template-rows: auto 0fr;
-    animation: pop-in var(--_#{var.$prefix}display-popup-duration);
+    animation: pop-in var(--#{var.$prefix}display-popup-duration);
   }
 
   &:has(&__header[aria-expanded="true"]) {
@@ -109,16 +108,5 @@
   }
   to {
     width: 0%;
-  }
-}
-
-@keyframes pop-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.1);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
   }
 }

@@ -101,4 +101,6 @@
   --#{var.$prefix}bg-divider: var(--#{var.$prefix}color-black-alpha-10);
   // Text Color
   --#{var.$prefix}text-primary: var(--#{var.$prefix}color-black);
+  // popups animation
+  --#{var.$prefix}display-popup-duration: 250ms;
 }

@@ -40,6 +40,7 @@ export default function useForm() {
       const dataValid = validateFormData(formData);
       // reset error
       if (dataValid) {
+        console.log(dataValid);
         setErrors({});
         setGlobalErrors({});
       }
@@ -55,6 +56,9 @@ export default function useForm() {
         setErrors(error.payload);
       } else if (error instanceof GlobalError) {
         setGlobalErrors(error.payload);
+        // by now from  inputs are valid but
+        // global error is the last one
+        setErrors({});
       } else {
         console.error(error);
         setFormState("error");

@@ -17,6 +17,7 @@
     --#{var.$prefix}border-focus
   );
   --_#{var.$prefix}form-toggle-display: block;
+  animation: pop-in var(--#{var.$prefix}display-popup-duration);
   display: var(--_#{var.$prefix}form-toggle-display);
   padding-inline: var(--_#{var.$prefix}form-px);
   padding-block: var(--_#{var.$prefix}form-py);
@@ -73,6 +74,9 @@
     &:focus[aria-invalid="true"] {
       outline: 1px solid var(--#{var.$prefix}color-error);
     }
+  }
+  &:has(&__fieldset:disabled) {
+    pointer-events: none;
   }
   &__input {
     max-width: 15ch;

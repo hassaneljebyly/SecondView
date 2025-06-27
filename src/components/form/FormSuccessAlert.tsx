@@ -26,10 +26,8 @@ export default function FormSuccessAlert(prop: FormSuccessAlertProp) {
   });
   return (
     <div
-      className={
-        withPrefix("success", "form-wrapper-grid__item") +
-        ` ${formState === "success" ? withPrefix("success--open") : ""}`
-      }
+      className={withPrefix("success", "form-wrapper-grid__item")}
+      aria-hidden={formState !== "success"}
     >
       <div className={withPrefix("success__icon-wrapper")}>
         <span className={withPrefix("success__icon")}>✅</span>

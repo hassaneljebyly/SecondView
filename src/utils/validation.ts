@@ -95,6 +95,7 @@ export function validateFormData(formData: FormData): true | never {
         return startBoundToSeconds < end && endBoundToSeconds > start;
       });
       if (overlappedSegment) {
+        console.log(overlappedSegment);
         const overlapStart = secondsToTimeString(overlappedSegment.start);
         const overlapEnd = secondsToTimeString(overlappedSegment.end);
         globalErrorPayload["global"] = {
