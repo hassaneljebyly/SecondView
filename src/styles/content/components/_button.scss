@@ -6,7 +6,6 @@
   --_#{var.$prefix}text-visibility: visible;
   --_#{var.$prefix}button-hight: 36px;
   --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-white);
-  --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-white);
   --_#{var.$prefix}text-color: var(--#{var.$prefix}text-primary);
   background-color: var(--_#{var.$prefix}bg-color);
   padding: 0 var(--#{var.$prefix}spacing-16);
@@ -28,18 +27,25 @@
   }
   &--primary {
     --_#{var.$prefix}text-color: var(--#{var.$prefix}color-white);
-    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-black);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-blue-43);
   }
   &--primary:hover {
-    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-gray-20);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-blue-38);
   }
   &--secondary {
     --_#{var.$prefix}text-color: var(--#{var.$prefix}color-black);
-    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-black-alpha-5);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-gray-95);
+    @media (prefers-color-scheme: dark) {
+      --_#{var.$prefix}text-color: var(--#{var.$prefix}color-white);
+      --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-gray-15);
+    }
   }
 
   &--secondary:hover {
-    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-black-alpha-10);
+    --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-gray-90);
+    @media (prefers-color-scheme: dark) {
+      --_#{var.$prefix}bg-color: var(--#{var.$prefix}color-gray-25);
+    }
   }
 
   & span {
