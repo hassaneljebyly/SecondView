@@ -1,9 +1,4 @@
 @use "../base/variables" as var;
-// [🎨 UI/UX]: remove hover states when form is disabled
-
-##{var.$prefix}form-global-error:empty {
-  height: 0;
-}
 
 .#{var.$prefix}form {
   --_#{var.$prefix}form-px: var(--#{var.$prefix}spacing-16);

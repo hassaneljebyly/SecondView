@@ -100,7 +100,17 @@ export default function Form() {
             minLength={NOTE_LIMITS.MIN_LENGTH}
             error={errors["note"]}
           />
-
+          <em
+            id={withPrefix(`form-global-error`)}
+            className={withPrefix(
+              "global-error",
+              "form__error-message",
+              "form-grid-span-2"
+            )}
+            aria-live="polite"
+          >
+            {globalErrors.global?.message || ""}
+          </em>
           <hr className={withPrefix("form__divider", "form-grid-span-2")} />
           <div className={withPrefix("form__action", "form-grid-span-2")}>
             <button
@@ -121,13 +131,6 @@ export default function Form() {
             </button>
           </div>
         </fieldset>
-        <em
-          id={withPrefix(`form-global-error`)}
-          className={withPrefix("form__error-message", "form-grid-span-2")}
-          aria-live="polite"
-        >
-          {globalErrors.global?.message || ""}
-        </em>
       </form>
 
       <FormSuccessAlert {...{ formState, setFormState }} />
