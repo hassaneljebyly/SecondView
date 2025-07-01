@@ -33,6 +33,7 @@ export function getVideoDetails(): VideoData {
 
     return { videoId, channelId, channelName, videoTitle, videoLength };
   } catch (error) {
+    // [🐞 BUG]: shouldn't return null, if no video data exists, saving note request shouldn't proceed
     console.warn("Failed to scrape video details:", error);
     return {
       videoId: null,
