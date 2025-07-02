@@ -1,9 +1,4 @@
 import { useState } from "react";
-import {
-  normalizeFormData,
-  prepareSubmissionPayload,
-  submitNotePayload,
-} from "../utils/data";
 import { validateFormData } from "../utils/validation";
 import {
   GlobalError,
@@ -11,10 +6,16 @@ import {
   type GlobalErrorPayload,
   type ValidationErrorPayload,
 } from "../utils/error";
+import { getVideoDetails_better } from "../utils/youtube";
+import type { FormInputData } from "../types";
+import { timeStringToSeconds } from "../utils/timestamp";
+import type { Categories } from "../api";
+import { useNotes } from "./useNotes";
 
 export type FormState = "hidden" | "idle" | "submitting" | "success" | "error";
 
 export default function useForm() {
+  const { updateNotes, noteMap } = useNotes();
   const [errors, setErrors] = useState<ValidationErrorPayload>({});
   const [globalErrors, setGlobalErrors] = useState<GlobalErrorPayload>({});
   // [🧱 REFACTOR]:  control form state styles via css class
@@ -33,23 +34,24 @@ export default function useForm() {
     try {
       setFormState("submitting");
       const formEntries = new FormData(form).entries();
-      const formDataObject = Object.fromEntries(formEntries);
-      // normalize form data to desired format
-      const formData = normalizeFormData(formDataObject);
+      const formDataObject = Object.fromEntries(formEntries) as FormInputData;
       // validate data
-      const dataValid = validateFormData(formData);
-      // reset error
-      if (dataValid) {
-        console.log(dataValid);
-        setErrors({});
-        setGlobalErrors({});
-      }
-      const submissionPayload = prepareSubmissionPayload(formData);
-      const data = await submitNotePayload(submissionPayload);
-      if (data) {
-        console.log(data);
-        setFormState("success");
-      }
+      const notesList = Array.from(noteMap.notesMap.values());
+      validateFormData(formDataObject, notesList);
+      // Validation passed
+      setErrors({});
+      setGlobalErrors({});
+      await updateNotes({
+        ...getVideoDetails_better(),
+        startTime: timeStringToSeconds(formDataObject.startTime),
+        endTime: timeStringToSeconds(formDataObject.endTime),
+        category: formDataObject.category as Categories,
+        noteContent: formDataObject.noteContent,
+        // [🧱 REFACTOR]: get current user ID
+        submittedBy: Math.random().toString(36),
+      });
+
+      setFormState("success");
     } catch (error) {
       setFormState("idle");
       if (error instanceof ValidationError) {

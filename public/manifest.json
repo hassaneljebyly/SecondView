@@ -11,6 +11,6 @@
       "run_at": "document_idle"
     }
   ],
-  "permissions": [],
+  "permissions": ["storage"],
   "host_permissions": ["<all_urls>"]
 }

@@ -1,109 +1,120 @@
+import type { GetNotesResponse } from "../types";
 import type { NOTE_FORM_PLACEHOLDERS } from "../utils/constant";
 
 export type Categories = (typeof NOTE_FORM_PLACEHOLDERS.CATEGORIES)[number];
 
-const localTestData: VideoNotesResponse = {
+const localTestData: GetNotesResponse = {
   videoId: "dQw4w9WgXcQ",
   notes: [
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note1",
-      start: 0,
-      end: 60,
-      videoLength: 596,
+      startTime: 0,
+      endTime: 60,
       category: "MISLEADING_CONTENT",
-      note: "The video claims a product cures all diseases, but there is no scientific evidence supporting this.",
-      timestamp: 1718700000,
+      noteContent:
+        "The video claims a product cures all diseases, but there is no scientific evidence supporting this.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note2",
-      start: 120,
-      end: 150,
-      videoLength: 596,
+      startTime: 120,
+      endTime: 150,
       category: "FABRICATED_CONTENT",
-      note: "The footage presented here is digitally altered and does not reflect any real event.",
-      timestamp: 1718700100,
+      noteContent:
+        "The footage presented here is digitally altered and does not reflect any real event.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note3",
-      start: 160,
-      end: 180,
-      videoLength: 596,
+      startTime: 160,
+      endTime: 180,
       category: "SATIRE_AND_PARODY",
-      note: "This segment is intended as satire and should not be interpreted as factual information.",
-      timestamp: 1718700200,
+      noteContent:
+        "This segment is intended as satire and should not be interpreted as factual information.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note4",
-      start: 200,
-      end: 220,
-      videoLength: 596,
+      startTime: 200,
+      endTime: 220,
       category: "PROPAGANDA",
-      note: "The segment contains political messaging designed to influence public opinion without presenting balanced views.",
-      timestamp: 1718700300,
+      noteContent:
+        "The segment contains political messaging designed to influence public opinion without presenting balanced views.",
     },
   ],
-  totalCount: 4,
+  videoLength: 596,
 };
 
-const youtubeTestData: VideoNotesResponse = {
+const youtubeTestData: GetNotesResponse = {
   videoId: "iranAttackUSBase123",
   notes: [
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note1",
-      start: 10,
-      end: 120,
-      videoLength: 1355,
+      startTime: 10,
+      endTime: 120,
       category: "FABRICATED_CONTENT",
-      note: "The footage shown is actually from a 2019 explosion in Beirut and not related to any recent incident involving Iran or a US base.",
-      timestamp: 1718800000,
+      noteContent:
+        "The footage shown is actually from a 2019 explosion in Beirut and not related to any recent incident involving Iran or a US base.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note2",
-      start: 150,
-      end: 240,
-      videoLength: 1355,
+      startTime: 150,
+      endTime: 240,
       category: "MISLEADING_CONTENT",
-      note: "The video implies that a full-scale war has begun, but official sources confirm no military escalation has occurred.",
-      timestamp: 1718800100,
+      noteContent:
+        "The video implies that a full-scale war has begun, but official sources confirm no military escalation has occurred.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note3",
-      start: 300,
-      end: 320,
-      videoLength: 1355,
+      startTime: 300,
+      endTime: 320,
       category: "SATIRE_AND_PARODY",
-      note: "This segment uses overlaid audio and edited visuals for comedic effect, not actual reporting.",
-      timestamp: 1718800200,
+      noteContent:
+        "This segment uses overlaid audio and edited visuals for comedic effect, not actual reporting.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note4",
-      start: 450,
-      end: 490,
-      videoLength: 1355,
+      startTime: 450,
+      endTime: 490,
       category: "PROPAGANDA",
-      note: "This portion features commentary that heavily favors one side and omits key facts from the opposing perspective.",
-      timestamp: 1718800300,
+      noteContent:
+        "This portion features commentary that heavily favors one side and omits key facts from the opposing perspective.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note5",
-      start: 600,
-      end: 640,
-      videoLength: 1355,
+      startTime: 600,
+      endTime: 640,
       category: "FALSE_CONTEXT",
-      note: "Claims about casualties and damage are not backed by any verifiable sources as of the time of publication.",
-      timestamp: 1718800400,
+      noteContent:
+        "Claims about casualties and damage are not backed by any verifiable sources as of the time of publication.",
     },
     {
+      createdAt: 41112121231,
+      submittedBy: "jsjdlskdlskdd",
       id: "note6",
-      start: 1115,
-      end: 1355,
-      videoLength: 1355,
+      startTime: 1115,
+      endTime: 1355,
       category: "IMPOSTER_CONTENT",
-      note: "Claims about casualties and damage are not backed by any verifiable sources as of the time of publication.",
-      timestamp: 1718800400,
+      noteContent:
+        "Claims about casualties and damage are not backed by any verifiable sources as of the time of publication.",
     },
   ],
-  totalCount: 5,
+  videoLength: 1355,
 };
 
 export type NoteResponse = {
@@ -122,7 +133,7 @@ export type VideoNotesResponse = {
   totalCount: number;
 };
 
-export function getNotes(): VideoNotesResponse {
+export function getNotes(): GetNotesResponse {
   return window.location.pathname === "/watch"
     ? youtubeTestData
     : localTestData;

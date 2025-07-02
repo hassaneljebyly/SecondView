@@ -1,9 +1,9 @@
+import type { NoteData } from "../../types";
 import { withPrefix } from "../../utils/class-names";
-import type { FormData } from "../../utils/data";
 import type { ValidationErrorPayload } from "../../utils/error";
 
 type FormInputProp = {
-  name: keyof FormData;
+  name: keyof NoteData;
   maxLength: number;
   pattern: RegExp;
   error: ValidationErrorPayload[keyof ValidationErrorPayload];
@@ -22,7 +22,7 @@ export default function FormSegmentTimeInput(prop: FormInputProp) {
       <input
         id={withPrefix(`${name}`)}
         className={withPrefix("form__input", "form__field")}
-        name={withPrefix(`${name}`)}
+        name={name}
         placeholder="(e.g. 1:05:30)"
         aria-errormessage={withPrefix(`${name}-error`)}
         aria-invalid={Boolean(error)}

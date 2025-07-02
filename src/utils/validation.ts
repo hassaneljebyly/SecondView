@@ -1,10 +1,9 @@
-import { getNotes } from "../api";
+import type { FormInputData, StoredNoteData } from "../types";
 import {
   NOTE_FORM_PLACEHOLDERS,
   NOTE_LIMITS,
   SEGMENT_LIMITS,
 } from "./constant";
-import type { FormData } from "./data";
 import {
   GlobalError,
   ValidationError,
@@ -18,30 +17,53 @@ import {
 } from "./timestamp";
 import { getVideoDetails } from "./youtube";
 
-export function validateFormData(formData: FormData): true | never {
-  const { start, end, category, note } = formData;
-  const noteList = getNotes().notes;
+export function validateFormData(
+  formData: FormInputData,
+  notesList: StoredNoteData[]
+): true | never {
+  const requiredFields: (keyof FormInputData)[] = [
+    "startTime",
+    "endTime",
+    "category",
+    "noteContent",
+  ];
+  // only accept predefined form fields to prevent malicious, accidental or intentional form tempering
+  // typeof value === "string" solves (Type 'File' is not assignable to type 'string') error
+  const allFieldsExistAndStringType = requiredFields.every(
+    (field) =>
+      Object.hasOwn(formData, field) && typeof formData[field] === "string"
+  );
+  if (!allFieldsExistAndStringType) {
+    throw new GlobalError({
+      global: {
+        target: "form",
+        message: "Invalid data entry",
+      },
+    });
+  }
+
+  const { startTime, endTime, category, noteContent } = formData;
   const errorsPayload: ValidationErrorPayload = {};
   const globalErrorPayload: GlobalErrorPayload = {};
   // [🐞 BUG]: account for fetch failure, deal with videoLength = 0 if getVideoDetails failed to get data
   const videoLength = Math.floor(getVideoDetails().videoLength || 0);
   // validate time bounds
-  const startBoundIsValid = timeStringIsValid(start);
-  const endBoundIsValid = timeStringIsValid(end);
+  const startBoundIsValid = timeStringIsValid(startTime);
+  const endBoundIsValid = timeStringIsValid(endTime);
   if (!startBoundIsValid) {
     errorsPayload["start"] = {
-      message: start ? "Invalid Input (e.g. 02:40)" : "Required Field",
+      message: startTime ? "Invalid Input (e.g. 02:40)" : "Required Field",
     };
   }
   if (!endBoundIsValid) {
     errorsPayload["end"] = {
-      message: end ? "Invalid Input (e.g. 02:40)" : "Required Field",
+      message: endTime ? "Invalid Input (e.g. 02:40)" : "Required Field",
     };
   }
 
   if (startBoundIsValid && endBoundIsValid) {
-    const startBoundToSeconds = timeStringToSeconds(start);
-    const endBoundToSeconds = timeStringToSeconds(end);
+    const startBoundToSeconds = timeStringToSeconds(startTime);
+    const endBoundToSeconds = timeStringToSeconds(endTime);
     const segmentLength = endBoundToSeconds - startBoundToSeconds;
     if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
       console.log(startBoundToSeconds === 0);
@@ -84,14 +106,14 @@ export function validateFormData(formData: FormData): true | never {
         no-overlap     overlap    overlap    overlap    no-overlap
     */
 
-    if (noteList.length) {
-      const overlappedSegment = noteList.find(({ start, end }) => {
-        return startBoundToSeconds < end && endBoundToSeconds > start;
+    if (notesList.length) {
+      const overlappedSegment = notesList.find(({ startTime, endTime }) => {
+        return startBoundToSeconds < endTime && endBoundToSeconds > startTime;
       });
       if (overlappedSegment) {
         console.log(overlappedSegment);
-        const overlapStart = secondsToTimeString(overlappedSegment.start);
-        const overlapEnd = secondsToTimeString(overlappedSegment.end);
+        const overlapStart = secondsToTimeString(overlappedSegment.startTime);
+        const overlapEnd = secondsToTimeString(overlappedSegment.endTime);
         globalErrorPayload["global"] = {
           target: "form",
           message: `Someone already added a note for ${overlapStart}-${overlapEnd} and your note overlaps with it - choose a different time range or check the existing note.`,
@@ -101,24 +123,24 @@ export function validateFormData(formData: FormData): true | never {
   }
 
   // validate category
-  if (!NOTE_FORM_PLACEHOLDERS.CATEGORIES.includes(category)) {
+  if (!category || !NOTE_FORM_PLACEHOLDERS.CATEGORIES.includes(category)) {
     errorsPayload["category"] = {
       message: category ? "Invalid input" : "Required Field",
     };
   }
 
   // validate note
-  if (note.length < NOTE_LIMITS.MIN_LENGTH) {
+  if (noteContent.length < NOTE_LIMITS.MIN_LENGTH) {
     errorsPayload["note"] = {
-      message: note
+      message: noteContent
         ? `Note must be at least ${NOTE_LIMITS.MIN_LENGTH} characters long.`
         : "Required Field",
     };
   }
 
-  if (note.length > NOTE_LIMITS.MAX_LENGTH) {
+  if (noteContent.length > NOTE_LIMITS.MAX_LENGTH) {
     errorsPayload["note"] = {
-      message: note
+      message: noteContent
         ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
         : "Required Field",
     };

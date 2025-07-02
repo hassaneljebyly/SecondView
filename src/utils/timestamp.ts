@@ -28,15 +28,17 @@ export function secondsToTimeString(seconds: number): string {
 
 export function getSegmentPercentRange({
   videoLength,
-  start,
-  end,
+  startTime,
+  endTime,
 }: {
   videoLength: number;
-  start: number;
-  end: number;
+  startTime: number;
+  endTime: number;
 }) {
-  const segmentWidth = `${(((end - start) * 100) / videoLength).toFixed(2)}%`;
-  const segmentLeftPos = `${((start * 100) / videoLength).toFixed(2)}%`;
+  const segmentWidth = `${(((endTime - startTime) * 100) / videoLength).toFixed(
+    2
+  )}%`;
+  const segmentLeftPos = `${((startTime * 100) / videoLength).toFixed(2)}%`;
   return { segmentWidth, segmentLeftPos };
 }
 

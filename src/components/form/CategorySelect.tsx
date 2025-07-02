@@ -1,10 +1,10 @@
 import type { Categories } from "../../api";
+import type { NoteData } from "../../types";
 import { withPrefix } from "../../utils/class-names";
-import type { FormData } from "../../utils/data";
 import type { ValidationErrorPayload } from "../../utils/error";
 
 type SelectInputProp = {
-  name: keyof FormData;
+  name: keyof NoteData;
   defaultSelect: string;
   categoriesList: Categories[];
   error: ValidationErrorPayload[keyof ValidationErrorPayload];
@@ -23,7 +23,7 @@ export default function CategorySelect(prop: SelectInputProp) {
       <select
         id={withPrefix(`${name}`)}
         className={withPrefix("form__select", "form__field")}
-        name={withPrefix(`${name}`)}
+        name={name}
         aria-errormessage={withPrefix(`${name}-error`)}
         aria-invalid={Boolean(error)}
         required

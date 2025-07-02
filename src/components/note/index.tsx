@@ -1,23 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { withPrefix } from "../../utils/class-names";
-import type { Note as NoteType } from "../segments-list";
 import type { BufferType } from "../note-queue-popup";
 import { removeNote } from "../note-queue-popup/utils";
+import type { StoredNoteData } from "../../types";
 
 type NoteOptions =
   | {
-      noteData: NoteType;
+      noteData: StoredNoteData;
       expandable: true;
       setNoteQueue: React.Dispatch<React.SetStateAction<BufferType>>;
     }
   | {
-      noteData: NoteType;
+      noteData: StoredNoteData;
       expandable: false;
       setNoteQueue?: never;
     };
 // [🎨 UI/UX]: make expandable note keyboard accessible
 export default function Note({
-  noteData: { category, note, id },
+  noteData: { category, noteContent, id },
   expandable,
   setNoteQueue,
 }: NoteOptions) {
@@ -73,7 +73,7 @@ export default function Note({
       </div>
       <div className={withPrefix("note__body")}>
         <div className={withPrefix("note__content")}>
-          <p className={withPrefix("note__text")}>{note}</p>
+          <p className={withPrefix("note__text")}>{noteContent}</p>
         </div>
       </div>
     </div>

@@ -73,13 +73,13 @@ export default function Form() {
           </legend>
           <hr className={withPrefix("form__divider", "form-grid-span-2")} />
           <FormSegmentTimeInput
-            name={"start"}
+            name={"startTime"}
             maxLength={TIME_STAMP_MAX_LENGTH}
             pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
             error={errors["start"]}
           />
           <FormSegmentTimeInput
-            name={"end"}
+            name={"endTime"}
             maxLength={TIME_STAMP_MAX_LENGTH}
             pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
             error={errors["end"]}
@@ -94,7 +94,7 @@ export default function Form() {
           />
 
           <FormTextArea
-            name={"note"}
+            name={"noteContent"}
             placeholder={NOTE_FORM_PLACEHOLDERS.TEXTAREA}
             maxLength={NOTE_LIMITS.MAX_LENGTH}
             minLength={NOTE_LIMITS.MIN_LENGTH}

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import type { ValidationErrorPayload } from "../../utils/error";
 import { withPrefix } from "../../utils/class-names";
-import type { FormData } from "../../utils/data";
+import type { NoteData } from "../../types";
 
 type FormTextAreaProp = {
-  name: keyof FormData;
+  name: keyof NoteData;
   placeholder: string;
   maxLength: number;
   minLength: number;
@@ -25,7 +25,7 @@ export default function FormTextArea(prop: FormTextAreaProp) {
       <textarea
         id={withPrefix(`${name}`)}
         className={withPrefix("form__textarea", "form__field")}
-        name={withPrefix(`${name}`)}
+        name={name}
         placeholder={placeholder}
         aria-errormessage={withPrefix(`${name}-error`)}
         aria-invalid={Boolean(error)}

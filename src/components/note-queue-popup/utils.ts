@@ -1,7 +1,10 @@
 import type { BufferType } from ".";
-import type { Note as NoteType } from "../segments-list";
+import type { StoredNoteData } from "../../types";
 
-export function addNewNote(note: NoteType, noteBuffer: BufferType): BufferType {
+export function addNewNote(
+  note: StoredNoteData,
+  noteBuffer: BufferType
+): BufferType {
   const [topSlot, bottomSlot] = noteBuffer;
   if (note.id === bottomSlot?.id) {
     return noteBuffer;
@@ -13,7 +16,7 @@ export function addNewNote(note: NoteType, noteBuffer: BufferType): BufferType {
 }
 
 export function removeNote(
-  noteItemID: NoteType["id"],
+  noteItemID: StoredNoteData["id"],
   noteBuffer: BufferType
 ): BufferType {
   const [topSlot, bottomSlot] = noteBuffer;

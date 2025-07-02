@@ -26,17 +26,20 @@ export type VideoMetaData = {
 export type SubmitNoteRequest = Prettify<
   VideoMetaData &
     NoteData & {
-      createdBy: string;
+      submittedBy: string;
     }
 >;
 
-export type StoredNoteData = NoteData & {
-  id: string;
-  submittedBy: string;
-  createdAt: number;
-};
+export type StoredNoteData = Prettify<
+  NoteData & {
+    id: string;
+    submittedBy: string;
+    createdAt: number;
+  }
+>;
 
 export type GetNotesResponse = {
   videoId: string;
   notes: StoredNoteData[];
+  videoLength: number;
 };
