@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import { withPrefix } from "../../utils/class-names";
 import type { BufferType } from "../note-queue-popup";
-import { removeNote } from "../note-queue-popup/utils";
 import type { StoredNoteData } from "../../types";
+import { removeNote, withPrefix } from "../../utils";
 
 type NoteOptions =
   | {

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import NotesCache from "../api/state/NotesCache";
 import type { StoredNoteData, SubmitNoteRequest } from "../types";
 import { dbLocalstorage } from "../api/repositories/LocalStorageRepository";
+import { getVideoId } from "../utils";
 
 let noteCacheInstance: NotesCache | null = null; // singleton instance of NotesCache
 
@@ -14,6 +15,18 @@ export function useNotes() {
   if (!noteCacheInstance) {
     noteCacheInstance = new NotesCache(dbLocalstorage);
   }
+
+  console.log("setNoteMap: ", noteMap);
+  useEffect(() => {
+    const videoId = getVideoId();
+    if (videoId) {
+      noteCacheInstance!.subscribe(setNoteMap);
+      noteCacheInstance!.getCachedNotes(videoId);
+    }
+    return () => {
+      noteCacheInstance!.unsubscribe(setNoteMap);
+    };
+  }, []);
 
   return {
     noteMap,

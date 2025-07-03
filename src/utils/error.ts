@@ -1,4 +1,5 @@
-import type { FormData } from "./data";
+import type { FormInputData } from "../types";
+
 export type GlobalErrorPayload = {
   global?: {
     target: string;
@@ -6,7 +7,7 @@ export type GlobalErrorPayload = {
   };
 };
 export type ValidationErrorPayload = {
-  [K in keyof FormData]?: {
+  [K in keyof FormInputData]?: {
     message: string;
   };
 };

@@ -2,9 +2,9 @@ import Button from "../components/button";
 import Form from "../components/form";
 import NoteSegmentsList from "../components/segments-list";
 import NoteQueuePopUp from "../components/note-queue-popup";
-import { withPrefix } from "./class-names";
-import type { InjectTask } from "./injector";
+import type { InjectTask } from "./injectComponent";
 import StrictModeWrapper from "./StrictModeWrapper";
+import { withPrefix } from "./helpers";
 
 export const tasks: InjectTask[] = [
   {

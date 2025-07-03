@@ -2,9 +2,9 @@
 // [📐 ARCHITECTURE]:  add no console.logs rule
 // [📐 ARCHITECTURE]:  add proper ts config
 
-import { tasks } from "../utils/componentTasks";
-import { cleanUp } from "../utils/dom";
-import { injectComponent, ROOTS, type InjectTask } from "../utils/injector";
+import { tasks } from "../utils";
+import { cleanUp } from "../utils";
+import { injectComponent, ROOTS, type InjectTask } from "../utils";
 import "../styles/content/index.scss";
 
 export type Retries = { task: InjectTask; attempts: number };

@@ -1,8 +1,9 @@
 import type { NoteData } from "../../types";
-import { withPrefix } from "../../utils/class-names";
-import type { ValidationErrorPayload } from "../../utils/error";
+import type { ValidationErrorPayload } from "../../utils";
+import { withPrefix } from "../../utils";
 
 type FormInputProp = {
+  labelDisplayName: string;
   name: keyof NoteData;
   maxLength: number;
   pattern: RegExp;
@@ -10,14 +11,14 @@ type FormInputProp = {
 };
 // [🚀 FEATURE]: add a "now" button to automatically insert current time
 export default function FormSegmentTimeInput(prop: FormInputProp) {
-  const { name, maxLength, pattern, error } = prop;
+  const { labelDisplayName, name, maxLength, pattern, error } = prop;
   return (
     <div className={withPrefix("form__group")}>
       <label
         className={withPrefix("form__label")}
         htmlFor={withPrefix(`${name}`)}
       >
-        {name}
+        {labelDisplayName}
       </label>
       <input
         id={withPrefix(`${name}`)}

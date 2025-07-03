@@ -1,5 +1,3 @@
-import { REGEX } from "./constant";
-
 export function timeStringToSeconds(segmentBound: string) {
   let result = 0;
   const valuesArray: number[] = segmentBound.split(":").map(Number);
@@ -40,9 +38,4 @@ export function getSegmentPercentRange({
   )}%`;
   const segmentLeftPos = `${((startTime * 100) / videoLength).toFixed(2)}%`;
   return { segmentWidth, segmentLeftPos };
-}
-
-export function timeStringIsValid(timeStamp: string): boolean {
-  const testRegex = new RegExp(REGEX.TIME_STAMP_PATTERN);
-  return testRegex.test(timeStamp);
 }

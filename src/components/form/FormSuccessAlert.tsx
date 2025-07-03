@@ -1,8 +1,8 @@
-import { withPrefix } from "../../utils/class-names";
-import { resetForm } from "../../utils/dom";
-import { CUSTOM_EVENTS, SUCCESS_MESSAGE_DURATION } from "../../utils/constant";
+import { resetForm } from "../../utils";
+import { CUSTOM_EVENTS, SUCCESS_MESSAGE_DURATION } from "../../utils";
 import { useEffect } from "react";
 import type { FormState } from "../../hooks/useForm";
+import { withPrefix } from "../../utils";
 
 type FormSuccessAlertProp = {
   formState: FormState;

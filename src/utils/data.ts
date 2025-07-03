@@ -1,31 +1,18 @@
-import type { Categories } from "../api";
-import { type VideoData } from "./youtube";
+import type { StoredNoteData, SubmitNoteRequest } from "../types";
+import { createRandomId } from "./helpers";
 
-export type FormData = {
-  start: string;
-  end: string;
-  category: Categories;
-  note: string;
-};
-
-export type NoteData = {
-  start: number;
-  end: number;
-  category: string;
-  note: string;
-};
-
-export type NoteSubmissionPayload = {
-  videoData: VideoData;
-  noteData: NoteData;
-  userId: string;
-  timestamp: number;
-};
-
-export function submitNotePayload(notePayload: NoteSubmissionPayload) {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res(JSON.stringify(notePayload));
-    }, 3000);
-  });
+export function createStoredNoteDataFromPayLoad(
+  payload: SubmitNoteRequest
+): StoredNoteData {
+  const { startTime, endTime, category, noteContent, submittedBy } = payload;
+  return {
+    // [🚀 FEATURE]: get actual user id
+    id: createRandomId(),
+    createdAt: Date.now(),
+    startTime,
+    endTime,
+    category,
+    noteContent,
+    submittedBy,
+  };
 }

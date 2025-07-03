@@ -3,8 +3,8 @@ import type {
   StoredNoteData,
   SubmitNoteRequest,
 } from "../../types";
-import { GlobalError } from "../../utils/error";
-import { createStoredNoteDataFromPayLoad } from "../state/NotesCache";
+import { createStoredNoteDataFromPayLoad } from "../../utils";
+import { GlobalError } from "../../utils";
 import NotesRepository from "./NotesRepository";
 
 class LocalStorageRepository extends NotesRepository {
@@ -28,12 +28,9 @@ class LocalStorageRepository extends NotesRepository {
   }
 
   async addNote(payload: SubmitNoteRequest): Promise<void> {
-    console.log("payload :", payload);
-
     try {
       const videoId = payload["videoId"];
       const storedData = await chrome.storage.local.get(videoId);
-      console.log("storedData :", storedData);
       const noteData: GetNotesResponse | null = storedData[videoId] || null;
       const newNote: StoredNoteData = createStoredNoteDataFromPayLoad(payload);
       const newStoredNoteData: GetNotesResponse = {
@@ -41,7 +38,6 @@ class LocalStorageRepository extends NotesRepository {
         notes: noteData ? [...noteData.notes, newNote] : [newNote],
         videoLength: payload.videoLength,
       };
-      console.log("newStoredNoteData: ", newStoredNoteData);
       await chrome.storage.local.set({
         [videoId]: newStoredNoteData,
       });

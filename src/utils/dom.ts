@@ -1,5 +1,5 @@
 import type { Root } from "react-dom/client";
-import { withPrefix } from "./class-names";
+import { withPrefix } from "./helpers";
 
 export function resetForm() {
   const form = document.querySelector(

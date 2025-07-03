@@ -1,9 +1,10 @@
 import type { Categories } from "../../api";
 import type { NoteData } from "../../types";
-import { withPrefix } from "../../utils/class-names";
-import type { ValidationErrorPayload } from "../../utils/error";
+import type { ValidationErrorPayload } from "../../utils";
+import { withPrefix } from "../../utils";
 
 type SelectInputProp = {
+  labelDisplayName: string;
   name: keyof NoteData;
   defaultSelect: string;
   categoriesList: Categories[];
@@ -11,14 +12,20 @@ type SelectInputProp = {
 };
 
 export default function CategorySelect(prop: SelectInputProp) {
-  const { name, defaultSelect, categoriesList, error } = prop;
+  const {
+    labelDisplayName: displayName,
+    name,
+    defaultSelect,
+    categoriesList,
+    error,
+  } = prop;
   return (
     <div className={withPrefix("form__group", "form-grid-span-2")}>
       <label
         className={withPrefix("form__label")}
         htmlFor={withPrefix(`${name}`)}
       >
-        Category
+        {displayName}
       </label>
       <select
         id={withPrefix(`${name}`)}

@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { CUSTOM_EVENTS } from "../../utils/constant";
+import { CUSTOM_EVENTS } from "../../utils";
 import Note from "../note";
-import { addNewNote } from "./utils";
-import { withPrefix } from "../../utils/class-names";
 import type { StoredNoteData } from "../../types";
+import { addNewNote, withPrefix } from "../../utils";
 
 export type BufferType = [StoredNoteData | null, StoredNoteData | null];
 export default function NoteQueuePopUp() {

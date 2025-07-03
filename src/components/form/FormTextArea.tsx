@@ -1,9 +1,10 @@
 import { useState } from "react";
-import type { ValidationErrorPayload } from "../../utils/error";
-import { withPrefix } from "../../utils/class-names";
+import type { ValidationErrorPayload } from "../../utils";
 import type { NoteData } from "../../types";
+import { withPrefix } from "../../utils";
 
 type FormTextAreaProp = {
+  labelDisplayName: string;
   name: keyof NoteData;
   placeholder: string;
   maxLength: number;
@@ -13,14 +14,15 @@ type FormTextAreaProp = {
 
 export default function FormTextArea(prop: FormTextAreaProp) {
   const [noteLength, setNoteLength] = useState(0);
-  const { name, placeholder, maxLength, minLength, error } = prop;
+  const { labelDisplayName, name, placeholder, maxLength, minLength, error } =
+    prop;
   return (
     <div className={withPrefix("form__group", "form-grid-span-2")}>
       <label
         className={withPrefix("form__label")}
         htmlFor={withPrefix(`${name}`)}
       >
-        Your note
+        {labelDisplayName}
       </label>
       <textarea
         id={withPrefix(`${name}`)}

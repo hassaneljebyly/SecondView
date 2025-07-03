@@ -2,6 +2,7 @@ import type { FormInputData, StoredNoteData } from "../types";
 import {
   NOTE_FORM_PLACEHOLDERS,
   NOTE_LIMITS,
+  REGEX,
   SEGMENT_LIMITS,
 } from "./constant";
 import {
@@ -10,11 +11,7 @@ import {
   type GlobalErrorPayload,
   type ValidationErrorPayload,
 } from "./error";
-import {
-  secondsToTimeString,
-  timeStringIsValid,
-  timeStringToSeconds,
-} from "./timestamp";
+import { secondsToTimeString, timeStringToSeconds } from "./timestamp";
 import { getVideoDetails } from "./youtube";
 
 export function validateFormData(
@@ -51,12 +48,12 @@ export function validateFormData(
   const startBoundIsValid = timeStringIsValid(startTime);
   const endBoundIsValid = timeStringIsValid(endTime);
   if (!startBoundIsValid) {
-    errorsPayload["start"] = {
+    errorsPayload["startTime"] = {
       message: startTime ? "Invalid Input (e.g. 02:40)" : "Required Field",
     };
   }
   if (!endBoundIsValid) {
-    errorsPayload["end"] = {
+    errorsPayload["endTime"] = {
       message: endTime ? "Invalid Input (e.g. 02:40)" : "Required Field",
     };
   }
@@ -66,20 +63,19 @@ export function validateFormData(
     const endBoundToSeconds = timeStringToSeconds(endTime);
     const segmentLength = endBoundToSeconds - startBoundToSeconds;
     if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
-      console.log(startBoundToSeconds === 0);
-      errorsPayload["end"] = {
+      errorsPayload["endTime"] = {
         message: `Segment must be ≥${SEGMENT_LIMITS.MIN_SECONDS}s. Adjust start/end.`,
       };
     }
     // too long
     if (segmentLength > SEGMENT_LIMITS.MAX_SECONDS) {
-      errorsPayload["end"] = {
+      errorsPayload["endTime"] = {
         message: `Segment must be ≤${SEGMENT_LIMITS.MAX_SECONDS}s. Adjust start/end.`,
       };
     }
     // end bound bigger than start bound
     if (segmentLength < 0) {
-      errorsPayload["end"] = {
+      errorsPayload["endTime"] = {
         message: `End must come after start`,
       };
     }
@@ -88,7 +84,7 @@ export function validateFormData(
     // [🧱 REFACTOR]: best to use video.duration, cause some videos might not have notes
     const endTimeOutOfVideoBound = endBoundToSeconds > videoLength;
     if (endTimeOutOfVideoBound) {
-      errorsPayload["end"] = {
+      errorsPayload["endTime"] = {
         message: `Segment end cannot exceed video length (${secondsToTimeString(
           videoLength
         )})`,
@@ -111,7 +107,6 @@ export function validateFormData(
         return startBoundToSeconds < endTime && endBoundToSeconds > startTime;
       });
       if (overlappedSegment) {
-        console.log(overlappedSegment);
         const overlapStart = secondsToTimeString(overlappedSegment.startTime);
         const overlapEnd = secondsToTimeString(overlappedSegment.endTime);
         globalErrorPayload["global"] = {
@@ -131,7 +126,7 @@ export function validateFormData(
 
   // validate note
   if (noteContent.length < NOTE_LIMITS.MIN_LENGTH) {
-    errorsPayload["note"] = {
+    errorsPayload["noteContent"] = {
       message: noteContent
         ? `Note must be at least ${NOTE_LIMITS.MIN_LENGTH} characters long.`
         : "Required Field",
@@ -139,7 +134,7 @@ export function validateFormData(
   }
 
   if (noteContent.length > NOTE_LIMITS.MAX_LENGTH) {
-    errorsPayload["note"] = {
+    errorsPayload["noteContent"] = {
       message: noteContent
         ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
         : "Required Field",
@@ -156,4 +151,9 @@ export function validateFormData(
     throw new GlobalError(globalErrorPayload);
   }
   throw new ValidationError(errorsPayload);
+}
+
+export function timeStringIsValid(timeStamp: string): boolean {
+  const testRegex = new RegExp(REGEX.TIME_STAMP_PATTERN);
+  return testRegex.test(timeStamp);
 }

@@ -5,15 +5,15 @@ import {
   NOTE_LIMITS,
   REGEX,
   TIME_STAMP_MAX_LENGTH,
-} from "../../utils/constant";
-import { withPrefix } from "../../utils/class-names";
+} from "../../utils";
 import FormSegmentTimeInput from "./FormSegmentTimeInput";
 import CategorySelect from "./CategorySelect";
 import FormTextArea from "./FormTextArea";
 import FormSuccessAlert from "./FormSuccessAlert";
 import useForm from "../../hooks/useForm";
-import { resetForm } from "../../utils/dom";
+import { resetForm } from "../../utils";
 import type { Categories } from "../../api";
+import { withPrefix } from "../../utils";
 // [🚀 FEATURE]: add soft close when Esc button clicked
 export default function Form() {
   const {
@@ -73,18 +73,21 @@ export default function Form() {
           </legend>
           <hr className={withPrefix("form__divider", "form-grid-span-2")} />
           <FormSegmentTimeInput
+            labelDisplayName={"start"}
             name={"startTime"}
             maxLength={TIME_STAMP_MAX_LENGTH}
             pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
-            error={errors["start"]}
+            error={errors["startTime"]}
           />
           <FormSegmentTimeInput
+            labelDisplayName={"end"}
             name={"endTime"}
             maxLength={TIME_STAMP_MAX_LENGTH}
             pattern={REGEX.TIME_STAMP_PATTERN as unknown as RegExp}
-            error={errors["end"]}
+            error={errors["endTime"]}
           />
           <CategorySelect
+            labelDisplayName={"category"}
             name={"category"}
             defaultSelect={NOTE_FORM_PLACEHOLDERS.CATEGORY_SELECT}
             categoriesList={
@@ -94,11 +97,12 @@ export default function Form() {
           />
 
           <FormTextArea
+            labelDisplayName={"your note"}
             name={"noteContent"}
             placeholder={NOTE_FORM_PLACEHOLDERS.TEXTAREA}
             maxLength={NOTE_LIMITS.MAX_LENGTH}
             minLength={NOTE_LIMITS.MIN_LENGTH}
-            error={errors["note"]}
+            error={errors["noteContent"]}
           />
           <em
             id={withPrefix(`form-global-error`)}
@@ -122,7 +126,6 @@ export default function Form() {
               )}
               type="submit"
             >
-              {/* {formState === "submitting" ? "Submitting" : "Submit"} */}
               <span className={withPrefix("button__text")}>Submit</span>
               <span
                 aria-label="submitting"

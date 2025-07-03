@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { CUSTOM_EVENTS } from "../../utils/constant";
-import { withPrefix } from "../../utils/class-names";
-import { focusFirstElement } from "../../utils/dom";
+import { CUSTOM_EVENTS } from "../../utils";
+import { focusFirstElement } from "../../utils";
+import { withPrefix } from "../../utils";
 
 export default function Button() {
   const [formOpen, setFormOpen] = useState(false);

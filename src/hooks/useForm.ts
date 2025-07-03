@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { validateFormData } from "../utils/validation";
+import { validateFormData } from "../utils";
 import {
   GlobalError,
   ValidationError,
   type GlobalErrorPayload,
   type ValidationErrorPayload,
-} from "../utils/error";
-import { getVideoDetails_better } from "../utils/youtube";
+} from "../utils";
+import { getVideoDetails } from "../utils";
 import type { FormInputData } from "../types";
-import { timeStringToSeconds } from "../utils/timestamp";
+import { timeStringToSeconds } from "../utils";
 import type { Categories } from "../api";
 import { useNotes } from "./useNotes";
 
@@ -42,7 +42,7 @@ export default function useForm() {
       setErrors({});
       setGlobalErrors({});
       await updateNotes({
-        ...getVideoDetails_better(),
+        ...getVideoDetails(),
         startTime: timeStringToSeconds(formDataObject.startTime),
         endTime: timeStringToSeconds(formDataObject.endTime),
         category: formDataObject.category as Categories,

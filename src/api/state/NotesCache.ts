@@ -4,7 +4,8 @@ import type {
   StoredNoteData,
   SubmitNoteRequest,
 } from "../../types";
-import { GlobalError } from "../../utils/error";
+import { GlobalError } from "../../utils";
+import { createStoredNoteDataFromPayLoad } from "../../utils";
 
 type Subscriber = React.Dispatch<
   React.SetStateAction<{
@@ -36,16 +37,16 @@ export default class NotesCache {
   async getCachedNotes(videoId: string) {
     try {
       this.currentVideoId = videoId;
-      const cashedNoteData = this.cachedApiRepositoryResponse.get(videoId);
-      if (cashedNoteData) {
+      // check if there's cached api responses
+      const cachedNoteData = this.cachedApiRepositoryResponse.get(videoId);
+      if (cachedNoteData) {
         this.notifySubscribers();
         return;
-      } else {
-        const noteData = await this.apiRepository.getNotes(videoId);
-        if (noteData) {
-          this.cachedApiRepositoryResponse.set(videoId, noteData);
-          this.notifySubscribers();
-        }
+      }
+      const noteData = await this.apiRepository.getNotes(videoId);
+      if (noteData) {
+        this.cachedApiRepositoryResponse.set(videoId, noteData);
+        this.notifySubscribers();
       }
     } catch (error) {
       console.error("Something went Wrong while getting notes", error);
@@ -64,16 +65,17 @@ export default class NotesCache {
     try {
       const cachedNotesData = this.cachedApiRepositoryResponse.get(videoId);
       const newNoteData = createStoredNoteDataFromPayLoad(payload);
-      const newCashedNoteData: GetNotesResponse = {
+      const newCachedNoteData: GetNotesResponse = {
         videoId: videoId,
         notes: cachedNotesData
           ? [...cachedNotesData["notes"], newNoteData]
           : [newNoteData],
         videoLength: payload["videoLength"],
       };
-      this.cachedApiRepositoryResponse.set(videoId, newCashedNoteData);
+      this.cachedApiRepositoryResponse.set(videoId, newCachedNoteData);
       lastCreatedNoteId = newNoteData.id;
       await this.apiRepository.addNote(payload);
+      this.notifySubscribers();
     } catch (error) {
       // remove last cached note
       if (lastCreatedNoteId)
@@ -86,8 +88,6 @@ export default class NotesCache {
             "Something went Wrong while saving notes, please try again later",
         },
       });
-    } finally {
-      this.notifySubscribers();
     }
   }
 
@@ -100,20 +100,21 @@ export default class NotesCache {
           (note) => note.id !== lastCreatedNoteId
         ),
       });
+      this.notifySubscribers();
     }
   }
 
   private notifySubscribers() {
-    // This allows O(1) lookup on each timeupdate event instead of looping over all notes
-    // or using the old approach of nextNoteIndex which need the notes to be sorted based on end time
-    // also when user skips or seek forwards or backward there's no need to reset the nextNoteIndex
-    // also will make it easier to add optimistic UI later when a note is added, deleted or edited
-    // cause no sorting is needed
-    const notesMap = new Map<number, StoredNoteData>();
     const cachedResponse = this.cachedApiRepositoryResponse.get(
       this.currentVideoId
     );
     if (cachedResponse) {
+      // using a map with endTime as keys allows O(1) lookup on each timeupdate event instead of looping over all notes
+      // or using the old approach of nextNoteIndex which need the notes to be sorted based on end time
+      // also when user skips or seek forwards or backward there's no need to reset the nextNoteIndex
+      // also will make it easier to add optimistic UI later when a note is added, deleted or edited
+      // cause no sorting is needed
+      const notesMap = new Map<number, StoredNoteData>();
       // build the noteMap
       cachedResponse.notes.forEach((note) => {
         notesMap.set(note.endTime, note);
@@ -128,24 +129,4 @@ export default class NotesCache {
       });
     }
   }
-}
-
-export function createStoredNoteDataFromPayLoad(
-  payload: SubmitNoteRequest
-): StoredNoteData {
-  const { startTime, endTime, category, noteContent, submittedBy } = payload;
-  return {
-    // [🚀 FEATURE]: get actual user id
-    id: createRandomId(),
-    createdAt: Date.now(),
-    startTime,
-    endTime,
-    category,
-    noteContent,
-    submittedBy,
-  };
-}
-
-export function createRandomId() {
-  return Math.random().toString(36);
 }

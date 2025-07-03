@@ -1,11 +1,10 @@
 import { useEffect } from "react";
 import { type Categories } from "../../api";
-import { withPrefix } from "../../utils/class-names";
-import { getSegmentPercentRange } from "../../utils/timestamp";
-import { CUSTOM_EVENTS } from "../../utils/constant";
+import { getSegmentPercentRange } from "../../utils";
+import { CUSTOM_EVENTS } from "../../utils";
 import type { StoredNoteData } from "../../types";
 import { useNotes } from "../../hooks/useNotes";
-import { getVideoId } from "../../utils/youtube";
+import { withPrefix } from "../../utils";
 
 // [🧱 REFACTOR]: temporary for now, redo categories
 const misinformationColors: Record<Categories, string> = {
@@ -23,11 +22,9 @@ const misinformationColors: Record<Categories, string> = {
 
 // [🚀 FEATURE]: make displaying note segments dynamic, use notesMap as state
 export default function NoteSegmentsList() {
-  const { noteMap, setNoteMap, noteCacheInstance, getCachedNotes } = useNotes();
+  const { noteMap, setNoteMap, noteCacheInstance } = useNotes();
 
   useEffect(() => {
-    const videoId = getVideoId();
-
     const video = document.querySelector("video");
     if (!video) {
       console.error("Could not locate video element");
@@ -35,7 +32,6 @@ export default function NoteSegmentsList() {
     }
 
     noteCacheInstance.subscribe(setNoteMap);
-    if (videoId) getCachedNotes(videoId);
     // const notesMap = buildNotesMap(getNotes().notes);
     const seenNotes = new Set<StoredNoteData>();
     //
@@ -60,7 +56,6 @@ export default function NoteSegmentsList() {
     video.addEventListener("seeked", handleUnSeeNote);
     video.addEventListener("timeupdate", handleTimeUpdate);
     return () => {
-      noteCacheInstance.unsubscribe(setNoteMap);
       video.removeEventListener("seeked", handleUnSeeNote);
       video.removeEventListener("timeupdate", handleTimeUpdate);
     };

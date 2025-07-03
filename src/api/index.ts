@@ -1,5 +1,5 @@
 import type { GetNotesResponse } from "../types";
-import type { NOTE_FORM_PLACEHOLDERS } from "../utils/constant";
+import type { NOTE_FORM_PLACEHOLDERS } from "../utils";
 
 export type Categories = (typeof NOTE_FORM_PLACEHOLDERS.CATEGORIES)[number];
 
@@ -115,22 +115,6 @@ const youtubeTestData: GetNotesResponse = {
     },
   ],
   videoLength: 1355,
-};
-
-export type NoteResponse = {
-  id: string;
-  start: number;
-  end: number;
-  videoLength: number;
-  category: Categories;
-  note: string;
-  timestamp: number;
-};
-
-export type VideoNotesResponse = {
-  videoId: string;
-  notes: NoteResponse[];
-  totalCount: number;
 };
 
 export function getNotes(): GetNotesResponse {
