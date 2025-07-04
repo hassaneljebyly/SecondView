@@ -7,7 +7,7 @@ import {
 } from "./constant";
 import {
   GlobalError,
-  ValidationError,
+  InputValidationError,
   type GlobalErrorPayload,
   type ValidationErrorPayload,
 } from "./error";
@@ -42,7 +42,6 @@ export function validateFormData(
   const { startTime, endTime, category, noteContent } = formData;
   const errorsPayload: ValidationErrorPayload = {};
   const globalErrorPayload: GlobalErrorPayload = {};
-  // [🐞 BUG]: account for fetch failure, deal with videoLength = 0 if getVideoDetails failed to get data
   const videoLength = getVideoDetails().videoLength;
   // validate time bounds
   const startBoundIsValid = timeStringIsValid(startTime);
@@ -79,8 +78,6 @@ export function validateFormData(
         message: `End must come after start`,
       };
     }
-    // [🧱 REFACTOR]: create functions to get current times or video duration
-    // [🧱 REFACTOR]: best to use video.duration, cause some videos might not have notes
     const endTimeOutOfVideoBound = endTimeInSeconds > videoLength;
     if (endTimeOutOfVideoBound) {
       errorsPayload["endTime"] = {
@@ -149,7 +146,7 @@ export function validateFormData(
   if (globalErrorPayload["global"] && !Object.keys(errorsPayload).length) {
     throw new GlobalError(globalErrorPayload);
   }
-  throw new ValidationError(errorsPayload);
+  throw new InputValidationError(errorsPayload);
 }
 
 export function timeStringIsValid(timeStamp: string): boolean {

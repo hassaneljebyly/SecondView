@@ -1,9 +1,13 @@
+import { testVideoDetails } from "../api/mock-data";
 import type { VideoMetaData } from "../types";
 import { GlobalError } from "./error";
 
 // export only to clear old data during clean
 export const videoDetailsMap = new Map<keyof VideoMetaData, string | number>();
 export function getVideoDetails(): VideoMetaData | never {
+  if (import.meta.env.DEV) {
+    return testVideoDetails;
+  }
   try {
     // channel name
     const channelName =

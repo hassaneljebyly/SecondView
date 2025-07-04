@@ -1,18 +1,24 @@
+/**
+ * for testing in local storage only
+ */
+
 import type {
   GetNotesResponse,
   StoredNoteData,
   SubmitNoteRequest,
 } from "../../types";
-import { createStoredNoteDataFromPayLoad } from "../../utils";
-import { GlobalError } from "../../utils";
+import { createStoredNoteDataFromPayLoad, GlobalError } from "../../utils";
 import NotesRepository from "./NotesRepository";
-import TestLocalStorageRepository from "./TestLocalStorageRepository";
 
-class LocalStorageRepository extends NotesRepository {
+export default class TestLocalStorageRepository extends NotesRepository {
   async getNotes(videoId: string): Promise<GetNotesResponse | null> {
     try {
-      const storedData = await chrome.storage.local.get(videoId);
-      const noteData: GetNotesResponse | null = storedData[videoId] || null;
+      const storedData = await JSON.parse(
+        window.localStorage.getItem(videoId) || "{}"
+      );
+      const noteData: GetNotesResponse | null = storedData
+        ? storedData[videoId]
+        : null;
       return noteData;
     } catch (error) {
       console.error(
@@ -31,17 +37,22 @@ class LocalStorageRepository extends NotesRepository {
   async addNote(payload: SubmitNoteRequest): Promise<void> {
     try {
       const videoId = payload["videoId"];
-      const storedData = await chrome.storage.local.get(videoId);
-      const noteData: GetNotesResponse | null = storedData[videoId] || null;
+      const storedData = await JSON.parse(
+        window.localStorage.getItem(videoId) || "{}"
+      );
+      const noteData: GetNotesResponse | null = storedData
+        ? storedData[videoId]
+        : null;
       const newNote: StoredNoteData = createStoredNoteDataFromPayLoad(payload);
       const newStoredNoteData: GetNotesResponse = {
         videoId,
         notes: noteData ? [...noteData.notes, newNote] : [newNote],
         videoLength: payload.videoLength,
       };
-      await chrome.storage.local.set({
-        [videoId]: newStoredNoteData,
-      });
+      window.localStorage.setItem(
+        videoId,
+        JSON.stringify({ [videoId]: newStoredNoteData })
+      );
     } catch (error) {
       console.error("Something went wrong while trying to save note: ", error);
       throw new GlobalError({
@@ -53,7 +64,3 @@ class LocalStorageRepository extends NotesRepository {
     }
   }
 }
-console.log("dev mode", import.meta.env.DEV);
-export const dbLocalstorage = import.meta.env.DEV
-  ? new TestLocalStorageRepository()
-  : new LocalStorageRepository();

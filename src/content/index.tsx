@@ -1,6 +1,7 @@
 // [⚙️ TECH DEBT]:  don't let utils become too big
 // [📐 ARCHITECTURE]:  add no console.logs rule
 // [📐 ARCHITECTURE]:  add proper ts config
+// [🚀 FEATURE]: consider adding an error boundary to your tree to customize error handling behavior.
 
 import { tasks } from "../utils";
 import { cleanUp } from "../utils";

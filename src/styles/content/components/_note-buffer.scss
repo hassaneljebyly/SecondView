@@ -12,7 +12,9 @@
   transition: grid-template-rows 250ms ease;
   list-style: none;
   overflow: hidden;
-
+  &__item {
+    align-self: end;
+  }
   &:not(&__item:last-child:empty) {
     grid-template-rows: 0fr auto;
   }

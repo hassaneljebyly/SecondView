@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { validateFormData } from "../utils";
+import { createRandomId, validateFormData } from "../utils";
 import {
   GlobalError,
-  ValidationError,
+  InputValidationError,
   type GlobalErrorPayload,
   type ValidationErrorPayload,
 } from "../utils";
@@ -18,7 +18,6 @@ export default function useForm() {
   const { updateNotes, noteMap } = useNotes();
   const [errors, setErrors] = useState<ValidationErrorPayload>({});
   const [globalErrors, setGlobalErrors] = useState<GlobalErrorPayload>({});
-  // [🧱 REFACTOR]:  control form state styles via css class
   const [formState, setFormState] = useState<FormState>("hidden");
 
   async function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -48,13 +47,13 @@ export default function useForm() {
         category: formDataObject.category as Categories,
         noteContent: formDataObject.noteContent,
         // [🧱 REFACTOR]: get current user ID
-        submittedBy: Math.random().toString(36),
+        submittedBy: createRandomId(),
       });
 
       setFormState("success");
     } catch (error) {
       setFormState("idle");
-      if (error instanceof ValidationError) {
+      if (error instanceof InputValidationError) {
         setErrors(error.payload);
       } else if (error instanceof GlobalError) {
         setGlobalErrors(error.payload);

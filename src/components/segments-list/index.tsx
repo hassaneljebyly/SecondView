@@ -20,7 +20,6 @@ const misinformationColors: Record<Categories, string> = {
   ERROR: "#BDC3C7",
 };
 
-// [🚀 FEATURE]: make displaying note segments dynamic, use notesMap as state
 export default function NoteSegmentsList() {
   const { noteMap, setNoteMap, noteCacheInstance } = useNotes();
 

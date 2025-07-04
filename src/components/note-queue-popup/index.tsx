@@ -25,11 +25,7 @@ export default function NoteQueuePopUp() {
     <ul className={withPrefix("note-buffer")} aria-hidden={!noteQueueLength}>
       {noteQueue.map((note, index) =>
         note ? (
-          <li
-            className={withPrefix("note-buffer__item")}
-            style={{ alignSelf: "end" }}
-            key={note.id}
-          >
+          <li className={withPrefix("note-buffer__item")} key={note.id}>
             <Note
               setNoteQueue={setNoteQueue}
               expandable={true}
@@ -37,12 +33,7 @@ export default function NoteQueuePopUp() {
             />
           </li>
         ) : (
-          <li
-            className={withPrefix("note-buffer__item")}
-            // [🧹 CLEANUP]: probably not needed
-            style={{ alignSelf: "end" }}
-            key={index}
-          ></li>
+          <li className={withPrefix("note-buffer__item")} key={index}></li>
         )
       )}
     </ul>

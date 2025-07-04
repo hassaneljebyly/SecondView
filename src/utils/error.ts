@@ -12,7 +12,7 @@ export type ValidationErrorPayload = {
   };
 };
 
-export class ValidationError extends Error {
+export class InputValidationError extends Error {
   payload: ValidationErrorPayload;
   constructor(payload: ValidationErrorPayload) {
     super();
