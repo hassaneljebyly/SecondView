@@ -1,31 +1,48 @@
 import type { VideoMetaData } from "../types";
 import { GlobalError } from "./error";
 
+// export only to clear old data during clean
+export const videoDetailsMap = new Map<keyof VideoMetaData, string | number>();
 export function getVideoDetails(): VideoMetaData | never {
   try {
+    // channel name
     const channelName =
+      videoDetailsMap.get("channelName") ||
       (
         document.querySelector(
           '#upload-info a[href^="/@"]'
         ) as HTMLAnchorElement
-      )?.innerText || null;
+      )?.innerText ||
+      (document.querySelector("ytd-channel-name a") as HTMLAnchorElement)
+        ?.innerText;
 
-    const url = document
-      .querySelector('[href*="/channel/"]')
-      ?.getAttribute("href");
-    const channelId = url?.match(/channel\/([A-Za-z0-9_-]+)/)?.[1] || null;
+    // channel ID
+    const channelLink = document.querySelector('[href*="/channel/"]');
+    const channelUrl = channelLink?.getAttribute("href");
+    const channelId =
+      videoDetailsMap.get("channelId") ||
+      channelUrl?.match(/channel\/([A-Za-z0-9_-]+)/)?.[1];
 
+    // video duration
     const videoLength =
-      Math.floor(document.querySelector("video")?.duration || 0) || null;
+      videoDetailsMap.get("videoLength") ||
+      Math.floor(document.querySelector("video")?.duration || 0);
 
+    // video title
     const videoTitle =
-      (document.querySelector("#title h1") as HTMLHeadElement)?.innerText ||
-      null;
+      videoDetailsMap.get("videoTitle") ||
+      (document.querySelector("#title h1") as HTMLHeadingElement)?.innerText ||
+      (
+        document.querySelector(
+          "h1.ytd-video-primary-info-renderer"
+        ) as HTMLHeadingElement
+      )?.innerText;
 
+    // video ID from URL
     const videoId =
-      new URLSearchParams(window.location.search).get("v") ||
-      window.location.pathname.match(/\/watch\/([^/]+)/)?.[1] ||
-      null;
+      videoDetailsMap.get("videoId") ||
+      new URLSearchParams(window.location.search).get("v");
+
     const videoMetaData = {
       videoId,
       channelId,
@@ -33,18 +50,23 @@ export function getVideoDetails(): VideoMetaData | never {
       videoTitle,
       videoLength,
     };
+
+    // check if all required data was scraped successfully
     const videoMetaDataScrappedSuccessfully = Object.values(
       videoMetaData
-    ).every((value) => value !== null);
+    ).every((value) => value !== null && value !== undefined && value !== "");
 
     if (videoMetaDataScrappedSuccessfully) {
+      // cache for later use
+      for (const [key, value] of Object.entries(videoMetaData)) {
+        videoDetailsMap.set(key as keyof VideoMetaData, value!);
+      }
       return videoMetaData as VideoMetaData;
     } else {
-      throw Error();
+      throw new Error("Incomplete video metadata");
     }
   } catch (error) {
     console.warn("Failed to get video details:", error);
-    // [🧱 REFACTOR]: make GlobalError payload optional
     throw new GlobalError({
       global: {
         target: "form",
@@ -53,9 +75,4 @@ export function getVideoDetails(): VideoMetaData | never {
       },
     });
   }
-}
-
-export function getVideoId() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("v");
 }

@@ -98,6 +98,7 @@
     font-size: var(--#{var.$prefix}font-size-md);
     line-height: var(--#{var.$prefix}line-height-5);
     padding-block: var(--_#{var.$prefix}py);
+    word-wrap: break-word;
     width: 30ch;
   }
 }

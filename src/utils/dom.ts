@@ -1,5 +1,6 @@
 import type { Root } from "react-dom/client";
 import { withPrefix } from "./helpers";
+import { videoDetailsMap } from "./youtube";
 
 export function resetForm() {
   const form = document.querySelector(
@@ -37,6 +38,7 @@ export function focusFirstElement(formOpen: boolean) {
 }
 
 export function cleanUp(rootsMap: Map<string, Root>) {
+  videoDetailsMap.clear();
   for (const [wrapperId, root] of rootsMap) {
     root.unmount();
     const wrapper = document.getElementById(wrapperId);

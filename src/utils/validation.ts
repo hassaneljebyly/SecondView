@@ -43,7 +43,7 @@ export function validateFormData(
   const errorsPayload: ValidationErrorPayload = {};
   const globalErrorPayload: GlobalErrorPayload = {};
   // [🐞 BUG]: account for fetch failure, deal with videoLength = 0 if getVideoDetails failed to get data
-  const videoLength = Math.floor(getVideoDetails().videoLength || 0);
+  const videoLength = getVideoDetails().videoLength;
   // validate time bounds
   const startBoundIsValid = timeStringIsValid(startTime);
   const endBoundIsValid = timeStringIsValid(endTime);
@@ -59,9 +59,9 @@ export function validateFormData(
   }
 
   if (startBoundIsValid && endBoundIsValid) {
-    const startBoundToSeconds = timeStringToSeconds(startTime);
-    const endBoundToSeconds = timeStringToSeconds(endTime);
-    const segmentLength = endBoundToSeconds - startBoundToSeconds;
+    const startTimeInSeconds = timeStringToSeconds(startTime);
+    const endTimeInSeconds = timeStringToSeconds(endTime);
+    const segmentLength = endTimeInSeconds - startTimeInSeconds;
     if (segmentLength >= 0 && segmentLength < SEGMENT_LIMITS.MIN_SECONDS) {
       errorsPayload["endTime"] = {
         message: `Segment must be ≥${SEGMENT_LIMITS.MIN_SECONDS}s. Adjust start/end.`,
@@ -80,9 +80,8 @@ export function validateFormData(
       };
     }
     // [🧱 REFACTOR]: create functions to get current times or video duration
-    // [🧱 REFACTOR]: remove videoLength from notes and move it to parent object
     // [🧱 REFACTOR]: best to use video.duration, cause some videos might not have notes
-    const endTimeOutOfVideoBound = endBoundToSeconds > videoLength;
+    const endTimeOutOfVideoBound = endTimeInSeconds > videoLength;
     if (endTimeOutOfVideoBound) {
       errorsPayload["endTime"] = {
         message: `Segment end cannot exceed video length (${secondsToTimeString(
@@ -93,18 +92,18 @@ export function validateFormData(
     /*
        check if new segment overlaps with existing segments
        visual representation of overlap scenarios:
-       e = endBoundToSeconds, s = startBoundToSeconds
+       e = endTimeInSeconds, s = startTimeInSeconds
       
-                          start                end
+                          startTime            endTime
       --------------------|====================|-----------------
-        s      e       s      e
+        s      e       s      e   s      e   s      e   s      e
       --|======|-------|======|---|======|---|======|---|======|--
         no-overlap     overlap    overlap    overlap    no-overlap
     */
 
     if (notesList.length) {
       const overlappedSegment = notesList.find(({ startTime, endTime }) => {
-        return startBoundToSeconds < endTime && endBoundToSeconds > startTime;
+        return startTimeInSeconds < endTime && endTimeInSeconds > startTime;
       });
       if (overlappedSegment) {
         const overlapStart = secondsToTimeString(overlappedSegment.startTime);
