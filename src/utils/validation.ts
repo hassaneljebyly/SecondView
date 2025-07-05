@@ -128,12 +128,20 @@ export function validateFormData(
         : "Required Field",
     };
   }
-
   if (noteContent.length > NOTE_LIMITS.MAX_LENGTH) {
     errorsPayload["noteContent"] = {
-      message: noteContent
-        ? `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`
-        : "Required Field",
+      message: `Note must be no more than ${NOTE_LIMITS.MAX_LENGTH} characters long.`,
+    };
+  }
+
+  if (
+    noteContent.length > NOTE_LIMITS.MIN_LENGTH &&
+    !REGEX.ACCEPTED_LINKS_FORMAT.test(noteContent)
+  ) {
+    errorsPayload["noteContent"] = {
+      // [🐞 BUG]: fix error text formatting issue
+      message:
+        "Please include at least one valid link in your input.\nMake sure your link starts with http:// or https://",
     };
   }
 
@@ -141,7 +149,7 @@ export function validateFormData(
     return true;
   }
   // segment overlap is a global error
-  // since it concerns how more than one input influence each other (end and start input)
+  // since it concerns how more than one input influence each other (startTime and endTime input)
   // handle global errors separately to avoid overwhelming users
   if (globalErrorPayload["global"] && !Object.keys(errorsPayload).length) {
     throw new GlobalError(globalErrorPayload);

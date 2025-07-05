@@ -63,3 +63,32 @@ export function removeNote(
   }
   return newBuffer;
 }
+
+const displayLinksCacheMap = new Map<string, string>();
+export function truncateLinks(link: string) {
+  const cachedLinkText = displayLinksCacheMap.get(link);
+  if (cachedLinkText) {
+    return cachedLinkText;
+  }
+  try {
+    const url = new URL(link.startsWith("http") ? link : "http://" + link);
+    // remove www. and only display  to and second level domain
+    const hostname = url.hostname
+      .replace(/www\./, "")
+      .split(".")
+      .slice(-2)
+      .join(".");
+    // get last path name in link
+    const lastPathName = url.pathname.split("/").filter(Boolean).at(-1) || "";
+    // add truncation
+    const middle = lastPathName ? "/../" : "";
+    const displayLink = `${hostname}${middle}${lastPathName}`;
+    displayLinksCacheMap.set(link, displayLink);
+    return displayLink;
+  } catch (error) {
+    console.error("Error while formatting link", error);
+    const alternativeDisplayLink = link.slice(0, 12);
+    displayLinksCacheMap.set(link, alternativeDisplayLink);
+    return alternativeDisplayLink;
+  }
+}

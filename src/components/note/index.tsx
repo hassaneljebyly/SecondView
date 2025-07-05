@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { BufferType } from "../note-queue-popup";
 import type { StoredNoteData } from "../../types";
-import { removeNote, withPrefix } from "../../utils";
+import { Linkify, removeNote, withPrefix } from "../../utils";
 
 type NoteOptions =
   | {
@@ -72,7 +72,9 @@ export default function Note({
       </div>
       <div className={withPrefix("note__body")}>
         <div className={withPrefix("note__content")}>
-          <p className={withPrefix("note__text")}>{noteContent}</p>
+          <p className={withPrefix("note__text")}>
+            <Linkify text={noteContent} />
+          </p>
         </div>
       </div>
     </div>
