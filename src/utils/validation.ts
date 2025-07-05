@@ -139,7 +139,6 @@ export function validateFormData(
     !REGEX.ACCEPTED_LINKS_FORMAT.test(noteContent)
   ) {
     errorsPayload["noteContent"] = {
-      // [🐞 BUG]: fix error text formatting issue
       message:
         "Please include at least one link to a source.\nMake sure your link starts with http:// or https://",
     };
