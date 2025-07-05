@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { createRandomId, validateFormData } from "../utils";
+import {
+  createRandomId,
+  getSourcesFromNoteContent,
+  validateFormData,
+} from "../utils";
 import {
   GlobalError,
   InputValidationError,
@@ -46,6 +50,7 @@ export default function useForm() {
         endTime: timeStringToSeconds(formDataObject.endTime),
         category: formDataObject.category as Categories,
         noteContent: formDataObject.noteContent,
+        sources: getSourcesFromNoteContent(formDataObject.noteContent),
         // [🧱 REFACTOR]: get current user ID
         submittedBy: createRandomId(),
       });

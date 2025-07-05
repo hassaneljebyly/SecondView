@@ -13,6 +13,7 @@ export type NoteData = {
   endTime: number;
   category: Categories;
   noteContent: string;
+  sources: string[]
 };
 
 export type VideoMetaData = {
