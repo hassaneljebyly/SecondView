@@ -38,6 +38,8 @@
     margin-bottom: var(--_#{var.$prefix}form-py);
   }
   &__group {
+    --_#{var.$prefix}field-px: var(--#{var.$prefix}spacing-12);
+    --_#{var.$prefix}field-py: var(--#{var.$prefix}spacing-10);
     display: flex;
     flex-direction: column;
     position: relative;
@@ -50,10 +52,12 @@
     text-transform: capitalize;
   }
   &__field {
-    --_border-color: var(--_#{var.$prefix}border-color-form-field);
-    border: 1px solid var(--_border-color);
+    --_#{var.$prefix}border-color: var(
+      --_#{var.$prefix}border-color-form-field
+    );
+    border: 1px solid var(--_#{var.$prefix}border-color);
     border-radius: var(--_#{var.$prefix}border-radius-form-field);
-    padding: var(--#{var.$prefix}spacing-10) var(--#{var.$prefix}spacing-12);
+    padding: var(--_#{var.$prefix}field-py) var(--_#{var.$prefix}field-px);
     font-size: var(--#{var.$prefix}font-size-md);
     line-height: var(--#{var.$prefix}line-height-5);
     // form fields states
@@ -83,6 +87,10 @@
   &__textarea {
     resize: vertical;
     min-height: 150px;
+    width: 100%;
+  }
+  &__textarea-wrapper {
+    position: relative;
   }
   &__error-message {
     font-size: var(--#{var.$prefix}font-size-xsm);
@@ -99,16 +107,15 @@
     font-size: var(--#{var.$prefix}font-size-sm);
     font-weight: var(--#{var.$prefix}font-weight-400);
     letter-spacing: 0.011em;
-    line-height: var(--#{var.$prefix}line-height-4);
     color: var(--#{var.$prefix}color-gray-30);
     position: absolute;
-    bottom: 0;
-    right: 1em;
-    translate: 0% calc(-150% - 1em);
+    bottom: var(--_#{var.$prefix}field-py);
+    right: var(--_#{var.$prefix}field-px);
+    background-color: white;
     display: none;
   }
   // live char counter state
-  &__textarea:focus + * + &__char-counter {
+  &__textarea:focus + &__char-counter {
     display: block;
   }
 

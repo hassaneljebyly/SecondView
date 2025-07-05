@@ -141,7 +141,7 @@ export function validateFormData(
     errorsPayload["noteContent"] = {
       // [🐞 BUG]: fix error text formatting issue
       message:
-        "Please include at least one valid link in your input.\nMake sure your link starts with http:// or https://",
+        "Please include at least one link to a source.\nMake sure your link starts with http:// or https://",
     };
   }
 

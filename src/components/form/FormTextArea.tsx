@@ -24,18 +24,23 @@ export default function FormTextArea(prop: FormTextAreaProp) {
       >
         {labelDisplayName}
       </label>
-      <textarea
-        id={withPrefix(`${name}`)}
-        className={withPrefix("form__textarea", "form__field")}
-        name={name}
-        placeholder={placeholder}
-        aria-errormessage={withPrefix(`${name}-error`)}
-        aria-invalid={Boolean(error)}
-        maxLength={maxLength}
-        minLength={minLength}
-        required
-        onChange={(e) => setNoteLength(e.currentTarget.value.length)}
-      ></textarea>
+      <div className={withPrefix("form__textarea-wrapper")}>
+        <textarea
+          id={withPrefix(`${name}`)}
+          className={withPrefix("form__textarea", "form__field")}
+          name={name}
+          placeholder={placeholder}
+          aria-errormessage={withPrefix(`${name}-error`)}
+          aria-invalid={Boolean(error)}
+          maxLength={maxLength}
+          minLength={minLength}
+          required
+          onChange={(e) => setNoteLength(e.currentTarget.value.length)}
+        ></textarea>
+        <p className={withPrefix("form__char-counter")} aria-live="polite">
+          {`${noteLength}/${maxLength}`}
+        </p>
+      </div>
       <em
         id={withPrefix(`${name}-error`)}
         className={withPrefix("form__error-message")}
@@ -43,9 +48,6 @@ export default function FormTextArea(prop: FormTextAreaProp) {
       >
         {error?.message || ""}
       </em>
-      <p className={withPrefix("form__char-counter")} aria-live="polite">
-        {`${noteLength}/${maxLength}`}
-      </p>
     </div>
   );
 }

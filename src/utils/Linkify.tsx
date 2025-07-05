@@ -7,6 +7,7 @@ export function Linkify({ text }: { text: string }) {
     .split(regex)
     .filter(Boolean)
     .map((textItem, index) => {
+      console.log("textItem :", textItem);
       if (textItem.match(regex)) {
         const displayLink = truncateLinks(textItem);
         return (

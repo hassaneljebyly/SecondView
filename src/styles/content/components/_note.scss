@@ -10,6 +10,7 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto;
+  width: 55ch;
   transition: grid-template-rows
     calc(var(--#{var.$prefix}display-popup-duration) / 2) ease-in-out;
   overflow: hidden;
@@ -99,7 +100,10 @@
     line-height: var(--#{var.$prefix}line-height-5);
     padding-block: var(--_#{var.$prefix}py);
     word-wrap: break-word;
-    width: 30ch;
+    a {
+      text-decoration: none;
+      color: var(--#{var.$prefix}color-blue-42);
+    }
   }
 }
 
