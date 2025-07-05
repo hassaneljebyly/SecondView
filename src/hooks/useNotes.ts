@@ -16,7 +16,6 @@ export function useNotes() {
     noteCacheInstance = new NotesCache(dbLocalstorage);
   }
 
-  console.log("setNoteMap: ", noteMap);
   useEffect(() => {
     const videoId = getVideoDetails().videoId;
     if (videoId) {

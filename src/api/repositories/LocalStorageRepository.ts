@@ -53,7 +53,7 @@ class LocalStorageRepository extends NotesRepository {
     }
   }
 }
-console.log("dev mode", import.meta.env.DEV);
+
 export const dbLocalstorage = import.meta.env.DEV
   ? new TestLocalStorageRepository()
   : new LocalStorageRepository();
