@@ -81,7 +81,7 @@ export function truncateLinks(link: string) {
     // get last path name in link
     const lastPathName = url.pathname.split("/").filter(Boolean).at(-1) || "";
     // add truncation
-    const middle = lastPathName ? "/../" : "";
+    const middle = lastPathName ? "/.../" : "";
     const displayLink = `${hostname}${middle}${lastPathName}`;
     displayLinksCacheMap.set(link, displayLink);
     return displayLink;

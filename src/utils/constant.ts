@@ -32,7 +32,7 @@ export const NOTE_FORM_PLACEHOLDERS = {
 export const REGEX = {
   TIME_STAMP_PATTERN: "^(\\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$",
   ACCEPTED_LINKS_FORMAT:
-    /(\bhttps?:\/\/(?:www\.)?[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z]{2,})+(?:\/[^\s<>"{}|\\^`[\]]*)?(?:\?[^\s<>"{}|\\^`[\]]*)?(?:#[^\s<>"{}|\\^`[\]]*)?)/gm,
+    /(\b(?:https?:\/\/)?(?:[a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,63}(?=\b|\/|:|\?|#)(?::\d{1,5})?(?:\/[a-zA-Z0-9\-._~%]*)*(?:\?[^#\s]*)?(?:#[^\s]*)?)/gm,
 } as const;
 
 export const CUSTOM_EVENTS = {

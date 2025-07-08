@@ -62,7 +62,9 @@
     line-height: var(--#{var.$prefix}line-height-5);
     // form fields states
     &:hover:not(:focus) {
-      --_border-color: var(--_#{var.$prefix}border-color-form-field-hover);
+      --_#{var.$prefix}border-color: var(
+        --_#{var.$prefix}border-color-form-field-hover
+      );
     }
     &:focus {
       outline: 2px solid var(--_#{var.$prefix}border-color-form-field-focus);
