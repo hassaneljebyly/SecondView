@@ -51,6 +51,16 @@
     margin-bottom: var(--#{var.$prefix}spacing-4);
     text-transform: capitalize;
   }
+  &__current-time-btn {
+    margin-left: var(--sv-spacing-8);
+    font-size: var(--sv-font-size-sm);
+    background-color: transparent;
+    color: var(--sv-color-gray-45);
+    cursor: pointer;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
   &__field {
     --_#{var.$prefix}border-color: var(
       --_#{var.$prefix}border-color-form-field

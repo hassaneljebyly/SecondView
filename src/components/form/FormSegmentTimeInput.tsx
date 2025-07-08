@@ -1,6 +1,7 @@
+import { useState } from "react";
 import type { NoteData } from "../../types";
 import type { ValidationErrorPayload } from "../../utils";
-import { withPrefix } from "../../utils";
+import { secondsToTimeString, withPrefix } from "../../utils";
 
 type FormInputProp = {
   labelDisplayName: string;
@@ -9,9 +10,21 @@ type FormInputProp = {
   pattern: RegExp;
   error: ValidationErrorPayload[keyof ValidationErrorPayload];
 };
-// [🚀 FEATURE]: add a "now" button to automatically insert current time
 export default function FormSegmentTimeInput(prop: FormInputProp) {
   const { labelDisplayName, name, maxLength, pattern, error } = prop;
+  const [timeValue, setTimeValue] = useState("");
+  function handleTimeInputValueChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setTimeValue(e.currentTarget.value);
+  }
+
+  function setCurrentTime() {
+    const video = document.querySelector("video");
+    if (video) {
+      const currentTime = Math.floor(video.currentTime);
+      const currentTimeStringFormat = secondsToTimeString(currentTime);
+      setTimeValue(currentTimeStringFormat);
+    }
+  }
   return (
     <div className={withPrefix("form__group")}>
       <label
@@ -19,6 +32,13 @@ export default function FormSegmentTimeInput(prop: FormInputProp) {
         htmlFor={withPrefix(`${name}`)}
       >
         {labelDisplayName}
+        <button
+          className={withPrefix("form__current-time-btn")}
+          type="button"
+          onClick={setCurrentTime}
+        >
+          (now)
+        </button>
       </label>
       <input
         id={withPrefix(`${name}`)}
@@ -28,6 +48,8 @@ export default function FormSegmentTimeInput(prop: FormInputProp) {
         aria-errormessage={withPrefix(`${name}-error`)}
         aria-invalid={Boolean(error)}
         autoComplete="off"
+        onChange={handleTimeInputValueChange}
+        value={timeValue}
         maxLength={maxLength}
         pattern={`${pattern}`}
         required

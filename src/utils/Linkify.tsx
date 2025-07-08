@@ -16,7 +16,8 @@ export function Linkify({ text }: { text: string }) {
           <a
             key={`${textItem + index}`}
             tabIndex={0}
-            href={link}
+            // [⚙️ TECH DEBT]: better deal with it in regex
+            href={link.replace(/[.,!?;:]$/gm, "")}
             rel="noopener nofollow"
             target="_blank"
           >
