@@ -198,6 +198,152 @@
       Your browser does not support the video tag.
     </video>
 
+    <div>
+      <form method="post" action="#">
+        <fieldset>
+          <legend id="tablist-1">How Accurate was this note?</legend>
+          <div role="tablist" aria-labelledby="tablist-1">
+            <button
+              id="tab-1"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tabpanel-1"
+              tabindex="-1"
+            >
+              <span class="focus">Accurate</span>
+            </button>
+            <button
+              id="tab-2"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              aria-controls="tabpanel-2"
+              tabindex="-1"
+            >
+              <span class="focus">Inaccurate</span>
+            </button>
+          </div>
+          <h2>What was accurate/inaccurate about this note?</h2>
+          <div>
+            <label for="high-quality-sources">
+              High quality sources
+              <input
+                type="checkbox"
+                name="high-quality-sources"
+                id="high-quality-sources"
+              />
+            </label>
+            <label for="specific-clear">
+              Specific & clear
+              <input
+                type="checkbox"
+                name="specific-clear"
+                id="specific-clear"
+              />
+            </label>
+            <label for="contextually-relevant">
+              Contextually relevant
+              <input
+                type="checkbox"
+                name="contextually-relevant"
+                id="contextually-relevant"
+              />
+            </label>
+            <label for="actionable-information">
+              Actionable information
+              <input
+                type="checkbox"
+                name="actionable-information"
+                id="actionable-information"
+              />
+            </label>
+            <label for="balanced-tone">
+              Balanced tone
+              <input type="checkbox" name="balanced-tone" id="balanced-tone" />
+            </label>
+            <label for="recent-current">
+              Recent & current
+              <input
+                type="checkbox"
+                name="recent-current"
+                id="recent-current"
+              />
+            </label>
+            <label for="expert-perspective">
+              Expert perspective
+              <input
+                type="checkbox"
+                name="expert-perspective"
+                id="expert-perspective"
+              />
+            </label>
+            <label for="comprehensive">
+              Comprehensive
+              <input type="checkbox" name="comprehensive" id="comprehensive" />
+            </label>
+          </div>
+          <div>
+            <label for="poor-source-quality">
+              Poor source quality
+              <input
+                type="checkbox"
+                name="poor-source-quality"
+                id="poor-source-quality"
+              />
+            </label>
+            <label for="vague-unclear">
+              Vague or unclear
+              <input type="checkbox" name="vague-unclear" id="vague-unclear" />
+            </label>
+            <label for="off-topic">
+              Off topic
+              <input type="checkbox" name="off-topic" id="off-topic" />
+            </label>
+            <label for="opinion-based">
+              Opinion based
+              <input type="checkbox" name="opinion-based" id="opinion-based" />
+            </label>
+            <label for="outdated-sources">
+              Outdated sources
+              <input
+                type="checkbox"
+                name="outdated-sources"
+                id="outdated-sources"
+              />
+            </label>
+            <label for="biased-language">
+              Biased language
+              <input
+                type="checkbox"
+                name="biased-language"
+                id="biased-language"
+              />
+            </label>
+            <label for="incomplete">
+              Incomplete
+              <input type="checkbox" name="incomplete" id="incomplete" />
+            </label>
+            <label for="contradictory">
+              Contradictory
+              <input type="checkbox" name="contradictory" id="contradictory" />
+            </label>
+            <label for="spam-irrelevant">
+              Spam/irrelevant
+              <input
+                type="checkbox"
+                name="spam-irrelevant"
+                id="spam-irrelevant"
+              />
+            </label>
+          </div>
+          <div>
+            <button>Submit</button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+
     <script>
       const exampleNotes = [
         {

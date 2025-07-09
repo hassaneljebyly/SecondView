@@ -3,7 +3,7 @@ import { CUSTOM_EVENTS } from "../../utils";
 import { focusFirstElement } from "../../utils";
 import { withPrefix } from "../../utils";
 
-export default function Button() {
+export default function FormToggleButton() {
   const [formOpen, setFormOpen] = useState(false);
   const btnText = formOpen ? "Cancel" : "Add Note";
   function handleButtonClick() {

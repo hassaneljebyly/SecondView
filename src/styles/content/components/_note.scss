@@ -10,7 +10,7 @@
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto auto;
-  width: 50ch;
+  width: 55ch;
   transition: grid-template-rows
     calc(var(--#{var.$prefix}display-popup-duration) / 2) ease-in-out;
   overflow: hidden;
@@ -94,6 +94,7 @@
   }
   &__content {
     padding-inline: var(--_#{var.$prefix}px);
+    border-bottom: 1px solid var(--#{var.$prefix}bg-divider);
   }
   &__text {
     font-size: var(--#{var.$prefix}font-size-md);
@@ -104,6 +105,21 @@
       text-decoration: none;
       color: var(--#{var.$prefix}color-blue-42);
       white-space: nowrap;
+    }
+  }
+
+  &__action {
+    padding-block: calc(var(--_#{var.$prefix}py) * 0.5);
+    padding-inline: var(--_#{var.$prefix}px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      font-size: var(--#{var.$prefix}font-size-sm);
+      color: var(--#{var.$prefix}color-gray-30);
+      &::first-letter {
+        text-transform: capitalize;
+      }
     }
   }
 }

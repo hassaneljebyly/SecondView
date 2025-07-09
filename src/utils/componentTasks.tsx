@@ -1,4 +1,4 @@
-import Button from "../components/button";
+import FormToggleButton from "../components/form-toggle-button";
 import Form from "../components/form";
 import NoteSegmentsList from "../components/segments-list";
 import NoteQueuePopUp from "../components/note-queue-popup";
@@ -13,7 +13,7 @@ export const tasks: InjectTask[] = [
     componentId: withPrefix("add-note-btn"),
     component: (
       <StrictModeWrapper>
-        <Button />
+        <FormToggleButton />
       </StrictModeWrapper>
     ),
   },

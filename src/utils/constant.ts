@@ -100,6 +100,80 @@ export const NOTE_FORM_PLACEHOLDERS = {
   },
   TEXTAREA: "Explain what's incorrect or provide additional context...",
   CATEGORY_SELECT: "Select note category",
+  RATING: {
+    ACCURATE: [
+      {
+        name: "high-quality-sources",
+        displayName: "High quality sources",
+      },
+      {
+        name: "specific-clear",
+        displayName: "Specific & clear",
+      },
+      {
+        name: "contextually-relevant",
+        displayName: "Contextually relevant",
+      },
+      {
+        name: "actionable-information",
+        displayName: "Actionable information",
+      },
+      {
+        name: "balanced-tone",
+        displayName: "Balanced tone",
+      },
+      {
+        name: "recent-current",
+        displayName: "Recent & current",
+      },
+      {
+        name: "expert-perspective",
+        displayName: "Expert perspective",
+      },
+      {
+        name: "comprehensive",
+        displayName: "Comprehensive",
+      },
+    ],
+    INACCURATE: [
+      {
+        name: "poor-source-quality",
+        displayName: "Poor source quality",
+      },
+      {
+        name: "vague-unclear",
+        displayName: "Vague or unclear",
+      },
+      {
+        name: "off-topic",
+        displayName: "Off topic",
+      },
+      {
+        name: "opinion-based",
+        displayName: "Opinion based",
+      },
+      {
+        name: "outdated-sources",
+        displayName: "Outdated sources",
+      },
+      {
+        name: "biased-language",
+        displayName: "Biased language",
+      },
+      {
+        name: "incomplete",
+        displayName: "Incomplete",
+      },
+      {
+        name: "contradictory",
+        displayName: "Contradictory",
+      },
+      {
+        name: "spam-irrelevant",
+        displayName: "Spam/irrelevant",
+      },
+    ],
+  },
 } as const;
 
 export const REGEX = {
