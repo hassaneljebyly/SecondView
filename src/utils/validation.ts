@@ -114,7 +114,10 @@ export function validateFormData(
   }
 
   // validate category
-  if (!category || !NOTE_FORM_PLACEHOLDERS.CATEGORIES.includes(category)) {
+  if (
+    !category ||
+    !Object.keys(NOTE_FORM_PLACEHOLDERS.CATEGORIES).includes(category)
+  ) {
     errorsPayload["category"] = {
       message: category ? "Invalid input" : "Required Field",
     };

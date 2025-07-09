@@ -12,7 +12,6 @@ import FormTextArea from "./FormTextArea";
 import FormSuccessAlert from "./FormSuccessAlert";
 import useForm from "../../hooks/useForm";
 import { resetForm } from "../../utils";
-import type { Categories } from "../../api";
 import { withPrefix } from "../../utils";
 // [🚀 FEATURE]: add soft close when Esc button clicked
 export default function Form() {
@@ -90,9 +89,7 @@ export default function Form() {
             labelDisplayName={"category"}
             name={"category"}
             defaultSelect={NOTE_FORM_PLACEHOLDERS.CATEGORY_SELECT}
-            categoriesList={
-              NOTE_FORM_PLACEHOLDERS.CATEGORIES as unknown as Categories[]
-            }
+            categoriesList={Object.values(NOTE_FORM_PLACEHOLDERS.CATEGORIES)}
             error={errors["category"]}
           />
 

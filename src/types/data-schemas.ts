@@ -1,19 +1,41 @@
-import type { Categories } from "../api";
 import type { Prettify } from "./Prettify";
+
+export type MisinformationType =
+  | "FABRICATED_CONTENT"
+  | "MANIPULATED_CONTENT"
+  | "IMPOSTER_CONTENT"
+  | "MISLEADING_CONTENT"
+  | "FALSE_CONTEXT"
+  | "SATIRE_AND_PARODY"
+  | "FALSE_CONNECTIONS"
+  | "SPONSORED_CONTENT"
+  | "PROPAGANDA"
+  | "ERROR"
+  | "TEMPORAL_MISREPRESENTATION"
+  | "UNSUBSTANTIATED_ADVICE";
+
+export type MisinformationCategories = {
+  [K in MisinformationType]: {
+    value: K;
+    displayName: string;
+    description: string;
+    color: string;
+  };
+};
 
 export type FormInputData = {
   startTime: string;
   endTime: string;
-  category: Categories | "";
+  category: MisinformationType | "";
   noteContent: string;
 };
 
 export type NoteData = {
   startTime: number;
   endTime: number;
-  category: Categories;
+  category: MisinformationType;
   noteContent: string;
-  sources: string[]
+  sources: string[];
 };
 
 export type VideoMetaData = {

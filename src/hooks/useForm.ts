@@ -11,9 +11,8 @@ import {
   type ValidationErrorPayload,
 } from "../utils";
 import { getVideoDetails } from "../utils";
-import type { FormInputData } from "../types";
+import type { FormInputData, MisinformationType } from "../types";
 import { timeStringToSeconds } from "../utils";
-import type { Categories } from "../api";
 import { useNotes } from "./useNotes";
 
 export type FormState = "hidden" | "idle" | "submitting" | "success" | "error";
@@ -48,7 +47,7 @@ export default function useForm() {
         ...getVideoDetails(),
         startTime: timeStringToSeconds(formDataObject.startTime),
         endTime: timeStringToSeconds(formDataObject.endTime),
-        category: formDataObject.category as Categories,
+        category: formDataObject.category as MisinformationType,
         noteContent: formDataObject.noteContent,
         sources: getSourcesFromNoteContent(formDataObject.noteContent),
         // [🧱 REFACTOR]: get current user ID

@@ -1,5 +1,8 @@
-import type { Categories } from "../../api";
-import type { NoteData } from "../../types";
+import type {
+  MisinformationCategories,
+  MisinformationType,
+  NoteData,
+} from "../../types";
 import type { ValidationErrorPayload } from "../../utils";
 import { withPrefix } from "../../utils";
 
@@ -7,7 +10,7 @@ type SelectInputProp = {
   labelDisplayName: string;
   name: keyof NoteData;
   defaultSelect: string;
-  categoriesList: Categories[];
+  categoriesList: MisinformationCategories[MisinformationType][];
   error: ValidationErrorPayload[keyof ValidationErrorPayload];
 };
 
@@ -36,10 +39,10 @@ export default function CategorySelect(prop: SelectInputProp) {
         required
       >
         <option value="">{defaultSelect}</option>
-        {categoriesList.map((cat) => {
+        {categoriesList.map(({ value, displayName }) => {
           return (
-            <option key={cat} value={cat}>
-              {cat.replaceAll("_", " ").toLowerCase()}
+            <option key={value} value={value}>
+              {displayName}
             </option>
           );
         })}

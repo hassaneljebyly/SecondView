@@ -1,24 +1,9 @@
 import { useEffect } from "react";
-import { type Categories } from "../../api";
-import { getSegmentPercentRange } from "../../utils";
+import { getSegmentPercentRange, NOTE_FORM_PLACEHOLDERS } from "../../utils";
 import { CUSTOM_EVENTS } from "../../utils";
 import type { StoredNoteData } from "../../types";
 import { useNotes } from "../../hooks/useNotes";
 import { withPrefix } from "../../utils";
-
-// [🧱 REFACTOR]: temporary for now, redo categories
-const misinformationColors: Record<Categories, string> = {
-  FABRICATED_CONTENT: "#8E44AD",
-  MANIPULATED_CONTENT: "#D35400",
-  IMPOSTER_CONTENT: "#2980B9",
-  MISLEADING_CONTENT: "#F39C12",
-  FALSE_CONTEXT: "#16A085",
-  SATIRE_AND_PARODY: "#95A5A6",
-  FALSE_CONNECTIONS: "#2ECC71",
-  SPONSORED_CONTENT: "#3498DB",
-  PROPAGANDA: "#9B59B6",
-  ERROR: "#BDC3C7",
-};
 
 export default function NoteSegmentsList() {
   const { noteMap, setNoteMap, noteCacheInstance } = useNotes();
@@ -70,6 +55,8 @@ export default function NoteSegmentsList() {
           const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
             ...{ videoLength, startTime, endTime },
           });
+          const segmentColor =
+            NOTE_FORM_PLACEHOLDERS.CATEGORIES[category]["color"];
           return (
             <li
               className={withPrefix("segments-list__segment")}
@@ -77,7 +64,7 @@ export default function NoteSegmentsList() {
               style={{
                 width: segmentWidth,
                 left: segmentLeftPos,
-                background: `linear-gradient(to top, ${misinformationColors[category]} 40%, transparent 100%)`,
+                background: `linear-gradient(to top, ${segmentColor} 40%, transparent 100%)`,
               }}
             ></li>
           );
