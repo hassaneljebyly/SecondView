@@ -1,0 +1,66 @@
+@use "../base/variables" as var;
+.sv-note__wrapper {
+  border-radius: var(--#{var.$prefix}radius-8);
+
+  height: var(--height);
+  width: var(--width);
+  display: flex;
+  align-items: end;
+  background-color: white;
+  transition: width 250ms ease, height 250ms ease;
+  .sv-note[aria-hidden="true"] {
+    opacity: 0;
+    translate: -100%;
+  }
+  .sv-note[aria-hidden="false"] {
+    translate: 0%;
+  }
+  .note-rating[aria-hidden="true"] {
+    opacity: 0;
+    translate: 100%;
+  }
+  .note-rating[aria-hidden="false"] {
+    translate: 0%;
+  }
+}
+
+.note-rating {
+  width: 100%;
+  max-width: 55ch;
+  border-radius: var(--#{var.$prefix}radius-8);
+  background-color: var(--sv-bg-primary);
+  position: absolute;
+  transition: translate 250ms ease, opacity 150ms ease;
+  bottom: 0;
+  &__legend {
+    font-size: var(--sv-font-size-md);
+    font-weight: var(--sv-font-weight-500);
+    line-height: var(--sv-line-height-4);
+    text-transform: capitalize;
+  }
+  &__heading {
+    font-size: var(--sv-font-size-sm);
+    font-weight: var(--sv-font-weight-500);
+    line-height: var(--sv-line-height-4);
+    text-transform: capitalize;
+  }
+  &__checkbox-label {
+    font-size: var(--sv-font-size-md);
+    font-weight: var(--sv-font-weight-400);
+    line-height: var(--sv-line-height-4);
+    text-transform: capitalize;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    cursor: pointer;
+    padding-block: var(--sv-spacing-8);
+    padding-inline: var(--sv-spacing-16);
+  }
+
+  &__checkbox {
+    margin: 0;
+    width: 18px;
+    aspect-ratio: 1;
+    cursor: pointer;
+  }
+}

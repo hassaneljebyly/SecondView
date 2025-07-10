@@ -12,7 +12,8 @@
   grid-template-rows: auto auto;
   width: 55ch;
   transition: grid-template-rows
-    calc(var(--#{var.$prefix}display-popup-duration) / 2) ease-in-out;
+      calc(var(--#{var.$prefix}display-popup-duration) / 2) ease-in-out,
+    translate 250ms ease, opacity 150ms ease;
   overflow: hidden;
 
   &--expandable {

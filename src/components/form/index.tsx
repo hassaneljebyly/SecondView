@@ -49,6 +49,7 @@ export default function Form() {
     };
   }, [errors, setGlobalErrors, setErrors, formState, setFormState]);
 
+  // [🧱 REFACTOR]: make button its own component
   return (
     <div
       id={withPrefix("form-wrapper")}
@@ -114,7 +115,6 @@ export default function Form() {
           </em>
           <hr className={withPrefix("form__divider", "form-grid-span-2")} />
           <div className={withPrefix("form__action", "form-grid-span-2")}>
-            // [🧱 REFACTOR]: make button its own component
             <button
               className={withPrefix(
                 "form__submit-btn",

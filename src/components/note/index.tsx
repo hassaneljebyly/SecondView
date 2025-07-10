@@ -7,6 +7,7 @@ import {
   removeNote,
   withPrefix,
 } from "../../utils";
+import NoteRating from "../note-rating";
 
 type NoteOptions =
   | {
@@ -26,7 +27,20 @@ export default function Note({
   setNoteQueue,
 }: NoteOptions) {
   const [expanded, setExpanded] = useState(false);
+  const [wrapperDimensions, setWrapperDimensions] = useState({});
+  const [activePanel, setActivePanel] = useState<HTMLDivElement | null>(null);
+  const [openRatingPanel, setOpenRatingPanel] = useState(false);
   const noteHeaderRef = useRef<HTMLDivElement | null>(null);
+  const noteRatingPanelRef = useRef<HTMLDivElement | null>(null);
+  const notePanelRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    if (activePanel) {
+      setWrapperDimensions({
+        "--height": `${activePanel.offsetHeight}px`,
+        "--width": `${activePanel.offsetWidth}px`,
+      });
+    }
+  }, [activePanel]);
   useEffect(() => {
     const noteHeader = noteHeaderRef.current;
     function dismissNote() {
@@ -42,8 +56,15 @@ export default function Note({
   }, [expandable, id, setNoteQueue]);
   const categoryColor = NOTE_FORM_PLACEHOLDERS.CATEGORIES[category]["color"];
   return (
-    <div className={withPrefix("note__wrapper")}>
-      <div className={withPrefix("note", expandable ? "note--expandable" : "")}>
+    <div
+      className={withPrefix("note__wrapper")}
+      style={{ ...wrapperDimensions }}
+    >
+      <div
+        className={withPrefix("note", expandable ? "note--expandable" : "")}
+        aria-hidden={openRatingPanel}
+        ref={notePanelRef}
+      >
         <div
           style={{
             backgroundColor: `rgb(from ${categoryColor} r g b / 10%)`,
@@ -88,6 +109,10 @@ export default function Note({
           <div className={withPrefix("note__action")}>
             <p>rate accuracy of this note</p>
             <button
+              onClick={() => {
+                setActivePanel(noteRatingPanelRef.current);
+                setOpenRatingPanel(true);
+              }}
               className={withPrefix(
                 "form__rating-btn",
                 "button",
@@ -100,59 +125,13 @@ export default function Note({
           </div>
         </div>
       </div>
-      <div>
-        <form>
-          <fieldset>
-            <legend id={withPrefix("tablist-1")}>
-              How Accurate was this note?
-            </legend>
-            <div role="tablist" aria-labelledby={withPrefix("tablist-1")}>
-              {Object.keys(NOTE_FORM_PLACEHOLDERS.RATING).map((tabName, i) => {
-                return (
-                  <button
-                    id={withPrefix(`tab-${tabName}`)}
-                    className={withPrefix(
-                      "form__rating-tab",
-                      "button",
-                      "button--primary",
-                      "button--sm"
-                    )}
-                    type="button"
-                    role="tab"
-                    aria-selected={i === 0 ? true : false}
-                    aria-controls={withPrefix(`tabpanel-${tabName}`)}
-                    tabIndex={i === 0 ? 0 : -1}
-                  >
-                    <span className={withPrefix("button__text")}>
-                      {tabName.toLowerCase()}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <div
-              id={withPrefix(`tabpanel-${"ACCURATE"}`)}
-              role="tabpanel"
-              tabIndex={0}
-              aria-labelledby={withPrefix(`tab-${"ACCURATE"}`)}
-            >
-              {NOTE_FORM_PLACEHOLDERS.RATING.ACCURATE.map(
-                ({ name, displayName }) => {
-                  return (
-                    <label htmlFor={name}>
-                      {displayName}
-                      <input type="checkbox" name={name} id={name} />
-                    </label>
-                  );
-                }
-              )}
-            </div>
-            <div>
-              <button>Submit</button>
-            </div>
-          </fieldset>
-        </form>
-      </div>
+      <NoteRating
+        notePanelRef={notePanelRef}
+        ref={noteRatingPanelRef}
+        setActivePanel={setActivePanel}
+        openRatingPanel={openRatingPanel}
+        setOpenRatingPanel={setOpenRatingPanel}
+      />
     </div>
   );
 }

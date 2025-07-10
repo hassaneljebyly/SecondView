@@ -10,3 +10,28 @@
   font-size: var(--sv-font-size-base);
   box-sizing: border-box;
 }
+// [🧱 REFACTOR]: add prefix
+form {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+legend {
+  padding: 0;
+  border: 0;
+  font: inherit;
+  color: inherit;
+  max-width: 100%;
+  white-space: normal;
+}
