@@ -31,6 +31,8 @@ export default function Note({
   const [activePanel, setActivePanel] = useState<HTMLDivElement | null>(null);
   const [openRatingPanel, setOpenRatingPanel] = useState(false);
   const noteHeaderRef = useRef<HTMLDivElement | null>(null);
+  const rateItButtonRef = useRef<HTMLButtonElement | null>(null);
+  const defaultTabButtonRef = useRef<HTMLButtonElement | null>(null);
   const noteRatingPanelRef = useRef<HTMLDivElement | null>(null);
   const notePanelRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -64,6 +66,14 @@ export default function Note({
         className={withPrefix("note", expandable ? "note--expandable" : "")}
         aria-hidden={openRatingPanel}
         ref={notePanelRef}
+        /**
+         * I had some issues where clicking Tab to move away from the note popup panel
+         * would move the two tab panels out of view without changing state which made the disappear
+         * this inert attribute solves that issue
+         * inert prevents an element and all of its flat tree descendants from getting focus or click
+         * applied when a tab panel is hidden
+         */
+        inert={openRatingPanel}
       >
         <div
           style={{
@@ -109,7 +119,17 @@ export default function Note({
           <div className={withPrefix("note__action")}>
             <p>rate accuracy of this note</p>
             <button
-              onClick={() => {
+              ref={rateItButtonRef}
+              onClick={(e) => {
+                /* e.currentTarget.blur() solves: 
+                Blocked aria-hidden on an element because its descendant retained focus. 
+                The focus must not be hidden from assistive technology users
+                */
+                e.currentTarget.blur();
+                requestAnimationFrame(() => {
+                  // focus default tab
+                  defaultTabButtonRef.current?.focus({ preventScroll: true });
+                });
                 setActivePanel(noteRatingPanelRef.current);
                 setOpenRatingPanel(true);
               }}
@@ -126,6 +146,8 @@ export default function Note({
         </div>
       </div>
       <NoteRating
+        defaultTabButtonRef={defaultTabButtonRef}
+        rateItButtonRef={rateItButtonRef}
         notePanelRef={notePanelRef}
         ref={noteRatingPanelRef}
         setActivePanel={setActivePanel}

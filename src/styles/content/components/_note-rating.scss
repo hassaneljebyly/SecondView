@@ -44,7 +44,6 @@
     border-bottom: 1px solid var(--sv-bg-divider);
   }
   &__tablist {
-    // background-color: var(--sv-color-black-alpha-5);
     padding-inline: var(--sv-spacing-12);
     padding-block: var(--sv-spacing-10);
     border-bottom: 1px solid var(--sv-bg-divider);
@@ -67,6 +66,10 @@
       background-color: var(--sv-color-black);
       color: var(--sv-color-white);
     }
+    &:focus-visible {
+      outline: 2px solid var(--sv-color-blue-43);
+      outline-offset: 2px;
+    }
   }
   &__heading {
     font-size: var(--sv-font-size-md);
@@ -84,6 +87,7 @@
     cursor: pointer;
     padding-block: var(--sv-spacing-8);
     padding-inline: var(--sv-spacing-16);
+    &:has(:focus-visible),
     &:hover {
       background-color: var(--sv-color-hover-bg);
     }

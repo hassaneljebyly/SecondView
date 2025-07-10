@@ -1,6 +1,7 @@
 import type { Root } from "react-dom/client";
 import { withPrefix } from "./helpers";
 import { videoDetailsMap } from "./youtube";
+import type { Tabs } from "../components/note-rating";
 
 export function resetForm() {
   const form = document.querySelector(
@@ -44,5 +45,17 @@ export function cleanUp(rootsMap: Map<string, Root>) {
     const wrapper = document.getElementById(wrapperId);
     if (wrapper) wrapper.remove();
     rootsMap.delete(wrapperId);
+  }
+}
+
+export function focusActiveTabButton(tab: Tabs) {
+  const currentSelectedTabButton = document.getElementById(
+    `sv-tab-${tab.toUpperCase()}`
+  ) as HTMLButtonElement | null;
+
+  if (currentSelectedTabButton) {
+    requestAnimationFrame(() => {
+      currentSelectedTabButton.focus();
+    });
   }
 }

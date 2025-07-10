@@ -165,10 +165,6 @@ export const NOTE_FORM_PLACEHOLDERS = {
         displayName: "Incomplete",
       },
       {
-        name: "contradictory",
-        displayName: "Contradictory",
-      },
-      {
         name: "spam-irrelevant",
         displayName: "Spam/irrelevant",
       },
