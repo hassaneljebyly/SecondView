@@ -47,15 +47,3 @@ export function cleanUp(rootsMap: Map<string, Root>) {
     rootsMap.delete(wrapperId);
   }
 }
-
-export function focusActiveTabButton(tab: Tabs) {
-  const currentSelectedTabButton = document.getElementById(
-    `sv-tab-${tab.toUpperCase()}`
-  ) as HTMLButtonElement | null;
-
-  if (currentSelectedTabButton) {
-    requestAnimationFrame(() => {
-      currentSelectedTabButton.focus();
-    });
-  }
-}

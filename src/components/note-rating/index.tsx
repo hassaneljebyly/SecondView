@@ -1,149 +1,131 @@
 import { useState } from "react";
-import {
-  focusActiveTabButton,
-  NOTE_FORM_PLACEHOLDERS,
-  withPrefix,
-} from "../../utils";
+import { NOTE_FORM_PLACEHOLDERS } from "../../utils";
+import NoteRatingCheckboxes from "./NoteRatingCheckboxes";
+import NoteRatingTabs from "./NoteRatingTabs";
 
 export type Tabs = "accurate" | "inaccurate";
-let currentTabIndex = 0; // accurate opened by default
+// [🧱 REFACTOR]: see where this is needed
+export type RatingItem = {
+  name: string;
+  displayName: string;
+};
+
+export type Rating = {
+  accurate: RatingItem[];
+  inaccurate: RatingItem[];
+};
+function focusActiveTabButton(tab: Tabs) {
+  const currentSelectedTabButton = document.getElementById(
+    `sv-tab-${tab}`
+  ) as HTMLButtonElement | null;
+
+  if (currentSelectedTabButton) {
+    requestAnimationFrame(() => {
+      currentSelectedTabButton.focus();
+    });
+  }
+}
+let currentTabIndex = 0; // first tab is opened by default
+
 export default function NoteRating({
+  notePanelIsOpen,
   defaultTabButtonRef,
   rateItButtonRef,
-  ref,
+  noteRatingPanelRef,
   notePanelRef,
-  openRatingPanel,
-  setOpenRatingPanel,
   setActivePanel,
 }: {
+  notePanelIsOpen: boolean;
   defaultTabButtonRef: React.RefObject<HTMLButtonElement | null>;
   rateItButtonRef: React.RefObject<HTMLButtonElement | null>;
-  ref: React.RefObject<HTMLDivElement | null>;
+  noteRatingPanelRef: React.RefObject<HTMLDivElement | null>;
   notePanelRef: React.RefObject<HTMLDivElement | null>;
-  openRatingPanel: boolean;
-  setOpenRatingPanel: React.Dispatch<React.SetStateAction<boolean>>;
   setActivePanel: React.Dispatch<React.SetStateAction<HTMLDivElement | null>>;
 }) {
   const [activeTab, setActiveTab] = useState<Tabs>("accurate");
   function handleTabClick(tab: Tabs) {
     setActiveTab(tab);
   }
-  function handleTabKeyDow(e: React.KeyboardEvent<HTMLButtonElement>) {
-    // reference https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
+  function handleTabKeyDown(e: React.KeyboardEvent<HTMLButtonElement>) {
     const tabsArray: Tabs[] = ["accurate", "inaccurate"];
-    if (e.code === "ArrowRight") {
-      currentTabIndex = (currentTabIndex + 1) % tabsArray.length;
+
+    switch (e.code) {
+      case "ArrowRight":
+        currentTabIndex = (currentTabIndex + 1) % tabsArray.length;
+        break;
+      case "ArrowLeft":
+        currentTabIndex =
+          (currentTabIndex - 1 + tabsArray.length) % tabsArray.length;
+        break;
+      case "Home":
+        currentTabIndex = 0;
+        break;
+      case "End":
+        currentTabIndex = tabsArray.length - 1;
+        break;
+      default:
+        return;
     }
-    if (e.code === "ArrowLeft") {
-      currentTabIndex =
-        (((currentTabIndex - 1) % tabsArray.length) + tabsArray.length) %
-        tabsArray.length;
-    }
-    if (e.code === "Home") {
-      currentTabIndex = 0;
-    }
-    if (e.code === "End") {
-      currentTabIndex = tabsArray.length - 1;
-    }
+
     const currentActiveTab = tabsArray[currentTabIndex];
     setActiveTab(currentActiveTab);
-    if (["ArrowRight", "ArrowLeft", "Home", "End"].includes(e.code)) {
-      // without this It gets stuck on tab buttons when clicking "Tab" key
-      // which supposed to navigate to the tab panels
-      focusActiveTabButton(currentActiveTab);
-    }
+    focusActiveTabButton(currentActiveTab);
   }
-  function handleCancel(e?: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+
+  function handleCancel(
+    e:
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+      | React.KeyboardEvent<HTMLDivElement>
+  ) {
+    const isEscape =
+      (e as React.KeyboardEvent<HTMLDivElement>).code === "Escape";
+    const isClick = e.type === "click";
+
+    if (!isEscape && !isClick) return;
+
     /* e?.currentTarget.blur() solves:
      * Blocked aria-hidden on an element because its descendant retained focus.
      * The focus must not be hidden from assistive technology users
      * */
-    e?.currentTarget.blur();
+    e.currentTarget.blur();
     requestAnimationFrame(() => {
       // return focus to where It was before rating panel opened (Rate It button)
       rateItButtonRef.current?.focus();
     });
+    // reset default tab
     setActiveTab("accurate");
     setActivePanel(notePanelRef.current);
-    setOpenRatingPanel(false);
   }
-  const tabs = Object.keys(NOTE_FORM_PLACEHOLDERS.RATING);
-  // [🧱 REFACTOR]: fix tabs naming and add type
-  const currentTabInputs =
-    NOTE_FORM_PLACEHOLDERS.RATING[activeTab.toUpperCase() as "ACCURATE"];
+  const tabs = Object.keys(NOTE_FORM_PLACEHOLDERS.RATING) as Tabs[];
+  // [🧱 REFACTOR]: add type to constants and get that file sorted
   return (
     <div
       className="note-rating"
-      aria-hidden={!openRatingPanel}
-      ref={ref}
-      inert={!openRatingPanel}
-      onKeyDown={(e) => {
-        if (e.code === "Escape") {
-          handleCancel();
-        }
-      }}
+      aria-hidden={notePanelIsOpen}
+      ref={noteRatingPanelRef}
+      inert={notePanelIsOpen}
+      onKeyDown={handleCancel}
     >
       <form className="note-rating__form">
         <fieldset className="note-rating__fieldset">
           <legend id="sv-tablist-1" className="note-rating__legend">
             How Accurate was this note?
           </legend>
-
-          <div
-            role="tablist"
-            aria-labelledby="sv-tablist-1"
-            className="note-rating__tablist"
-          >
-            {tabs.map((tab, index) => {
-              return (
-                <button
-                  key={tab}
-                  ref={index === 0 ? defaultTabButtonRef : null}
-                  id={withPrefix(`tab-${tab}`)}
-                  className="note-rating__tab"
-                  type="button"
-                  role="tab"
-                  aria-selected={activeTab === tab.toLowerCase()}
-                  aria-controls={withPrefix(`tabpanel-${tab.toLowerCase()}`)}
-                  tabIndex={activeTab !== tab.toLowerCase() ? -1 : 0}
-                  onClick={() => handleTabClick(tab.toLowerCase() as Tabs)}
-                  onKeyDown={handleTabKeyDow}
-                >
-                  <span className="note-rating__tab-text">
-                    {tab.toLowerCase()}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          <div
-            id={`sv-tabpanel-${activeTab.toUpperCase()}`}
-            className="note-rating__tabpanel"
-            role="tabpanel"
-            tabIndex={0}
-            aria-labelledby={`sv-tab-${activeTab.toUpperCase()}`}
-          >
-            <h3 className="note-rating__heading">Why was this note helpful?</h3>
-            {currentTabInputs.map(({ name, displayName }) => {
-              return (
-                <label
-                  key={name}
-                  className="note-rating__checkbox-label"
-                  htmlFor={name}
-                >
-                  {displayName}
-                  <input
-                    id={name}
-                    type="checkbox"
-                    name={name}
-                    className="note-rating__checkbox"
-                  />
-                </label>
-              );
-            })}
-          </div>
-
+          <NoteRatingTabs
+            handleTabClick={handleTabClick}
+            activeTab={activeTab}
+            handleTabKeyDown={handleTabKeyDown}
+            tabs={tabs}
+            defaultTabButtonRef={defaultTabButtonRef}
+          />
+          <NoteRatingCheckboxes
+            activeTab={activeTab}
+            activeTabCheckboxes={
+              NOTE_FORM_PLACEHOLDERS.RATING[
+                activeTab
+              ] as unknown as RatingItem[]
+            }
+          />
           <div className="note-rating__action">
             <button
               type="button"

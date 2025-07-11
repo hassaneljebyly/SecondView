@@ -101,7 +101,7 @@ export const NOTE_FORM_PLACEHOLDERS = {
   TEXTAREA: "Explain what's incorrect or provide additional context...",
   CATEGORY_SELECT: "Select note category",
   RATING: {
-    ACCURATE: [
+    accurate: [
       {
         name: "high-quality-sources",
         displayName: "High quality sources",
@@ -135,7 +135,7 @@ export const NOTE_FORM_PLACEHOLDERS = {
         displayName: "Comprehensive",
       },
     ],
-    INACCURATE: [
+    inaccurate: [
       {
         name: "poor-source-quality",
         displayName: "Poor source quality",

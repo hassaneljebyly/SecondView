@@ -27,14 +27,23 @@ export default function Note({
   setNoteQueue,
 }: NoteOptions) {
   const [expanded, setExpanded] = useState(false);
-  const [wrapperDimensions, setWrapperDimensions] = useState({});
   const [activePanel, setActivePanel] = useState<HTMLDivElement | null>(null);
-  const [openRatingPanel, setOpenRatingPanel] = useState(false);
   const noteHeaderRef = useRef<HTMLDivElement | null>(null);
+  // rateItButtonRef used to give back focus to Rate It button when rating panel is closed
   const rateItButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  // defaultTabButtonRef used to focus the first tab in the rating panel
   const defaultTabButtonRef = useRef<HTMLButtonElement | null>(null);
+
+  // notePanelRef and noteRatingPanelRef used to get dimensions
+  const [wrapperDimensions, setWrapperDimensions] = useState({});
   const noteRatingPanelRef = useRef<HTMLDivElement | null>(null);
   const notePanelRef = useRef<HTMLDivElement | null>(null);
+
+  const categoryColor = NOTE_FORM_PLACEHOLDERS.CATEGORIES[category]["color"];
+  // set defaults for notePanelIsOpen when activePanel is null
+  const notePanelIsOpen =
+    activePanel === null ? true : activePanel === notePanelRef.current;
   useEffect(() => {
     if (activePanel) {
       setWrapperDimensions({
@@ -56,7 +65,6 @@ export default function Note({
       noteHeader?.removeEventListener("animationend", dismissNote);
     };
   }, [expandable, id, setNoteQueue]);
-  const categoryColor = NOTE_FORM_PLACEHOLDERS.CATEGORIES[category]["color"];
   return (
     <div
       className={withPrefix("note__wrapper")}
@@ -64,7 +72,7 @@ export default function Note({
     >
       <div
         className={withPrefix("note", expandable ? "note--expandable" : "")}
-        aria-hidden={openRatingPanel}
+        aria-hidden={!notePanelIsOpen}
         ref={notePanelRef}
         /**
          * I had some issues where clicking Tab to move away from the note popup panel
@@ -73,7 +81,7 @@ export default function Note({
          * inert prevents an element and all of its flat tree descendants from getting focus or click
          * applied when a tab panel is hidden
          */
-        inert={openRatingPanel}
+        inert={!notePanelIsOpen}
       >
         <div
           style={{
@@ -131,7 +139,6 @@ export default function Note({
                   defaultTabButtonRef.current?.focus({ preventScroll: true });
                 });
                 setActivePanel(noteRatingPanelRef.current);
-                setOpenRatingPanel(true);
               }}
               className={withPrefix(
                 "form__rating-btn",
@@ -146,13 +153,12 @@ export default function Note({
         </div>
       </div>
       <NoteRating
+        notePanelIsOpen={notePanelIsOpen}
         defaultTabButtonRef={defaultTabButtonRef}
         rateItButtonRef={rateItButtonRef}
         notePanelRef={notePanelRef}
-        ref={noteRatingPanelRef}
+        noteRatingPanelRef={noteRatingPanelRef}
         setActivePanel={setActivePanel}
-        openRatingPanel={openRatingPanel}
-        setOpenRatingPanel={setOpenRatingPanel}
       />
     </div>
   );
