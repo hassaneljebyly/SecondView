@@ -30,7 +30,8 @@ export default function NoteRatingCheckboxes({
             <input
               id={name}
               type="checkbox"
-              name={name}
+              name={activeTab}
+              value={name}
               className="note-rating__checkbox"
             />
           </label>

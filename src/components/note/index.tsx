@@ -153,6 +153,7 @@ export default function Note({
         </div>
       </div>
       <NoteRating
+        noteId={id}
         notePanelIsOpen={notePanelIsOpen}
         defaultTabButtonRef={defaultTabButtonRef}
         rateItButtonRef={rateItButtonRef}

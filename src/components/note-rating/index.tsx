@@ -1,7 +1,27 @@
 import { useState } from "react";
-import { NOTE_FORM_PLACEHOLDERS } from "../../utils";
+import { NOTE_FORM_PLACEHOLDERS, withPrefix } from "../../utils";
 import NoteRatingCheckboxes from "./NoteRatingCheckboxes";
 import NoteRatingTabs from "./NoteRatingTabs";
+
+export type AccurateRatingName =
+  | "high-quality-sources"
+  | "specific-clear"
+  | "contextually-relevant"
+  | "actionable-information"
+  | "balanced-tone"
+  | "recent-current"
+  | "expert-perspective"
+  | "comprehensive";
+
+export type InaccurateRatingName =
+  | "poor-source-quality"
+  | "vague-unclear"
+  | "off-topic"
+  | "opinion-based"
+  | "outdated-sources"
+  | "biased-language"
+  | "incomplete"
+  | "spam-irrelevant";
 
 export type Tabs = "accurate" | "inaccurate";
 // [🧱 REFACTOR]: see where this is needed
@@ -16,7 +36,7 @@ export type Rating = {
 };
 function focusActiveTabButton(tab: Tabs) {
   const currentSelectedTabButton = document.getElementById(
-    `sv-tab-${tab}`
+    withPrefix(`tab-${tab}`)
   ) as HTMLButtonElement | null;
 
   if (currentSelectedTabButton) {
@@ -28,6 +48,7 @@ function focusActiveTabButton(tab: Tabs) {
 let currentTabIndex = 0; // first tab is opened by default
 
 export default function NoteRating({
+  noteId,
   notePanelIsOpen,
   defaultTabButtonRef,
   rateItButtonRef,
@@ -35,6 +56,7 @@ export default function NoteRating({
   notePanelRef,
   setActivePanel,
 }: {
+  noteId: string;
   notePanelIsOpen: boolean;
   defaultTabButtonRef: React.RefObject<HTMLButtonElement | null>;
   rateItButtonRef: React.RefObject<HTMLButtonElement | null>;
@@ -106,7 +128,31 @@ export default function NoteRating({
       inert={notePanelIsOpen}
       onKeyDown={handleCancel}
     >
-      <form className="note-rating__form">
+      <form
+        className="note-rating__form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          // check if form in dom
+          // in a SPA environments(YouTube in this case)
+          // the form may be dynamically removed or replaced
+          if (!(form instanceof HTMLFormElement)) {
+            console.error("Form submit event missing a valid form target");
+            return;
+          }
+          try {
+            const formCheckboxesData = new FormData(form);
+            const formCheckboxesDataArray = formCheckboxesData.getAll(
+              activeTab
+            ) as (InaccurateRatingName | AccurateRatingName)[];
+            if (!formCheckboxesDataArray.length) return;
+            if (!validInputValues(activeTab, formCheckboxesDataArray)) return;
+            console.log("done", noteId);
+          } catch (error) {
+            console.error(error);
+          }
+        }}
+      >
         <fieldset className="note-rating__fieldset">
           <legend id="sv-tablist-1" className="note-rating__legend">
             How Accurate was this note?
@@ -135,7 +181,7 @@ export default function NoteRating({
               <span className="sv-button__text">Cancel</span>
             </button>
             <button
-              type="button"
+              type="submit"
               className="note-rating__submit-btn sv-button sv-button--primary sv-button--sm"
             >
               <span className="sv-button__text">Submit</span>
@@ -145,4 +191,14 @@ export default function NoteRating({
       </form>
     </div>
   );
+}
+
+function validInputValues(
+  activeTab: Tabs,
+  checkedValues: (InaccurateRatingName | AccurateRatingName)[]
+) {
+  const targetCheckBoxValues = NOTE_FORM_PLACEHOLDERS.RATING[activeTab].map(
+    ({ name }) => name
+  );
+  return checkedValues.every((value) => targetCheckBoxValues.includes(value));
 }
