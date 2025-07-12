@@ -1,3 +1,8 @@
+import type {
+  AccurateRatingName,
+  InaccurateRatingName,
+  Tabs,
+} from "../components/note-rating";
 import type { FormInputData, StoredNoteData } from "../types";
 import {
   NOTE_FORM_PLACEHOLDERS,
@@ -161,4 +166,14 @@ export function validateFormData(
 export function timeStringIsValid(timeStamp: string): boolean {
   const testRegex = new RegExp(REGEX.TIME_STAMP_PATTERN);
   return testRegex.test(timeStamp);
+}
+
+export function validInputValues(
+  activeTab: Tabs,
+  checkedValues: (InaccurateRatingName | AccurateRatingName)[]
+) {
+  const targetCheckBoxValues = NOTE_FORM_PLACEHOLDERS.RATING[activeTab].map(
+    ({ name }) => name
+  );
+  return checkedValues.every((value) => targetCheckBoxValues.includes(value));
 }

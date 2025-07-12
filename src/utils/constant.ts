@@ -1,3 +1,5 @@
+import type { AccurateWeights, InaccurateWeights } from "../types";
+
 // [🧱 REFACTOR]:  refactor for clarity use json or whatever
 export const SEGMENT_LIMITS = {
   MIN_SECONDS: 10,
@@ -103,70 +105,93 @@ export const NOTE_FORM_PLACEHOLDERS = {
   RATING: {
     accurate: [
       {
-        name: "high-quality-sources",
-        displayName: "High quality sources",
+        name: "reliable-sources",
+        displayName: "Reliable sources",
+        description: "High-quality, credible sources",
       },
       {
-        name: "specific-clear",
-        displayName: "Specific & clear",
+        name: "well-documented",
+        displayName: "Well documented",
+        description: "Claims backed by evidence",
       },
       {
         name: "contextually-relevant",
         displayName: "Contextually relevant",
+        description: "Directly addresses the claim",
       },
       {
-        name: "actionable-information",
-        displayName: "Actionable information",
+        name: "clear-explanation",
+        displayName: "Clear explanation",
+        description: "Easy to understand",
       },
       {
-        name: "balanced-tone",
-        displayName: "Balanced tone",
+        name: "neutral-tone",
+        displayName: "Neutral tone",
+        description: "Objective, professional language",
       },
       {
-        name: "recent-current",
-        displayName: "Recent & current",
+        name: "current-information",
+        displayName: "Current information",
+        description: "Up-to-date sources/facts",
       },
       {
-        name: "expert-perspective",
-        displayName: "Expert perspective",
+        name: "comprehensive-coverage",
+        displayName: "Comprehensive coverage",
+        description: "Addresses the full claim",
       },
       {
-        name: "comprehensive",
-        displayName: "Comprehensive",
+        name: "actionable-helpful",
+        displayName: "Actionable helpful",
+        description: "Gives viewers useful info",
       },
     ],
     inaccurate: [
       {
-        name: "poor-source-quality",
-        displayName: "Poor source quality",
+        name: "unreliable-sources",
+        displayName: "Unreliable sources",
+        description: "Poor quality or biased sources",
       },
+
       {
-        name: "vague-unclear",
-        displayName: "Vague or unclear",
+        name: "unsupported-claims",
+        displayName: "Unsupported claims",
+        description: "No evidence provided",
       },
+
       {
         name: "off-topic",
         displayName: "Off topic",
+        description: "Doesn't match the flagged content",
       },
+
       {
-        name: "opinion-based",
-        displayName: "Opinion based",
+        name: "confusing-unclear",
+        displayName: "Confusing unclear",
+        description: "Hard to follow or vague",
       },
-      {
-        name: "outdated-sources",
-        displayName: "Outdated sources",
-      },
+
       {
         name: "biased-language",
         displayName: "Biased language",
+        description: "Inflammatory or one-sided",
       },
+
       {
-        name: "incomplete",
-        displayName: "Incomplete",
+        name: "outdated-information",
+        displayName: "Outdated information",
+        description: "Old or superseded info",
       },
+
       {
-        name: "spam-irrelevant",
-        displayName: "Spam/irrelevant",
+        name: "incomplete-shallow",
+        displayName: "Incomplete shallow",
+        description: "Doesn't fully address the issue",
+      },
+
+      {
+        name: "spam-unhelpful",
+        displayName: "Spam unhelpful",
+        description: "Low effort or irrelevant",
       },
     ],
   },
@@ -185,6 +210,28 @@ export const CUSTOM_EVENTS = {
   CLEAR_NOTE: "clearNote",
   NOTE_OPENED: "noteOpened",
 } as const;
+
+export const inaccurateWeights: InaccurateWeights = {
+  "unreliable-sources": -5, // Destroys credibility completely
+  "unsupported-claims": -4, // Major red flag for fact-checking
+  "off-topic": -4, // Completely misses the point
+  "confusing-unclear": -2, // Bad UX but doesn't affect accuracy
+  "biased-language": -2, // Reduces trust but claims might still be true
+  "outdated-information": -3, // Can be misleading, context-dependent
+  "incomplete-shallow": -3, // Can mislead by omission
+  "spam-unhelpful": -4, // Wastes everyone's time, needs strong penalty
+};
+
+export const accurateWeights: AccurateWeights = {
+  "reliable-sources": 5, // Most critical - foundation of credibility
+  "well-documented": 4, // Essential - claims need evidence
+  "contextually-relevant": 4, // Essential - must address the actual claim
+  "clear-explanation": 2, // Important but secondary to accuracy
+  "neutral-tone": 2, // Important for trust but not accuracy
+  "current-information": 3, // Very important, especially for evolving topics
+  "comprehensive-coverage": 3, // Important - partial corrections can mislead
+  "actionable-helpful": 2, // Nice to have but not critical for accuracy
+};
 
 export const SUCCESS_MESSAGE_DURATION = 1500;
 export const PREFIX = "sv-" as const;

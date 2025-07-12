@@ -1,3 +1,7 @@
+import type {
+  AccurateRatingName,
+  InaccurateRatingName,
+} from "../components/note-rating";
 import type { Prettify } from "./Prettify";
 
 export type MisinformationType =
@@ -66,3 +70,15 @@ export type GetNotesResponse = {
   notes: StoredNoteData[];
   videoLength: number;
 };
+
+export type NoteRating = {
+  noteId: string;
+  ratedBy: string;
+  accurateRatings: AccurateRatingName[];
+  inaccurateRatings: InaccurateRatingName[];
+  overallHelpful: boolean; // derived from activeTab
+  createdAt: number;
+};
+
+export type AccurateWeights = Record<AccurateRatingName, number>;
+export type InaccurateWeights = Record<InaccurateRatingName, number>;

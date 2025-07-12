@@ -18,6 +18,7 @@ export default function NoteRatingCheckboxes({
       role="tabpanel"
       aria-labelledby={`sv-tab-${activeTab}`}
     >
+      {/*// [🚀 FEATURE]: add tooltip for checkboxes and category selection */}
       <h3 className="note-rating__heading">{heading}</h3>
       {activeTabCheckboxes.map(({ name, displayName }) => {
         return (

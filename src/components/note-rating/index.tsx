@@ -1,27 +1,32 @@
 import { useState } from "react";
-import { NOTE_FORM_PLACEHOLDERS, withPrefix } from "../../utils";
+import {
+  createNoteRatingData,
+  NOTE_FORM_PLACEHOLDERS,
+  validInputValues,
+  withPrefix,
+} from "../../utils";
 import NoteRatingCheckboxes from "./NoteRatingCheckboxes";
 import NoteRatingTabs from "./NoteRatingTabs";
 
 export type AccurateRatingName =
-  | "high-quality-sources"
-  | "specific-clear"
-  | "contextually-relevant"
-  | "actionable-information"
-  | "balanced-tone"
-  | "recent-current"
-  | "expert-perspective"
-  | "comprehensive";
+  | "reliable-sources" // High-quality, credible sources
+  | "well-documented" // Claims backed by evidence
+  | "contextually-relevant" // Directly addresses the claim
+  | "clear-explanation" // Easy to understand
+  | "neutral-tone" // Objective, professional language
+  | "current-information" // Up-to-date sources/facts
+  | "comprehensive-coverage" // Addresses the full claim
+  | "actionable-helpful"; // Gives viewers useful info
 
 export type InaccurateRatingName =
-  | "poor-source-quality"
-  | "vague-unclear"
-  | "off-topic"
-  | "opinion-based"
-  | "outdated-sources"
-  | "biased-language"
-  | "incomplete"
-  | "spam-irrelevant";
+  | "unreliable-sources" // Poor quality or biased sources
+  | "unsupported-claims" // No evidence provided
+  | "off-topic" // Doesn't match the flagged content
+  | "confusing-unclear" // Hard to follow or vague
+  | "biased-language" // Inflammatory or one-sided
+  | "outdated-information" // Old or superseded info
+  | "incomplete-shallow" // Doesn't fully address the issue
+  | "spam-unhelpful"; // Low effort or irrelevant
 
 export type Tabs = "accurate" | "inaccurate";
 // [🧱 REFACTOR]: see where this is needed
@@ -147,7 +152,11 @@ export default function NoteRating({
             ) as (InaccurateRatingName | AccurateRatingName)[];
             if (!formCheckboxesDataArray.length) return;
             if (!validInputValues(activeTab, formCheckboxesDataArray)) return;
-            console.log("done", noteId);
+            console.log(
+              createNoteRatingData(formCheckboxesDataArray, activeTab, noteId)
+            );
+            // continue from here
+            // figure out how to store this
           } catch (error) {
             console.error(error);
           }
@@ -191,14 +200,4 @@ export default function NoteRating({
       </form>
     </div>
   );
-}
-
-function validInputValues(
-  activeTab: Tabs,
-  checkedValues: (InaccurateRatingName | AccurateRatingName)[]
-) {
-  const targetCheckBoxValues = NOTE_FORM_PLACEHOLDERS.RATING[activeTab].map(
-    ({ name }) => name
-  );
-  return checkedValues.every((value) => targetCheckBoxValues.includes(value));
 }
