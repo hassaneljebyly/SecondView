@@ -133,7 +133,7 @@ export default function Form() {
           </div>
         </fieldset>
       </form>
-
+      {/* // [🧱 REFACTOR]: remove this and change it to submit button */}
       <FormSuccessAlert {...{ formState, setFormState }} />
     </div>
   );

@@ -4,6 +4,7 @@
 
 import type {
   GetNotesResponse,
+  NoteRating,
   StoredNoteData,
   SubmitNoteRequest,
 } from "../../types";
@@ -59,6 +60,54 @@ export default class TestLocalStorageRepository extends NotesRepository {
         global: {
           target: "form",
           message: "Something went wrong while trying to save note",
+        },
+      });
+    }
+  }
+
+  async addNoteRating(payload: NoteRating, noteId: string): Promise<void> {
+    try {
+      const noteRatingKey = `note_rating_${noteId}`;
+
+      const noteRatingInStorage = JSON.parse(
+        localStorage.getItem(noteRatingKey) || "{}"
+      ) as { [key: string]: NoteRating[] };
+
+      const ratingData = noteRatingInStorage[noteRatingKey] || [];
+      ratingData.push(payload);
+      localStorage.setItem(
+        noteRatingKey,
+        JSON.stringify({ [noteRatingKey]: ratingData })
+      );
+    } catch (error) {
+      console.error(
+        "Something went wrong while trying to save notes rating:",
+        error
+      );
+      throw new GlobalError({
+        global: {
+          target: "form",
+          message: "Something went wrong while trying to save notes rating",
+        },
+      });
+    }
+  }
+  async getNoteRating(noteId: string): Promise<NoteRating[]> {
+    try {
+      const noteRatingKey = `note_rating_${noteId}`;
+      const noteRatingInStorage = JSON.parse(
+        localStorage.getItem(noteRatingKey) || "{}"
+      ) as { [key: string]: NoteRating[] };
+      return noteRatingInStorage[noteRatingKey] || [];
+    } catch (error) {
+      console.error(
+        "Something went wrong while trying to get notes rating:",
+        error
+      );
+      throw new GlobalError({
+        global: {
+          target: "form",
+          message: "Something went wrong while trying to get notes rating",
         },
       });
     }

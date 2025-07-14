@@ -51,7 +51,6 @@ function focusActiveTabButton(tab: Tabs) {
   }
 }
 let currentTabIndex = 0; // first tab is opened by default
-
 export default function NoteRating({
   noteId,
   notePanelIsOpen,
@@ -152,11 +151,12 @@ export default function NoteRating({
             ) as (InaccurateRatingName | AccurateRatingName)[];
             if (!formCheckboxesDataArray.length) return;
             if (!validInputValues(activeTab, formCheckboxesDataArray)) return;
+
             console.log(
               createNoteRatingData(formCheckboxesDataArray, activeTab, noteId)
             );
-            // continue from here
-            // figure out how to store this
+            // stop here, get proper API running
+            // [🚀 FEATURE]: create the API
           } catch (error) {
             console.error(error);
           }
