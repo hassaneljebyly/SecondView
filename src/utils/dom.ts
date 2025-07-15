@@ -1,7 +1,6 @@
 import type { Root } from "react-dom/client";
 import { withPrefix } from "./helpers";
 import { videoDetailsMap } from "./youtube";
-import type { Tabs } from "../components/note-rating";
 
 export function resetForm() {
   const form = document.querySelector(
