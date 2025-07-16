@@ -1,0 +1,118 @@
+:root {
+  /* Shared typography */
+  --sv-font-sans: "Roboto", "Helvetica Neue", Arial, sans-serif;
+  --sv-font-mono: "Roboto Mono", Menlo, monospace;
+
+  --sv-font-xxs: 1.1rem; /* 11px */
+  --sv-font-xs: 1.2rem; /* 12px */
+  --sv-font-sm: 1.4rem; /* 14px (youtube base) */
+  --sv-font-md: 1.6rem; /* 16px */
+  --sv-font-lg: 1.8rem; /* 18px */
+  --sv-font-xl: 2rem; /* 20px */
+  --sv-font-xxl: 2.4rem; /* 24px */
+  --sv-font-hero: 3.2rem; /* 32px */
+
+  --sv-font-weight-normal: 400;
+  --sv-font-weight-medium: 500;
+  --sv-font-weight-bold: 700;
+
+  /* Spacing scale */
+  --sv-space-xxs: 4px;
+  --sv-space-xs: 8px;
+  --sv-space-s: 10px;
+  --sv-space-sm: 12px;
+  --sv-space-md: 16px;
+  --sv-space-lg: 24px;
+  --sv-space-xl: 32px;
+
+  /* Border radius & shadows */
+  --sv-border-radius-4: 4px;
+  --sv-border-radius-6: 6px;
+  --sv-border-radius-8: 8px;
+  --sv-border-radius-12: 12px;
+  --sv-border-radius-pill: 100vh;
+  --sv-border-default: 1px solid hsl(0, 0%, 90%);
+  --sv-shadow-sm: 0 1px 2px hsl(0, 0%, 0%, 0.05);
+  --sv-shadow-md: 0 4px 6px hsl(0, 0%, 0%, 0.1);
+
+  /* Icon sizes */
+  --sv-icon-xs: 10px;
+  --sv-icon-sm: 16px;
+  --sv-icon-md: 24px;
+  --sv-icon-lg: 32px;
+
+  /* Status colors */
+  --sv-white: hsl(0, 0%, 100%);
+  --sv-black-6: hsl(0, 0%, 6%);
+  --sv-black-1: hsl(0, 0%, 1%);
+  --sv-black-15: hsl(0, 0%, 15%);
+  --sv-black-85: hsl(0, 0%, 85%);
+  --sv-blue-62: hsl(208, 100%, 62%);
+
+  --sv-gray-50: hsl(0, 0%, 98%);
+  --sv-gray-100: hsl(0, 0%, 95%);
+  --sv-gray-200: hsl(0, 0%, 90%);
+  --sv-gray-300: hsl(0, 0%, 80%);
+  --sv-gray-400: hsl(0, 0%, 65%);
+  --sv-gray-500: hsl(0, 0%, 50%);
+  --sv-gray-600: hsl(0, 0%, 40%);
+  --sv-gray-700: hsl(0, 0%, 30%);
+  --sv-gray-800: hsl(0, 0%, 20%);
+  --sv-gray-900: hsl(0, 0%, 10%);
+
+  --sv-black-alpha-05: hsla(0, 0%, 0%, 0.05);
+  --sv-black-alpha-10: hsla(0, 0%, 0%, 0.1);
+  --sv-black-alpha-20: hsla(0, 0%, 0%, 0.2);
+  --sv-black-alpha-40: hsla(0, 0%, 0%, 0.4);
+  --sv-black-alpha-60: hsla(0, 0%, 0%, 0.6);
+  --sv-black-alpha-80: hsla(0, 0%, 0%, 0.8);
+
+  --sv-white-alpha-05: hsla(0, 0%, 100%, 0.05);
+  --sv-white-alpha-10: hsla(0, 0%, 100%, 0.1);
+  --sv-white-alpha-20: hsla(0, 0%, 100%, 0.2);
+  --sv-white-alpha-40: hsla(0, 0%, 100%, 0.4);
+  --sv-white-alpha-60: hsla(0, 0%, 100%, 0.6);
+  --sv-white-alpha-80: hsla(0, 0%, 100%, 0.8);
+
+  --sv-blue-100: hsl(214, 94%, 95%);
+  --sv-blue-200: hsl(214, 94%, 85%);
+  --sv-blue-300: hsl(214, 94%, 75%);
+  --sv-blue-400: hsl(214, 94%, 63%);
+  --sv-blue-500: hsl(214, 94%, 53%);
+  --sv-blue-600: hsl(214, 94%, 43%); /* Brand blue */
+  --sv-blue-700: hsl(214, 94%, 35%);
+  --sv-blue-800: hsl(214, 94%, 28%);
+  --sv-blue-900: hsl(214, 94%, 22%);
+
+  --sv-red-100: hsl(0, 100%, 95%);
+  --sv-red-200: hsl(0, 95%, 85%);
+  --sv-red-300: hsl(0, 90%, 75%);
+  --sv-red-400: hsl(0, 87%, 65%);
+  --sv-red-500: hsl(0, 85%, 60%);
+  --sv-red-600: hsl(0, 85%, 50%);
+  --sv-red-700: hsl(0, 80%, 42%);
+  --sv-red-800: hsl(0, 75%, 35%);
+  --sv-red-900: hsl(0, 70%, 28%);
+
+  --sv-green-100: hsl(123, 70%, 95%);
+  --sv-green-200: hsl(123, 68%, 85%);
+  --sv-green-300: hsl(123, 67%, 72%);
+  --sv-green-400: hsl(123, 67%, 58%);
+  --sv-green-500: hsl(123, 67%, 45%); /* Success green */
+  --sv-green-600: hsl(123, 67%, 35%);
+  --sv-green-700: hsl(123, 65%, 28%);
+  --sv-green-800: hsl(123, 60%, 22%);
+  --sv-green-900: hsl(123, 55%, 16%);
+
+  --sv-icon-to-white-filter: brightness(0) saturate(100%) invert(100%) sepia(0%)
+    saturate(7488%) hue-rotate(49deg) brightness(120%) contrast(100%);
+  --sv-icon-to-blue-filter: brightness(0) saturate(100%) invert(23%) sepia(42%)
+    saturate(6427%) hue-rotate(207deg) brightness(92%) contrast(94%);
+  --sv-icon-to-blue-filter-dark: brightness(0) saturate(100%) invert(56%)
+    sepia(99%) saturate(2261%) hue-rotate(187deg) brightness(103%)
+    contrast(105%);
+
+  --sv-form-popup-max-width: 370px;
+
+  --sv-error-color: var(--sv-red-600);
+}

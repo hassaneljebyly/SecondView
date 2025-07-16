@@ -3,26 +3,228 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/root.css" />
+    <link rel="stylesheet" href="./styles/reset.css" />
+    <link rel="stylesheet" href="./styles/main.css" />
     <title>SecondView - Design System</title>
   </head>
   <body>
-    <header>
-      <nav>
-        <ul>
-          <li>Compoenet 1</li>
-        </ul>
-      </nav>
-    </header>
-    <main>
-      <h1>SecondView Design System</h1>
-      <h2>A comprehensive overview of all UI components in SecondView.</h2>
-      <p>
-        This page displays every component in its different states, highlighting
-        functionality, styling, and interactive behavior, as reference point,
-        and a behind the scenes look for anyone curious about how the interface
-        comes together
-      </p>
-    </main>
-    <footer></footer>
+    <div style="display: flex; align-items: center; gap: 1em">
+      <button class="sv-button sv-button--neutral">
+        <span
+          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-cancel"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Cancel</span>
+      </button>
+      <button class="sv-button sv-button--neutral">
+        <span
+          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-add"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Add Note</span>
+      </button>
+      <button class="sv-button sv-button--neutral">
+        <span
+          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-submit"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Submit</span>
+      </button>
+      <button class="sv-button sv-button--neutral">
+        <span
+          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-loading sv-icon--loading"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Submitting</span>
+      </button>
+      <button class="sv-button sv-button--neutral">
+        <span
+          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-check"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Submitted</span>
+      </button>
+      <button class="sv-button sv-button--dark">
+        <span
+          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-check"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Submitted</span>
+      </button>
+      <button class="sv-button sv-button--accent">
+        <span
+          class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-check"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Submitted</span>
+      </button>
+      <button class="sv-button sv-button--sm sv-button--dark">
+        <span
+          class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-check"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">Accurate</span>
+      </button>
+      <button class="sv-button sv-button--text">
+        <span
+          class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-time"
+          aria-hidden="true"
+        ></span>
+        <span class="sv-button__text">now</span>
+      </button>
+    </div>
+    <div>
+      <form
+        id="sv-form"
+        class="sv-form sv-popup-panel"
+        aria-hidden="false"
+        aria-errormessage="sv-form-global-error"
+        aria-invalid="false"
+        novalidate=""
+      >
+        <fieldset class="sv-form__fieldset sv-form-fieldset-grid">
+          <legend class="sv-form__legend sv-divider sv-divider--bottom">
+            Explain the Context
+          </legend>
+          <div class="sv-form__group">
+            <label class="sv-form__label" for="sv-startTime">
+              start
+              <button class="sv-button sv-button--text">
+                <span
+                  class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-time"
+                  type="button"
+                  aria-hidden="true"
+                ></span>
+                <span class="sv-button__text">now</span>
+              </button>
+            </label>
+            <input
+              id="sv-startTime"
+              class="sv-form__time-input sv-input"
+              placeholder="(e.g. 1:05:30)"
+              aria-errormessage="sv-startTime-error"
+              aria-invalid="false"
+              autocomplete="off"
+              maxlength="8"
+              pattern="^(\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$"
+              required=""
+              value=""
+              name="startTime"
+            /><em
+              id="sv-startTime-error"
+              class="sv-form__error-message"
+              aria-live="polite"
+              ><span
+                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
+              ></span
+            ></em>
+          </div>
+          <div class="sv-form__group">
+            <label class="sv-form__label" for="sv-endTime"
+              >end<button class="sv-button sv-button--text">
+                <span
+                  class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-time"
+                  type="button"
+                  aria-hidden="true"
+                ></span>
+                <span class="sv-button__text">now</span>
+              </button></label
+            ><input
+              id="sv-endTime"
+              class="sv-form__time-input sv-input"
+              placeholder="(e.g. 1:05:30)"
+              aria-errormessage="sv-endTime-error"
+              aria-invalid="false"
+              autocomplete="off"
+              maxlength="8"
+              pattern="^(\d{1,2})(:([0-5]?[0-9]))?(:([0-5]?[0-9]))?$"
+              required=""
+              value=""
+              name="endTime"
+            /><em
+              id="sv-endTime-error"
+              class="sv-form__error-message"
+              aria-live="polite"
+              ><span
+                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
+              ></span
+              >Invalid Input (e.g. 02:40)</em
+            >
+          </div>
+          <div class="sv-form__group sv-form-fieldset-grid__item--full">
+            <label class="sv-form__label" for="sv-category">category</label
+            ><select
+              id="sv-category"
+              class="sv-form__select sv-input"
+              name="category"
+              aria-errormessage="sv-category-error"
+              aria-invalid="false"
+              required=""
+            >
+              <option value="">Select note category</option>
+              <option value="TEMPORAL_MISREPRESENTATION">
+                Temporal Misrepresentation
+              </option>
+              <option value="UNSUBSTANTIATED_ADVICE">
+                Unsubstantiated Advice
+              </option>
+              <option value="MANIPULATED_CONTENT">Manipulated Content</option>
+              <option value="FABRICATED_CONTENT">Fabricated Content</option>
+              <option value="MISLEADING_CONTENT">Misleading Content</option>
+              <option value="SATIRE_AND_PARODY">Satire and Parody</option>
+              <option value="FALSE_CONNECTIONS">False Connections</option>
+              <option value="SPONSORED_CONTENT">Sponsored Content</option>
+              <option value="IMPOSTER_CONTENT">Imposter Content</option>
+              <option value="FALSE_CONTEXT">False Context</option>
+              <option value="PROPAGANDA">Propaganda</option>
+              <option value="ERROR">Error</option></select
+            ><em
+              id="sv-category-error"
+              class="sv-form__error-message"
+              aria-live="polite"
+              ><span
+                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
+              ></span
+            ></em>
+          </div>
+          <div class="sv-form__group sv-form-fieldset-grid__item--full">
+            <label class="sv-form__label" for="sv-noteContent">your note</label>
+            <div class="sv-form__textarea-wrapper">
+              <textarea
+                id="sv-noteContent"
+                class="sv-form__textarea sv-input"
+                name="noteContent"
+                placeholder="Explain what's incorrect or provide additional context..."
+                aria-errormessage="sv-noteContent-error"
+                aria-invalid="false"
+                maxlength="500"
+                minlength="10"
+                required=""
+              ></textarea>
+              <p class="sv-form__char-counter" aria-live="polite">0/500</p>
+            </div>
+            <em
+              id="sv-noteContent-error"
+              class="sv-form__error-message"
+              aria-live="polite"
+              ><span
+                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
+              ></span
+            ></em>
+          </div>
+          <div class="sv-form__action">
+            <button class="sv-button sv-button--accent">
+              <span
+                class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-submit"
+                aria-hidden="true"
+              ></span>
+              <span class="sv-button__text">Submit</span>
+            </button>
+          </div>
+        </fieldset>
+      </form>
+    </div>
   </body>
 </html>
