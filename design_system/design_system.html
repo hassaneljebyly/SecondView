@@ -74,6 +74,16 @@
         ></span>
         <span class="sv-button__text">now</span>
       </button>
+      <button class="icon-button">
+        <span
+          class="icon-button__sv-icon sv-icon sv-icon--sm sv-icon--sm-settings"
+        ></span>
+      </button>
+      <a class="icon-button" href="">
+        <span
+          class="icon-button__sv-icon sv-icon sv-icon--sm sv-icon--sm-settings"
+        ></span>
+      </a>
     </div>
     <div>
       <form
@@ -112,14 +122,17 @@
               required=""
               value=""
               name="startTime"
-            /><em
-              id="sv-startTime-error"
-              class="sv-form__error-message"
-              aria-live="polite"
-              ><span
+            />
+            <div class="sv-form__error-message-wrapper">
+              <span
                 class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span
-            ></em>
+              ></span>
+              <em
+                id="sv-startTime-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+            </div>
           </div>
           <div class="sv-form__group">
             <label class="sv-form__label" for="sv-endTime"
@@ -143,15 +156,17 @@
               required=""
               value=""
               name="endTime"
-            /><em
-              id="sv-endTime-error"
-              class="sv-form__error-message"
-              aria-live="polite"
-              ><span
+            />
+            <div class="sv-form__error-message-wrapper">
+              <span
                 class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span
-              >Invalid Input (e.g. 02:40)</em
-            >
+              ></span>
+              <em
+                id="sv-endTime-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+            </div>
           </div>
           <div class="sv-form__group sv-form-fieldset-grid__item--full">
             <label class="sv-form__label" for="sv-category">category</label
@@ -179,15 +194,18 @@
               <option value="IMPOSTER_CONTENT">Imposter Content</option>
               <option value="FALSE_CONTEXT">False Context</option>
               <option value="PROPAGANDA">Propaganda</option>
-              <option value="ERROR">Error</option></select
-            ><em
-              id="sv-category-error"
-              class="sv-form__error-message"
-              aria-live="polite"
-              ><span
+              <option value="ERROR">Error</option>
+            </select>
+            <div class="sv-form__error-message-wrapper">
+              <span
                 class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span
-            ></em>
+              ></span>
+              <em
+                id="sv-category-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+            </div>
           </div>
           <div class="sv-form__group sv-form-fieldset-grid__item--full">
             <label class="sv-form__label" for="sv-noteContent">your note</label>
@@ -196,7 +214,7 @@
                 id="sv-noteContent"
                 class="sv-form__textarea sv-input"
                 name="noteContent"
-                placeholder="Explain what's incorrect or provide additional context..."
+                placeholder="Explain what’s incorrect or unclear, or add relevant context to support the content..."
                 aria-errormessage="sv-noteContent-error"
                 aria-invalid="false"
                 maxlength="500"
@@ -205,16 +223,20 @@
               ></textarea>
               <p class="sv-form__char-counter" aria-live="polite">0/500</p>
             </div>
-            <em
-              id="sv-noteContent-error"
-              class="sv-form__error-message"
-              aria-live="polite"
-              ><span
+            <div class="sv-form__error-message-wrapper">
+              <span
                 class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span
-            ></em>
+              ></span>
+              <em
+                id="sv-noteContent-error"
+                class="sv-form__error-message"
+                aria-live="polite"
+              ></em>
+            </div>
           </div>
-          <div class="sv-form__action">
+          <div
+            class="sv-form__action sv-form-fieldset-grid__item--full sv-divider sv-divider--top"
+          >
             <button class="sv-button sv-button--accent">
               <span
                 class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-submit"

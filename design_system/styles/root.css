@@ -31,7 +31,9 @@
   --sv-border-radius-8: 8px;
   --sv-border-radius-12: 12px;
   --sv-border-radius-pill: 100vh;
+  --sv-border-radius-round: 50%;
   --sv-border-default: 1px solid hsl(0, 0%, 90%);
+  --sv-shadow-popup: 0 4px 32px 0 var(--sv-black-alpha-10);
   --sv-shadow-sm: 0 1px 2px hsl(0, 0%, 0%, 0.05);
   --sv-shadow-md: 0 4px 6px hsl(0, 0%, 0%, 0.1);
 
@@ -115,4 +117,8 @@
   --sv-form-popup-max-width: 370px;
 
   --sv-error-color: var(--sv-red-600);
+}
+
+html[dark] {
+  --sv-error-color: var(--sv-red-400);
 }
