@@ -1,0 +1,12 @@
+.sv-animation--rotate {
+  animation: rotate 900ms infinite forwards linear;
+}
+
+@keyframes rotate {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}

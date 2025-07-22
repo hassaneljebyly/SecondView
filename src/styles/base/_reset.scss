@@ -1,0 +1,65 @@
+[data-sv-root] {
+  /* 1. Create a root stacking context */
+  isolation: isolate;
+  /* 2. Add accessible line-height */
+  line-height: 1.5;
+  /* 3. Improve text rendering */
+  -webkit-font-smoothing: antialiased;
+
+  /* 4. Use a more-intuitive box-sizing model */
+  box-sizing: border-box;
+  position: relative;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* 5. Remove default margin/padding */
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  /* 6. Improve media defaults */
+  img,
+  picture,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  /* 7. Inherit fonts for form controls */
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+  }
+
+  /* 8. Avoid text overflows */
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+  }
+
+  /* 9. Improve line wrapping */
+  p {
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+}
