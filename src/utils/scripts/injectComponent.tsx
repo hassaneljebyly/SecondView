@@ -1,13 +1,12 @@
-import { createRoot } from 'react-dom/client';
+import { createRoot} from 'react-dom/client';
 
 import StrictModeWrapper from '@/components/helpers/StrictModeWrapper';
 import type { InjectComponentResult, InjectTask } from '@/types';
 
-import { MAX_ATTEMPTS } from '../config/componentInjectConfig';
+import { MAX_ATTEMPTS, MOUNTED_ROOTS } from '../config/componentInjectConfig';
 import { getOrCreateRootWrapper } from '../dom/injectUtils';
 import { logger } from '../lib/logger';
 
-import { ROOTS } from './cleanup';
 
 export default function injectComponent(
   task: InjectTask,
@@ -28,7 +27,7 @@ export default function injectComponent(
     rootWrapper.setAttribute('data-sv-root', '');
     // mount the react component into the wrapper
     const root = createRoot(rootWrapper);
-    ROOTS.set(rootWrapperId, root);
+    MOUNTED_ROOTS.set(rootWrapperId, root);
     root.render(<StrictModeWrapper>{component}</StrictModeWrapper>);
     return {
       success: true,
