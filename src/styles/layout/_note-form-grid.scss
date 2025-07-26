@@ -1,0 +1,8 @@
+.sv-form-fieldset-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  &__item--full {
+    grid-column: span 2;
+  }
+}
