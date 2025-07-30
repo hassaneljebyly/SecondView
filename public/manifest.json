@@ -1,8 +1,21 @@
 {
   "manifest_version": 3,
-  "name": "Content Script Extension",
+  "name": "SecondView",
   "version": "0.1.0",
-  "description": "A Chrome extension using only a content script.",
+  "description": "SecondView is a Chrome extension that brings community-driven fact-checking to YouTube videos.",
+  "icons": {
+    "16": "./icons/logo_16px.png",
+    "48": "./icons/logo_48px.png",
+    "128": "./icons/logo_128px.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "./icons/logo_16px.png",
+      "48": "./icons/logo_48px.png",
+      "128": "./icons/logo_128px.png"
+    },
+    "default_title": "SecondView"
+  },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],

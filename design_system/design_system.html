@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,77 +12,58 @@
   <body>
     <div style="display: flex; align-items: center; gap: 1em">
       <button class="sv-button sv-button--neutral">
-        <span
-          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-cancel"
-          aria-hidden="true"
-        ></span>
+        <span class="sv-button__icon sv-icon sv-icon--md sv-icon--cancel" aria-hidden="true"></span>
         <span class="sv-button__text">Cancel</span>
       </button>
       <button class="sv-button sv-button--neutral">
-        <span
-          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-add"
-          aria-hidden="true"
-        ></span>
+        <span class="sv-button__icon sv-icon sv-icon--md sv-icon--add" aria-hidden="true"></span>
         <span class="sv-button__text">Add Note</span>
       </button>
       <button class="sv-button sv-button--neutral">
-        <span
-          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-submit"
-          aria-hidden="true"
-        ></span>
+        <span class="sv-button__icon sv-icon sv-icon--md sv-icon--submit" aria-hidden="true"></span>
         <span class="sv-button__text">Submit</span>
       </button>
       <button class="sv-button sv-button--neutral">
         <span
-          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-loading sv-icon--loading"
+          class="sv-button__icon sv-icon sv-icon--md sv-icon--loading sv-icon--loading sv-animation--rotate"
           aria-hidden="true"
         ></span>
         <span class="sv-button__text">Submitting</span>
       </button>
       <button class="sv-button sv-button--neutral">
-        <span
-          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-check"
-          aria-hidden="true"
-        ></span>
+        <span class="sv-button__icon sv-icon sv-icon--md sv-icon--check" aria-hidden="true"></span>
         <span class="sv-button__text">Submitted</span>
       </button>
       <button class="sv-button sv-button--dark">
-        <span
-          class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-check"
-          aria-hidden="true"
-        ></span>
+        <span class="sv-button__icon sv-icon sv-icon--md sv-icon--check" aria-hidden="true"></span>
         <span class="sv-button__text">Submitted</span>
       </button>
       <button class="sv-button sv-button--accent">
         <span
-          class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-check"
+          class="sv-button__icon sv-icon sv-icon--dark sv-icon--md sv-icon--check"
           aria-hidden="true"
         ></span>
         <span class="sv-button__text">Submitted</span>
       </button>
       <button class="sv-button sv-button--sm sv-button--dark">
         <span
-          class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-check"
+          class="sv-button__icon sv-icon sv-icon--dark sv-icon--md sv-icon--check"
           aria-hidden="true"
         ></span>
         <span class="sv-button__text">Accurate</span>
       </button>
       <button class="sv-button sv-button--text">
         <span
-          class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-time"
+          class="sv-button__icon sv-icon sv-icon--dark sv-icon--sm sv-icon--time"
           aria-hidden="true"
         ></span>
         <span class="sv-button__text">now</span>
       </button>
       <button class="icon-button">
-        <span
-          class="icon-button__sv-icon sv-icon sv-icon--sm sv-icon--sm-settings"
-        ></span>
+        <span class="icon-button__sv-icon sv-icon sv-icon--md sv-icon--settings"></span>
       </button>
       <a class="icon-button" href="">
-        <span
-          class="icon-button__sv-icon sv-icon sv-icon--sm sv-icon--sm-settings"
-        ></span>
+        <span class="icon-button__sv-icon sv-icon sv-icon--md sv-icon--settings"></span>
       </a>
     </div>
     <div>
@@ -95,15 +76,13 @@
         novalidate=""
       >
         <fieldset class="sv-form__fieldset sv-form-fieldset-grid">
-          <legend class="sv-form__legend sv-divider sv-divider--bottom">
-            Explain the Context
-          </legend>
+          <legend class="sv-form__legend sv-divider sv-divider--bottom">Explain the Context</legend>
           <div class="sv-form__group">
             <label class="sv-form__label" for="sv-startTime">
               start
               <button class="sv-button sv-button--text">
                 <span
-                  class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-time"
+                  class="sv-button__icon sv-icon sv-icon--dark sv-icon--sm sv-icon--time"
                   type="button"
                   aria-hidden="true"
                 ></span>
@@ -124,21 +103,15 @@
               name="startTime"
             />
             <div class="sv-form__error-message-wrapper">
-              <span
-                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span>
-              <em
-                id="sv-startTime-error"
-                class="sv-form__error-message"
-                aria-live="polite"
-              ></em>
+              <span class="sv-fom__icon sv-icon sv-icon--sm sv-icon--error"></span>
+              <em id="sv-startTime-error" class="sv-form__error-message" aria-live="polite"></em>
             </div>
           </div>
           <div class="sv-form__group">
             <label class="sv-form__label" for="sv-endTime"
               >end<button class="sv-button sv-button--text">
                 <span
-                  class="sv-button__icon sv-icon icon--dark sv-icon--sm sv-icon--sm-time"
+                  class="sv-button__icon sv-icon sv-icon--dark sv-icon--sm sv-icon--time"
                   type="button"
                   aria-hidden="true"
                 ></span>
@@ -158,14 +131,8 @@
               name="endTime"
             />
             <div class="sv-form__error-message-wrapper">
-              <span
-                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span>
-              <em
-                id="sv-endTime-error"
-                class="sv-form__error-message"
-                aria-live="polite"
-              ></em>
+              <span class="sv-fom__icon sv-icon sv-icon--sm sv-icon--error"></span>
+              <em id="sv-endTime-error" class="sv-form__error-message" aria-live="polite"></em>
             </div>
           </div>
           <div class="sv-form__group sv-form-fieldset-grid__item--full">
@@ -179,12 +146,8 @@
               required=""
             >
               <option value="">Select note category</option>
-              <option value="TEMPORAL_MISREPRESENTATION">
-                Temporal Misrepresentation
-              </option>
-              <option value="UNSUBSTANTIATED_ADVICE">
-                Unsubstantiated Advice
-              </option>
+              <option value="TEMPORAL_MISREPRESENTATION">Temporal Misrepresentation</option>
+              <option value="UNSUBSTANTIATED_ADVICE">Unsubstantiated Advice</option>
               <option value="MANIPULATED_CONTENT">Manipulated Content</option>
               <option value="FABRICATED_CONTENT">Fabricated Content</option>
               <option value="MISLEADING_CONTENT">Misleading Content</option>
@@ -197,14 +160,8 @@
               <option value="ERROR">Error</option>
             </select>
             <div class="sv-form__error-message-wrapper">
-              <span
-                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span>
-              <em
-                id="sv-category-error"
-                class="sv-form__error-message"
-                aria-live="polite"
-              ></em>
+              <span class="sv-fom__icon sv-icon sv-icon--sm sv-icon--error"></span>
+              <em id="sv-category-error" class="sv-form__error-message" aria-live="polite"></em>
             </div>
           </div>
           <div class="sv-form__group sv-form-fieldset-grid__item--full">
@@ -224,22 +181,14 @@
               <p class="sv-form__char-counter" aria-live="polite">0/500</p>
             </div>
             <div class="sv-form__error-message-wrapper">
-              <span
-                class="sv-fom__icon sv-icon sv-icon--sm sv-icon--sm-error"
-              ></span>
-              <em
-                id="sv-noteContent-error"
-                class="sv-form__error-message"
-                aria-live="polite"
-              ></em>
+              <span class="sv-fom__icon sv-icon sv-icon--sm sv-icon--error"></span>
+              <em id="sv-noteContent-error" class="sv-form__error-message" aria-live="polite"></em>
             </div>
           </div>
-          <div
-            class="sv-form__action sv-form-fieldset-grid__item--full sv-divider sv-divider--top"
-          >
+          <div class="sv-form__action sv-form-fieldset-grid__item--full sv-divider sv-divider--top">
             <button class="sv-button sv-button--accent">
               <span
-                class="sv-button__icon sv-icon sv-icon--sm sv-icon--sm-submit"
+                class="sv-button__icon sv-icon sv-icon--md sv-icon--submit"
                 aria-hidden="true"
               ></span>
               <span class="sv-button__text">Submit</span>

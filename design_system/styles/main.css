@@ -56,46 +56,52 @@ html[dark] {
   aspect-ratio: 1;
   background-repeat: no-repeat;
   background-size: cover;
+  flex-shrink: 0;
 }
 
-.icon--dark {
+.sv-icon--dark {
   filter: var(--sv-icon-to-white-filter);
 }
 
+.sv-icon--xs {
+  --_sv-width: var(--sv-icon-xs);
+}
 .sv-icon--sm {
+  --_sv-width: var(--sv-icon-sm);
+}
+.sv-icon--md {
   --_sv-width: var(--sv-icon-md);
 }
-
-.sv-icon--sm-cancel {
-  background-image: url("./../../public/icons/cancel_24px.png");
+.sv-icon--lg {
+  --_sv-width: var(--sv-icon-lg);
 }
 
-.sv-icon--sm-add {
-  background-image: url("./../../public/icons/add_24px.png");
+.sv-icon--cancel {
+  background-image: url('./../../public/icons/cancel_24px.png');
 }
 
-.sv-icon--sm-submit {
-  background-image: url("./../../public/icons/submit_24px.png");
+.sv-icon--add {
+  background-image: url('./../../public/icons/add_24px.png');
 }
 
-.sv-icon--sm-loading {
-  background-image: url("./../../public/icons/loading_24px.png");
-  animation: rotate 900ms infinite forwards linear;
+.sv-icon--submit {
+  background-image: url('./../../public/icons/submit_24px.png');
 }
-.sv-icon--sm-check {
-  background-image: url("./../../public/icons/check_24px.png");
+
+.sv-icon--loading {
+  background-image: url('./../../public/icons/loading_24px.png');
 }
-.sv-icon--sm-settings {
-  background-image: url("./../../public/icons/settings_24px.png");
+.sv-icon--check {
+  background-image: url('./../../public/icons/check_24px.png');
 }
-.sv-icon--sm-time {
-  background-image: url("./../../public/icons/time_16px.png");
-  --_sv-width: var(--sv-icon-sm);
+.sv-icon--settings {
+  background-image: url('./../../public/icons/settings_24px.png');
 }
-.sv-icon--sm-error {
-  background-image: url("./../../public/icons/error_16px.png");
-  flex-shrink: 0;
-  --_sv-width: var(--sv-icon-sm);
+.sv-icon--time {
+  background-image: url('./../../public/icons/time_16px.png');
+}
+.sv-icon--error {
+  background-image: url('./../../public/icons/error_16px.png');
 }
 
 /* ====================icon-button==================== */
@@ -369,7 +375,7 @@ html[dark] {
   --_sv-input-outline-color: var(--_sv-input-outline-color-focus);
 }
 
-.sv-input[aria-invalid="true"] {
+.sv-input[aria-invalid='true'] {
   --_sv-input-border-color: var(--sv-error-color) !important;
   --_sv-input-border-color-hover: var(--sv-error-color) !important;
   --_sv-input-outline-color-focus: var(--sv-error-color) !important;
@@ -388,6 +394,10 @@ html[dark] {
     --_sv-input-border-color-focus: transparent;
     --_sv-input-outline-color-focus: var(--sv-white);
   }
+}
+
+.sv-animation--rotate {
+  animation: rotate 900ms infinite forwards linear;
 }
 
 @keyframes rotate {
@@ -440,7 +450,7 @@ html[dark] {
   padding-inline: var(--_sv-form-px);
   width: 100%;
 }
-.sv-form__group:has(input[aria-invalid="true"]) {
+.sv-form__group:has(input[aria-invalid='true']) {
   --_sv-error-visibility: visible;
 }
 

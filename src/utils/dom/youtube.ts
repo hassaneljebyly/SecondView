@@ -1,8 +1,8 @@
 import { testVideoDetails } from '@/mocks/youtube';
-import type { VideoMetaData } from '@/shared/src/types/youtube-data';
 
 import { IS_DEV } from '../config/loggerConfig';
 import { logger } from '../lib/logger';
+import type { VideoMetaData } from '@shared/types/youtube-data';
 
 // export only to clear old data during clean
 export const videoDetailsMap = new Map<keyof VideoMetaData, string | number>();

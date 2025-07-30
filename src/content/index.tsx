@@ -1,6 +1,6 @@
 import type { Retries } from '@/types';
 import { MOUNTED_ROOTS } from '@/utils/config/componentInjectConfig';
-import { injectTask } from '@/utils/config/injectTasksConfig';
+import { INJECT_TASK } from '@/utils/config/injectTasksConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
 import { logger } from '@/utils/lib/logger';
 import {
@@ -14,7 +14,7 @@ import '@/styles/index.scss';
 
 let pageId = Date.now();
 
-let queuedTasks: Retries[] = injectTask.map(task => ({
+let queuedTasks: Retries[] = INJECT_TASK.map(task => ({
   task,
   attempts: 0,
 }));

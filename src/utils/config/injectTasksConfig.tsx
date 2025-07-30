@@ -2,7 +2,7 @@ import { FormToggleButtonTask } from '@/components/content/FormToggleButton/inje
 import { NoteFormTask } from '@/components/content/NoteForm/injectTask';
 import type { InjectTask } from '@/types';
 
-export const injectTask: InjectTask[] = [FormToggleButtonTask, NoteFormTask];
+export const INJECT_TASK: InjectTask[] = [FormToggleButtonTask, NoteFormTask];
 // {
 //   domTargetSelector: '.ytp-progress-bar-container',
 //   rootWrapperId: withPrefix('note-display-root'),

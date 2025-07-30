@@ -1,7 +1,7 @@
 :root {
   /* Shared typography */
-  --sv-font-sans: "Roboto", "Helvetica Neue", Arial, sans-serif;
-  --sv-font-mono: "Roboto Mono", Menlo, monospace;
+  --sv-font-sans: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --sv-font-mono: 'Roboto Mono', Menlo, monospace;
 
   --sv-font-xxs: 1.1rem; /* 11px */
   --sv-font-xs: 1.2rem; /* 12px */
@@ -106,16 +106,14 @@
   --sv-green-800: hsl(123, 60%, 22%);
   --sv-green-900: hsl(123, 55%, 16%);
 
-  --sv-icon-to-white-filter: brightness(0) saturate(100%) invert(100%) sepia(0%)
-    saturate(7488%) hue-rotate(49deg) brightness(120%) contrast(100%);
-  --sv-icon-to-blue-filter: brightness(0) saturate(100%) invert(23%) sepia(42%)
-    saturate(6427%) hue-rotate(207deg) brightness(92%) contrast(94%);
-  --sv-icon-to-blue-filter-dark: brightness(0) saturate(100%) invert(56%)
-    sepia(99%) saturate(2261%) hue-rotate(187deg) brightness(103%)
-    contrast(105%);
+  --sv-icon-to-white-filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7488%)
+    hue-rotate(49deg) brightness(120%) contrast(100%);
+  --sv-icon-to-blue-filter: brightness(0) saturate(100%) invert(23%) sepia(42%) saturate(6427%)
+    hue-rotate(207deg) brightness(92%) contrast(94%);
+  --sv-icon-to-blue-filter-dark: brightness(0) saturate(100%) invert(56%) sepia(99%) saturate(2261%)
+    hue-rotate(187deg) brightness(103%) contrast(105%);
 
   --sv-form-popup-max-width: 370px;
-
   --sv-error-color: var(--sv-red-600);
 }
 

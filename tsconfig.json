@@ -36,13 +36,14 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@/components/*": ["./src/components/*"],
-      "@/utils/*": ["./src/utils/*"],
-      "@/types/*": ["./src/types/*"],
-      "@/hooks/*": ["./src/hooks/*"],
-      "@/styles/*": ["./src/styles/*"]
+      "@components/*": ["./src/components/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@mocks/*": ["./src/mocks/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@types/*": ["./src/types/*"],
+      "@utils/*": ["./src/utils/*"],
+      "@shared/*": ["../shared/src/*"]
     },
-
     // Emit
     "declaration": true,
     "declarationMap": true,
@@ -64,7 +65,7 @@
     // Extension-specific types
     "types": ["chrome", "node", "vite/client"]
   },
-  "include": ["src/**/*", "config/**/*", "*.config.ts", "vite.config.ts"],
+  "include": ["src/**/*", "config/**/*", "*.config.ts", "vite.config.ts", "../shared/src/**/*"],
   "exclude": [
     "node_modules",
     "dist",

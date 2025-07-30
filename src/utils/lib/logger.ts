@@ -18,6 +18,6 @@ export const logger = {
 };
 
 function source() {
-  const location = `${new Error().stack?.split('\n')[3]}`.match(/(\(.+\))/);
-  return location ? `\n at ${location[0]}` : '';
+  const location = `${new Error().stack?.split('\n')[3]}`;
+  return `\n${location}`;
 }

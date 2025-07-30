@@ -1,10 +1,8 @@
+import type { CustomEventMap, GlobalEventNames } from '@/types';
+
+import { CUSTOM_EVENTS } from '../config/customEventsConfig';
+
 import { logger } from './logger';
-
-const customEvents = ['form:close', 'form:open'] as const;
-
-type CustomEventMap = (typeof customEvents)[number];
-
-type GlobalEventNames = keyof WindowEventMap | CustomEventMap;
 
 class GlobalEventSingleton {
   private readonly subscribedEvents: Map<GlobalEventNames, Set<EventListenerOrEventListenerObject>>;
@@ -54,7 +52,7 @@ class GlobalEventSingleton {
 
   emit(event: CustomEventMap, data?: CustomEventInit<unknown>) {
     // runtime validation to prevent malicious or accidental event dispatching
-    if (!customEvents.includes(event)) {
+    if (!CUSTOM_EVENTS.includes(event)) {
       logger.warn(`Attempted to dispatch unrecognizable event: ${event}`);
       return;
     }
