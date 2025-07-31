@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "noEmit": true,
+    "paths": {
+      "@/*": ["extension/src/*"],
+      "@components/*": ["extension/src/components/*"],
+      "@hooks/*": ["extension/src/hooks/*"],
+      "@mocks/*": ["extension/src/mocks/*"],
+      "@styles/*": ["extension/src/styles/*"],
+      "@types/*": ["extension/src/types/*"],
+      "@utils/*": ["extension/src/utils/*"],
+      "@shared/*": ["shared/*"]
+    },
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "react-jsx"
+  },
+  "exclude": ["backend"],
+  "include": ["extension", "shared"]
+}
