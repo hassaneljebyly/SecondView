@@ -67,5 +67,6 @@
     "**/*.spec.ts",
     "**/*.spec.tsx"
   ],
-  "include": ["extension", "shared"]
+
+  "include": ["extension/**/*", "shared/**/*", "*.ts", "*.tsx"]
 }
