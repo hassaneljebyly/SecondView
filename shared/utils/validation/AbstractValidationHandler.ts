@@ -50,6 +50,14 @@ export abstract class ValidationHandler {
       if (this.nextHandler) {
         this.nextHandler.validate(context, this.errors);
       }
+      // `validFormSchema` is used internally in the validation chain as a control flag
+      // (to short-circuit further checks if the form schema is invalid e.g missing fields or added fields).
+      // At this point, if it is `true`, it means no schema error occurred, so we
+      // remove it to avoid leaking internal state into the final errors object.
+      // that way we can easily check existence of errors more easily.
+      if (this.errors['validFormSchema'] === true) {
+        delete this.errors['validFormSchema'];
+      }
     }
   }
 
