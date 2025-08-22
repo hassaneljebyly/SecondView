@@ -13,7 +13,6 @@ export class TimeStampPatternHandler extends ValidationHandler {
   }
   protected override handle(context: ValidationConfig): void {
     const { formData, timeStampRegex } = context;
-
     // Validate start time format if no existing error
     const startTimeField = formData['startTime'].trim();
     if (!this.errors['startTime'] && !timeStringIsValid(startTimeField, timeStampRegex)) {

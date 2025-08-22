@@ -1,4 +1,4 @@
-import type { ValidationConfig } from '@shared/types/validation';
+import type { ValidationConfig, ValidationResult } from '@shared/types/validation';
 
 import { EndWithinBoundsValidator } from './EndWithinBoundsValidator';
 import { FormSchemaValidator } from './FormSchemaValidator';
@@ -14,20 +14,24 @@ import { TimeStampPatternHandler } from './TimeStampPatternHandler';
 /**
  * Validates a form submission against a chain of validation handlers.
  * This function builds a validation chain (using the Chain of Responsibility pattern),
- * executes all validation steps, and returns a summary object indicating whether
- * the form is valid and the associated form data.
+ * executes all validation steps, and returns a result indicating whether the form
+ * is valid. On success, the form data is returned; on failure, the errors are returned.
  *
  * @param validationConfig - The configuration and data to be validated.
- * @returns An object with:
- * - `formIsValid`: boolean indicating overall form validity
- * - `formData`: the raw form data extracted from the validationConfig
+ * @returns ValidationResult:
+ * - `{ formIsValid: true, formData }` if no validation errors were found.
+ * - `{ formIsValid: false, errors }` if validation failed.
  */
-export function validateForm(validationConfig: ValidationConfig) {
+export function validateForm(validationConfig: ValidationConfig): ValidationResult {
   const validationChain = buildValidationChain();
+
   validationChain.validate(validationConfig, {});
-  const formIsValid = !Object.keys(validationChain.getErrors()).length;
-  const formData = validationConfig['formData'];
-  return { formIsValid, formData };
+
+  if (Object.keys(validationChain.getErrors()).length === 0) {
+    return { formIsValid: true, formData: validationConfig.formData };
+  }
+
+  return { formIsValid: false, errors: validationChain.getErrors() };
 }
 
 /**
