@@ -31,15 +31,15 @@ class GlobalEventSingleton {
    *
    * @param {GlobalEventNames} event - The event name to listen for.
    * @param {EventListenerOrEventListenerObject} eventHandler - The handler function or object.
-   * @param {boolean | AddEventListenerOptions} [options] - Optional options for `addEventListener`.
    * @param {HTMLElement | Window} [target=window] - The target to attach the listener to.
+   * @param {boolean | AddEventListenerOptions} [options] - Optional options for `addEventListener`.
    * @returns {{ disconnectEvent: () => void }} An object with a `disconnectEvent` function to unsubscribe the listener.
    */
   on(
     event: GlobalEventNames,
     eventHandler: EventListenerOrEventListenerObject,
-    options?: boolean | AddEventListenerOptions,
-    target: HTMLElement | Window = window
+    target: HTMLElement | Window = window,
+    options?: boolean | AddEventListenerOptions
   ): { disconnectEvent: () => void } {
     // register the event listener with the browser
     target.addEventListener(event, eventHandler, options);
@@ -69,13 +69,13 @@ class GlobalEventSingleton {
    * Dispatches a global custom event if it is recognized.
    *
    * @param {CustomEventMap} event - The event name to dispatch.
-   * @param {CustomEventInit<unknown>} [data] - Optional event detail data.
    * @param {HTMLElement | Window} [target=window] - The target to attach the listener to.
+   * @param {CustomEventInit<unknown>} [data] - Optional event detail data.
    */
   emit(
     event: CustomEventMap,
-    data?: CustomEventInit<unknown>,
-    target: HTMLElement | Window = window
+    target: HTMLElement | Window = window,
+    data?: CustomEventInit<unknown>
   ) {
     // runtime validation to prevent malicious or accidental event dispatching
     if (!CUSTOM_EVENTS.includes(event)) {
