@@ -70,19 +70,19 @@ class GlobalEventSingleton {
    *
    * @param {CustomEventMap} event - The event name to dispatch.
    * @param {HTMLElement | Window} [target=window] - The target to attach the listener to.
-   * @param {CustomEventInit<unknown>} [data] - Optional event detail data.
+   * @param {CustomEventInit<unknown>} [options] - Optional event detail options.
    */
   emit(
     event: CustomEventMap,
     target: HTMLElement | Window = window,
-    data?: CustomEventInit<unknown>
+    options?: CustomEventInit<unknown>
   ) {
     // runtime validation to prevent malicious or accidental event dispatching
     if (!CUSTOM_EVENTS.includes(event)) {
       logger.warn(`Attempted to dispatch unrecognizable event: ${event}`);
       return;
     }
-    const customEventObject = new CustomEvent(event, { detail: data });
+    const customEventObject = new CustomEvent(event, options);
     target.dispatchEvent(customEventObject);
   }
   /**
