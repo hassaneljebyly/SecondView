@@ -35,7 +35,7 @@
       "@/*": ["extension/src/*"],
       "@components/*": ["extension/src/components/*"],
       "@hooks/*": ["extension/src/hooks/*"],
-      "@mocks/*": ["extension/src/mocks/*"],
+      "@mocks/*": ["shared/mocks/*"],
       "@styles/*": ["extension/src/styles/*"],
       "@types/*": ["extension/src/types/*"],
       "@utils/*": ["extension/src/utils/*"],

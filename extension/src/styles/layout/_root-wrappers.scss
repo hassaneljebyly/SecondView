@@ -1,0 +1,15 @@
+#sv-add-note-btn-wrapper {
+  margin-right: var(--sv-space-xs);
+  width: fit-content;
+}
+
+#sv-note-form-root {
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  z-index: 999;
+  min-width: 370px;
+  max-width: 370px;
+  // youtube disables user select form this element container
+  user-select: text !important;
+}

@@ -1,0 +1,10 @@
+.sv-segments-list {
+  list-style: none;
+  position: 'relative';
+
+  &__segment {
+    position: absolute;
+    bottom: 0;
+    height: 10px;
+  }
+}

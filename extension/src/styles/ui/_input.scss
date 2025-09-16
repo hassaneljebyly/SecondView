@@ -1,0 +1,55 @@
+.sv-input {
+  /* default */
+  --_sv-input-color: var(--sv-black-6);
+  --_sv-input-border-color: var(--sv-gray-300);
+  --_sv-input-outline-color: transparent;
+  --_sv-input-bg-color: transparent;
+  /* hover */
+  --_sv-input-border-color-hover: var(--sv-black-6);
+  /* focus */
+  --_sv-input-border-color-focus: transparent;
+  --_sv-input-outline-color-focus: var(--sv-black-6);
+  /*  */
+  --_sv-input-py: var(--sv-space-s);
+  --_sv-input-px: var(--sv-space-sm);
+  --_sv-input-radius: var(--sv-border-radius-8);
+  font-size: var(--sv-font-sm);
+  color: var(--_sv-input-color);
+  background-color: var(--_sv-input-bg-color);
+  border: 1px solid var(--_sv-input-border-color);
+  outline: 2px solid var(--_sv-input-outline-color);
+  border-radius: var(--_sv-input-radius);
+  padding-inline: var(--_sv-input-px);
+  padding-block: var(--_sv-input-py);
+  margin: 0;
+  appearance: none;
+
+  &:hover:not(:disabled) {
+    --_sv-input-border-color: var(--_sv-input-border-color-hover);
+  }
+  &:focus-visible:not(:disabled) {
+    --_sv-input-border-color: var(--_sv-input-border-color-focus);
+    --_sv-input-outline-color: var(--_sv-input-outline-color-focus);
+  }
+
+  &[aria-invalid='true'] {
+    --_sv-input-border-color: var(--sv-error-color) !important;
+    --_sv-input-border-color-hover: var(--sv-error-color) !important;
+    --_sv-input-outline-color-focus: var(--sv-error-color) !important;
+  }
+
+  html[dark] & {
+    & {
+      /* default */
+      --_sv-input-color: var(--sv-white);
+      --_sv-input-border-color: var(--sv-gray-600);
+      --_sv-input-outline-color: transparent;
+      --_sv-input-bg-color: transparent;
+      /* hover */
+      --_sv-input-border-color-hover: var(--sv-white);
+      /* focus */
+      --_sv-input-border-color-focus: transparent;
+      --_sv-input-outline-color-focus: var(--sv-white);
+    }
+  }
+}

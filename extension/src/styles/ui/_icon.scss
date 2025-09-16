@@ -1,0 +1,43 @@
+.sv-icon {
+  width: var(--_sv-icon-size, 24px);
+  height: var(--_sv-icon-size, 24px);
+  fill: var(--sv-black-6, black);
+  display: block;
+  flex-shrink: 0;
+}
+html[dark] {
+  .sv-icon {
+    fill: var(--sv-white, white);
+  }
+}
+.sv-icon--dark {
+  fill: var(--sv-black-6, black);
+}
+.sv-icon--light {
+  fill: var(--sv-white, white);
+}
+
+/* sizes */
+.sv-icon--xs {
+  --_sv-icon-size: var(--sv-icon-xs);
+}
+.sv-icon--sm {
+  --_sv-icon-size: var(--sv-icon-sm);
+}
+.sv-icon--md {
+  --_sv-icon-size: var(--sv-icon-md);
+}
+
+.sv-icon--lg {
+  --_sv-icon-size: var(--sv-icon-lg);
+}
+
+.sv-spin-it {
+  animation: Spin-It 1s infinite linear;
+}
+
+@keyframes Spin-It {
+  100% {
+    transform: rotate(1turn);
+  }
+}

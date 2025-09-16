@@ -1,0 +1,44 @@
+.sv-animation--rotate {
+  animation: sv-rotate 900ms infinite forwards linear;
+}
+
+@keyframes sv-rotate {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
+.sv-animation--panel[inert] {
+  opacity: 0;
+  visibility: hidden;
+}
+.sv-animation--panel-show:not([inert]) {
+  animation: pop-in 250ms;
+  visibility: visible;
+}
+.sv-animation--panel-hide[inert] {
+  animation: pop-out 250ms;
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(25%) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%) scale(1);
+  }
+}
+@keyframes pop-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(25%);
+  }
+}

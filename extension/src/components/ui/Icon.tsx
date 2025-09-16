@@ -88,7 +88,7 @@ export default function Icon({ variant, theme, size, animation }: IconProps) {
     case 'loading':
       return (
         <svg
-          className={`${iconClass}`}
+          className={`${iconClass} sv-spin-it`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
           width='24px'

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" style="font-size: 10px; font-family: Roboto, Arial, sans-serif">
   <head>
     <meta charset="UTF-8" />
@@ -13,18 +13,24 @@
     <div id="actions"></div>
     <!-- temp for testing -->
     <div style="position: relative; margin-top: 40vh">
-      <div
-        class="ytp-progress-bar-container"
-        style="width: 640px; margin-block: 2em"
-      ></div>
       <div id="player-container" style="width: 640px; margin-block: 2em">
+        <div
+          class="ytp-progress-bar-container"
+          style="
+            position: absolute;
+            width: 606px;
+            margin-block: 2em;
+            background: #ffffff00;
+            translate: 3% 316px;
+            z-index: 10;
+            height: 4px;
+          "
+        ></div>
         <div id="ytd-player"></div>
       </div>
       <video id="video" width="640" height="360" controls muted>
-        <source
-          src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-          type="video/mp4"
-        />
+        <!-- use https://youtu.be/y6nxveUmBwg?si=Q3HY1HVBGAohwPE7 -->
+        <source src="./mock_video/FP2_Highlights_ 2025_British_Grand_Prix.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </div>
