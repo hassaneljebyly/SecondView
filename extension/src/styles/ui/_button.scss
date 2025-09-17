@@ -40,13 +40,13 @@
     /* focus state */
     --_sv-btn-bg-focus: var(--sv-white);
     --_sv-btn-color-focus: var(--sv-black-6);
-    --_sv-btn-border-focus: 1px solid transparent;
+    --_sv-btn-border-focus: 0px solid transparent;
     --_sv-btn-outline-focus: 2px solid var(--sv-black-6);
 
     /* disabled state */
     --_sv-btn-bg-disabled: var(--sv-gray-100);
     --_sv-btn-color-disabled: var(--sv-gray-400);
-    --_sv-btn-border-disabled: 1px solid transparent;
+    --_sv-btn-border-disabled: 0px solid transparent;
     --_sv-btn-outline-disabled: none;
   }
   &--dark {
@@ -61,13 +61,13 @@
     /* focus state */
     --_sv-btn-bg-focus: var(--sv-white);
     --_sv-btn-color-focus: var(--sv-black-6);
-    --_sv-btn-border-focus: 1px solid transparent;
+    --_sv-btn-border-focus: 0px solid transparent;
     --_sv-btn-outline-focus: 2px solid var(--sv-black-6);
 
     /* disabled state */
     --_sv-btn-bg-disabled: var(--sv-gray-100);
     --_sv-btn-color-disabled: var(--sv-gray-400);
-    --_sv-btn-border-disabled: 1px solid transparent;
+    --_sv-btn-border-disabled: 0px solid transparent;
     --_sv-btn-outline-disabled: none;
   }
   &--blue {
@@ -82,13 +82,13 @@
     /* focus state */
     --_sv-btn-bg-focus: var(--sv-white);
     --_sv-btn-color-focus: var(--sv-blue-700);
-    --_sv-btn-border-focus: 1px solid transparent;
+    --_sv-btn-border-focus: 0px solid transparent;
     --_sv-btn-outline-focus: 2px solid var(--sv-blue-700);
 
     /* disabled state */
     --_sv-btn-bg-disabled: var(--sv-gray-100);
     --_sv-btn-color-disabled: var(--sv-gray-400);
-    --_sv-btn-border-disabled: 1px solid transparent;
+    --_sv-btn-border-disabled: 0px solid transparent;
     --_sv-btn-outline-disabled: none;
   }
   &--text {
@@ -133,6 +133,9 @@
   &__icon {
     display: block;
   }
+  &__icon:not(:has(svg)) {
+    display: none;
+  }
 
   &__icon svg {
     width: var(--_sv-btn-icon-size);
@@ -176,13 +179,13 @@ html[dark] .sv-button--light {
   /* focus state */
   --_sv-btn-bg-focus: transparent;
   --_sv-btn-color-focus: var(--sv-white);
-  --_sv-btn-border-focus: 1px solid transparent;
+  --_sv-btn-border-focus: 0px solid transparent;
   --_sv-btn-outline-focus: 2px solid var(--sv-white);
 
   /* disabled state */
   --_sv-btn-bg-disabled: var(--sv-black-15);
   --_sv-btn-color-disabled: var(--sv-gray-400);
-  --_sv-btn-border-disabled: 1px solid transparent;
+  --_sv-btn-border-disabled: 0px solid transparent;
   --_sv-btn-outline-disabled: none;
 }
 html[dark] .sv-button--dark {
@@ -197,13 +200,13 @@ html[dark] .sv-button--dark {
   /* focus state */
   --_sv-btn-bg-focus: transparent;
   --_sv-btn-color-focus: var(--sv-white);
-  --_sv-btn-border-focus: 1px solid transparent;
+  --_sv-btn-border-focus: 0px solid transparent;
   --_sv-btn-outline-focus: 2px solid var(--sv-white);
 
   /* disabled state */
   --_sv-btn-bg-disabled: var(--sv-black-15);
   --_sv-btn-color-disabled: var(--sv-gray-400);
-  --_sv-btn-border-disabled: 1px solid transparent;
+  --_sv-btn-border-disabled: 0px solid transparent;
   --_sv-btn-outline-disabled: none;
 }
 
@@ -219,12 +222,12 @@ html[dark] .sv-button--blue {
   /* focus state */
   --_sv-btn-bg-focus: transparent;
   --_sv-btn-color-focus: var(--sv-blue-62);
-  --_sv-btn-border-focus: 1px solid transparent;
+  --_sv-btn-border-focus: 0px solid transparent;
   --_sv-btn-outline-focus: 2px solid var(--sv-blue-62);
 
   /* disabled state */
   --_sv-btn-bg-disabled: var(--sv-black-15);
   --_sv-btn-color-disabled: var(--sv-gray-400);
-  --_sv-btn-border-disabled: 1px solid transparent;
+  --_sv-btn-border-disabled: 0px solid transparent;
   --_sv-btn-outline-disabled: none;
 }
