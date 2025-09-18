@@ -4,4 +4,5 @@ export const CUSTOM_EVENTS = [
   'form:close',
   'form:reset',
   'note:show',
+  'note:close',
 ] as const;
