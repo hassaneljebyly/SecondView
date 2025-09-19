@@ -7,7 +7,8 @@ import type { NotesFromStorage } from '@shared/types/schemas';
 import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
 
 import Button from './Button';
-import { Linkify } from './Linkify';
+import Linkify from './Linkify';
+import NoteRatingTabs from './NoteRatingTabs';
 
 export const noteComponentId = 'sv-note';
 export default function Note({ expandable = false }: { expandable?: boolean }) {
@@ -40,7 +41,7 @@ export default function Note({ expandable = false }: { expandable?: boolean }) {
     };
   });
   return (
-    <div className='sv-note__wrapper'>
+    <div className='sv-note-wrapper'>
       <div id={noteComponentId} className='sv-note'>
         <div
           className='sv-note__header sv-divider sv-divider--bottom'
@@ -70,10 +71,11 @@ export default function Note({ expandable = false }: { expandable?: boolean }) {
             <Linkify text={noteContent} />
           </p>
           <div className='sv-note__footer sv-divider sv-divider--top'>
-            <Button text='Rate It' shape='rounded' theme='blue' />
+            <Button text='Rate It' shape='pill' theme='blue' />
           </div>
         </div>
       </div>
+      <NoteRatingTabs />
     </div>
   );
 }

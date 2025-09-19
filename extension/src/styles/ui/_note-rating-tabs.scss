@@ -1,0 +1,104 @@
+.note-rating {
+  --_sv-rating-px: var(--sv-space-sm);
+  --_sv-rating-py: var(--sv-space-s);
+  --_sv-rating-bg: var(--sv-white);
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  translate: 100% 0%;
+  background-color: var(--_sv-rating-bg);
+  border-radius: var(--sv-border-radius-8);
+  border: 1px solid var(--sv-black-85);
+  overflow: hidden;
+  &__legend {
+    width: 100%;
+    padding-top: var(--sv-space-s);
+    padding-bottom: var(--sv-space-s);
+    padding-inline: var(--_sv-rating-px);
+    font-size: var(--sv-font-md);
+    font-weight: var(--sv-font-weight-medium);
+    background-color: var(--sv-gray-100);
+  }
+  &__tabs {
+    padding-inline: var(--_sv-rating-px);
+    padding-block: var(--_sv-rating-py);
+    display: flex;
+    gap: 1em;
+  }
+
+  &__reasons {
+    display: flex;
+    flex-direction: column;
+  }
+  &__checkbox-heading {
+    font-size: var(--sv-font-sm);
+    font-weight: var(--sv-font-weight-medium);
+    line-height: 1.4;
+    padding-inline: var(--_sv-rating-px);
+    padding-block: var(--_sv-rating-py);
+  }
+  &__checkbox-label {
+    font-size: var(--sv-font-sm);
+    font-weight: var(--sv-font-weight-normal);
+    line-height: 1.4;
+    text-transform: capitalize;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    cursor: pointer;
+    padding-inline: var(--_sv-rating-px);
+    padding-block: var(--sv-space-s);
+    &:hover {
+      background-color: var(--sv-gray-100);
+    }
+  }
+  &__action {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 1em;
+    padding-inline: var(--_sv-rating-px);
+    padding-block: calc(var(--sv-space-s) * 0.65);
+  }
+}
+
+.sv-checkbox {
+  --_sv-size: 20px;
+  --_sv-radius: 2px;
+  --_sv-border-color: var(--sv-gray-600);
+  --_sv-check-color: var(--_sv-rating-bg);
+  --_sv-checked-bg: var(--sv-blue-43);
+  --_sv-focus-outline: blue;
+
+  appearance: none;
+  position: relative;
+  width: var(--_sv-size);
+  aspect-ratio: 1;
+  border-radius: var(--_sv-radius);
+  border: 2px solid var(--_sv-border-color);
+  cursor: pointer;
+  isolation: isolate;
+
+  &:focus-visible {
+    outline: 2px solid var(--_sv-focus-outline);
+    outline-offset: 3px;
+  }
+
+  &:checked {
+    --_sv-border-color: transparent;
+    background-color: var(--_sv-checked-bg);
+  }
+
+  &:checked::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border: 3px solid var(--_sv-check-color);
+    border-top: 0;
+    border-left: 0;
+    clip-path: polygon(45% 0%, 100% 0%, 100% 100%, 45% 100%);
+    rotate: 40deg;
+    translate: -15% -30%;
+    z-index: 1;
+  }
+}
