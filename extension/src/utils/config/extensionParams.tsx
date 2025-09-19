@@ -1,0 +1,1 @@
+export const NOTE_POPUP_DURATION_SECONDS = 5;

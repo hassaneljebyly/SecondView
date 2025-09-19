@@ -1,5 +1,6 @@
-import { useState, type CSSProperties, type MouseEvent } from 'react';
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
 
+import { NOTE_POPUP_DURATION_SECONDS } from '@/utils/config/extensionParams';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { mockNotesDataResponse } from '@shared/mocks/mockDataConfig';
 import type { NotesFromStorage } from '@shared/types/schemas';
@@ -11,12 +12,14 @@ import { Linkify } from './Linkify';
 export const noteComponentId = 'sv-note';
 export default function Note({ expandable = false }: { expandable?: boolean }) {
   const [openNote, setOpenNote] = useState(false);
+  const noteHeaderRef = useRef<HTMLDivElement | null>(null);
   const { noteList } = mockNotesDataResponse;
   const { noteContent, category } = noteList[0] as NotesFromStorage;
   const categoryColor = NOTE_CATEGORIES[category]['color'];
   const categoryLabel = NOTE_CATEGORIES[category]['displayName'];
   const headerStyle = {
     '--_sv-category-color': categoryColor,
+    '--_sv-count-down-duration': `${NOTE_POPUP_DURATION_SECONDS}s`,
   } as CSSProperties;
   function handleNoteClose(event: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
     // stop propagation so clicking the button doesn't trigger
@@ -24,6 +27,18 @@ export default function Note({ expandable = false }: { expandable?: boolean }) {
     event.stopPropagation();
     globalEventSingleton.emit('note:close');
   }
+  useEffect(() => {
+    const { current: noteHeader } = noteHeaderRef;
+    if (!noteHeader) return;
+    const noteCloseAnimEndEvent = globalEventSingleton.on(
+      'animationend',
+      () => globalEventSingleton.emit('note:close'),
+      noteHeader
+    );
+    return () => {
+      noteCloseAnimEndEvent.disconnectEvent();
+    };
+  });
   return (
     <div className='sv-note__wrapper'>
       <div id={noteComponentId} className='sv-note'>
@@ -33,6 +48,7 @@ export default function Note({ expandable = false }: { expandable?: boolean }) {
           role={expandable ? 'button' : 'none'}
           aria-expanded={!expandable || openNote}
           onClick={() => setOpenNote(true)}
+          ref={noteHeaderRef}
         >
           <h3 className='sv-note__category'>{categoryLabel}</h3>
           {expandable && (

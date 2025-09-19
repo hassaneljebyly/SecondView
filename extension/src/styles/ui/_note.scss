@@ -13,6 +13,7 @@
   &:has(&__header[aria-expanded='true']) {
     grid-template-rows: auto auto;
   }
+
   &__header {
     display: flex;
     align-items: center;
@@ -29,6 +30,21 @@
       aspect-ratio: 1;
       background-color: var(--_sv-category-color);
       left: var(--_sv-note-px);
+    }
+    &[role='button']::before {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      left: 0;
+      bottom: -2px;
+      background-color: var(--_sv-category-color);
+      animation: countDown var(--_sv-count-down-duration) ease-out forwards;
+    }
+    // reset animation on hover also pauses the animation
+    // while user is interacting with the note
+    &:hover::before {
+      animation: none;
     }
   }
   &__header[role='button'] {
@@ -59,5 +75,14 @@
     display: flex;
     align-items: center;
     justify-content: end;
+  }
+}
+
+@keyframes countDown {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
   }
 }
