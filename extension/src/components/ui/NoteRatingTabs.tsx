@@ -12,6 +12,7 @@ import { validateSelectedReasons } from '@shared/utils/validation/noteRatingVali
 
 import Button from './Button';
 import ErrorMessage from './ErrorMessage';
+import Icon from './Icon';
 
 // first tab is opened by default
 // making as a state will reset it to 0 with every render
@@ -146,12 +147,17 @@ export default function NoteRatingTabs({ noteId }: { noteId: NotesFromStorage['n
             tabIndex={0}
           >
             <h3 className='note-rating__checkbox-heading'>{heading}</h3>
-            {RATINGS_CHECKBOXES_TABS[activeTab].map(({ value, label }) => {
+            {RATINGS_CHECKBOXES_TABS[activeTab].map(({ value, label, description }) => {
               // @ts-expect-error: safe because we ensure value matches activeTab at runtime
               const isChecked = Boolean(ratingFlags[activeTab][value]);
               return (
                 <label key={value} className='note-rating__checkbox-label' htmlFor={value}>
                   {label}
+                  <span className='sv-sr-only'>{description}</span>
+                  <span className='note-rating__description-wrapper' aria-hidden='true'>
+                    <span className='note-rating__description'>{description}</span>
+                    <Icon variant='error' size='sm' theme='dark' />
+                  </span>
                   <input
                     id={value}
                     type='checkbox'

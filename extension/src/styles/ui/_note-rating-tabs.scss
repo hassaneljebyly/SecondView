@@ -38,6 +38,8 @@
     padding-block: var(--_sv-rating-py);
   }
   &__checkbox-label {
+    --_sv-description-icon-display: hidden;
+    --_sv-description-display: none;
     font-size: var(--sv-font-sm);
     font-weight: var(--sv-font-weight-normal);
     line-height: 1.4;
@@ -48,8 +50,47 @@
     cursor: pointer;
     padding-inline: var(--_sv-rating-px);
     padding-block: var(--sv-space-s);
-    &:hover {
+    &:hover,
+    &:has(:focus) {
+      --_sv-description-icon-display: visible;
       background-color: var(--sv-gray-100);
+    }
+    &:has(:focus-visible) {
+      --_sv-description-display: block;
+    }
+  }
+  &__description-wrapper {
+    margin-left: auto;
+    margin-right: calc(var(--_sv-rating-px) * 3);
+    position: relative;
+    &:has(:hover) {
+      --_sv-description-display: block;
+    }
+    svg {
+      fill: var(--sv-gray-500);
+      visibility: var(--_sv-description-icon-display);
+    }
+  }
+
+  &__description {
+    position: absolute;
+    left: -180px;
+    bottom: 20px;
+    white-space: nowrap;
+    color: inherit;
+    font-size: var(--sv-font-xs);
+    font-weight: var(--sv-font-weight-medium);
+    line-height: normal;
+    display: var(--_sv-description-display);
+    background-color: var(--sv-white);
+    border: 1px solid var(--sv-gray-300);
+    border-radius: var(--sv-space-xxs);
+    padding-block: var(--sv-space-xs);
+    padding-inline: var(--sv-space-xs);
+    box-shadow: var(--sv-shadow-md);
+    text-transform: lowercase;
+    &::first-letter {
+      text-transform: uppercase;
     }
   }
   &__action {
@@ -72,6 +113,7 @@
 
   appearance: none;
   position: relative;
+  flex-shrink: 0;
   width: var(--_sv-size);
   aspect-ratio: 1;
   border-radius: var(--_sv-radius);
