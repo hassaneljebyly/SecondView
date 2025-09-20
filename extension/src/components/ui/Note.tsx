@@ -15,7 +15,7 @@ export default function Note({ expandable = false }: { expandable?: boolean }) {
   const [openNote, setOpenNote] = useState(false);
   const noteHeaderRef = useRef<HTMLDivElement | null>(null);
   const { noteList } = mockNotesDataResponse;
-  const { noteContent, category } = noteList[0] as NotesFromStorage;
+  const { noteId, noteContent, category } = noteList[0] as NotesFromStorage;
   const categoryColor = NOTE_CATEGORIES[category]['color'];
   const categoryLabel = NOTE_CATEGORIES[category]['displayName'];
   const headerStyle = {
@@ -75,7 +75,7 @@ export default function Note({ expandable = false }: { expandable?: boolean }) {
           </div>
         </div>
       </div>
-      <NoteRatingTabs />
+      <NoteRatingTabs noteId={noteId} />
     </div>
   );
 }

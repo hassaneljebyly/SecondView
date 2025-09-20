@@ -5,7 +5,9 @@ import Icon, { type IconProps } from './Icon';
 export default function Button({
   id,
   icon,
+  role,
   iconOnly = false,
+  tabIndex,
   theme = 'light',
   size = 'sm',
   shape = 'pill',
@@ -28,6 +30,8 @@ export default function Button({
       className={classes}
       aria-label={iconOnly ? text : undefined}
       type={type}
+      role={role}
+      tabIndex={tabIndex}
       {...aria}
       {...actions}
     >
@@ -43,6 +47,8 @@ type ButtonProps = {
   id?: string;
   icon?: IconProps;
   iconOnly?: boolean;
+  tabIndex?: number | undefined;
+  role?: React.HTMLAttributes<HTMLButtonElement>['role'];
   theme?: 'light' | 'dark' | 'blue';
   size?: 'xs' | 'sm';
   shape?: 'pill' | 'rounded';

@@ -10,3 +10,10 @@ export function autoFocusFirstInputWithError() {
     )?.focus();
   });
 }
+
+export function autoFocusActiveTab(tabId: string) {
+  requestAnimationFrame(() => {
+    const tabButton = document.getElementById(tabId) as HTMLButtonElement | null;
+    if (tabButton) tabButton.focus();
+  });
+}
