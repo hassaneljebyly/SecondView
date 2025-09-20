@@ -4,7 +4,7 @@
   border-radius: var(--sv-border-radius-8);
   background-color: var(--sv-white);
   border: 1px solid var(--sv-black-85);
-  width: 55ch;
+  width: var(--sv-note-width);
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: auto 0fr;
@@ -29,6 +29,7 @@
       width: 10px;
       aspect-ratio: 1;
       background-color: var(--_sv-category-color);
+      translate: 0% -8%;
       left: var(--_sv-note-px);
     }
     &[role='button']::before {

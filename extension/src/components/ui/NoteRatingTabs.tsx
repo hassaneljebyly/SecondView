@@ -1,4 +1,10 @@
-import { useState, type ChangeEvent, type FormEvent, type KeyboardEvent } from 'react';
+import {
+  useState,
+  type ChangeEvent,
+  type FormEvent,
+  type KeyboardEvent,
+  type RefObject,
+} from 'react';
 
 import type { FormState } from '@/types/components';
 import type { RatingFlagsState, RatingTabsType } from '@/types/noteRating';
@@ -13,6 +19,7 @@ import { validateSelectedReasons } from '@shared/utils/validation/noteRatingVali
 import Button from './Button';
 import ErrorMessage from './ErrorMessage';
 import Icon from './Icon';
+import type { PanelsNames } from './Note';
 
 // first tab is opened by default
 // making as a state will reset it to 0 with every render
@@ -20,7 +27,17 @@ import Icon from './Icon';
 let activeTabIndex = 0;
 
 // reference https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
-export default function NoteRatingTabs({ noteId }: { noteId: NotesFromStorage['noteId'] }) {
+export default function NoteRatingTabs({
+  noteId,
+  panelRef,
+  openPanel,
+  onCancel,
+}: {
+  noteId: NotesFromStorage['noteId'];
+  panelRef: RefObject<HTMLDivElement | null>;
+  openPanel: PanelsNames;
+  onCancel: () => void;
+}) {
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<RatingTabsType>('accurate');
@@ -93,6 +110,7 @@ export default function NoteRatingTabs({ noteId }: { noteId: NotesFromStorage['n
             accurate: {},
             inaccurate: {},
           });
+          onCancel();
           // [🚀 FEATURE]: finish data schema `userid`...
           logger.info({ noteId, vote: activeTab, reasons: selectedRatingReasons });
         }, 4000);
@@ -107,15 +125,20 @@ export default function NoteRatingTabs({ noteId }: { noteId: NotesFromStorage['n
     }
   }
   return (
-    <div className='note-rating' aria-hidden='false'>
-      <form className='note-rating__form' onSubmit={handleRatingSubmit}>
-        <fieldset className='note-rating__fieldset'>
-          <legend id='sv-tablist' className='note-rating__legend sv-divider sv-divider--bottom'>
+    <div
+      className='sv-note-rating'
+      ref={panelRef}
+      aria-hidden={openPanel !== 'ratingPanel'}
+      inert={openPanel !== 'ratingPanel'}
+    >
+      <form className='sv-note-rating__form' onSubmit={handleRatingSubmit}>
+        <fieldset className='sv-note-rating__fieldset'>
+          <legend id='sv-tablist' className='sv-note-rating__legend sv-divider sv-divider--bottom'>
             How Accurate was this note?
           </legend>
 
           <div
-            className='note-rating__tabs sv-divider sv-divider--bottom'
+            className='sv-note-rating__tabs sv-divider sv-divider--bottom'
             role='tablist'
             aria-labelledby='sv-tablist'
           >
@@ -142,20 +165,20 @@ export default function NoteRatingTabs({ noteId }: { noteId: NotesFromStorage['n
 
           <div
             id='sv-tab-panel'
-            className='note-rating__reasons sv-divider sv-divider--bottom'
+            className='sv-note-rating__reasons sv-divider sv-divider--bottom'
             aria-labelledby={activeTab}
             tabIndex={0}
           >
-            <h3 className='note-rating__checkbox-heading'>{heading}</h3>
+            <h3 className='sv-note-rating__checkbox-heading'>{heading}</h3>
             {RATINGS_CHECKBOXES_TABS[activeTab].map(({ value, label, description }) => {
               // @ts-expect-error: safe because we ensure value matches activeTab at runtime
               const isChecked = Boolean(ratingFlags[activeTab][value]);
               return (
-                <label key={value} className='note-rating__checkbox-label' htmlFor={value}>
+                <label key={value} className='sv-note-rating__checkbox-label' htmlFor={value}>
                   {label}
                   <span className='sv-sr-only'>{description}</span>
-                  <span className='note-rating__description-wrapper' aria-hidden='true'>
-                    <span className='note-rating__description'>{description}</span>
+                  <span className='sv-note-rating__description-wrapper' aria-hidden='true'>
+                    <span className='sv-note-rating__description'>{description}</span>
                     <Icon variant='error' size='sm' theme='dark' />
                   </span>
                   <input
@@ -173,8 +196,8 @@ export default function NoteRatingTabs({ noteId }: { noteId: NotesFromStorage['n
             {error && <ErrorMessage id='rating-form' global errorMessage={error} />}
           </div>
 
-          <div className='note-rating__action'>
-            <Button text='Cancel' shape='pill' />
+          <div className='sv-note-rating__action'>
+            <Button text='Cancel' shape='pill' actions={{ onClick: onCancel }} />
             <Button
               text={BUTTON_STATES_MAP[formSubmissionState]['text']}
               shape='pill'

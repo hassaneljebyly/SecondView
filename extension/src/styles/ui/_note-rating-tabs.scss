@@ -1,11 +1,8 @@
-.note-rating {
+.sv-note-rating {
   --_sv-rating-px: var(--sv-space-sm);
   --_sv-rating-py: var(--sv-space-s);
   --_sv-rating-bg: var(--sv-white);
-  position: absolute;
   width: 100%;
-  bottom: 0;
-  translate: 100% 0%;
   background-color: var(--_sv-rating-bg);
   border-radius: var(--sv-border-radius-8);
   border: 1px solid var(--sv-black-85);
