@@ -1,7 +1,7 @@
 import { truncateLinks } from '@/utils/format/trimLink';
 import { ACCEPTED_LINKS_FORMAT } from '@shared/utils/config/regexConfig';
 
-export function Linkify({ text }: { text: string }) {
+export default function Linkify({ text }: { text: string }) {
   const textWithLinkComponents = text
     .split(ACCEPTED_LINKS_FORMAT)
     .filter(Boolean)
