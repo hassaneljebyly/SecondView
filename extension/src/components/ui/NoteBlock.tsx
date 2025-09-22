@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react';
 
 import { autoFocusFirstTab, autoFocusRateItButton } from '@/utils/dom/autoFocus';
 import { globalEventSingleton } from '@/utils/lib/events';
-import { mockNotesDataResponse } from '@mocks/mockDataConfig';
+import { mockNotesDataResponse } from '@shared/mocks/mockDataConfig';
 import type { NotesFromStorage } from '@shared/types/schemas';
 
 import Note from './Note';
@@ -48,11 +48,7 @@ export default function NoteBlock() {
     }
   }, [openPanel, openNote]);
   return (
-    <div
-      id={noteBlockId}
-      className='sv-note-wrapper'
-      style={{ height: openPanel === 'ratingPanel' ? noteWrapperHight : '' }}
-    >
+    <div id={noteBlockId} className='sv-note-wrapper' style={{ height: noteWrapperHight }}>
       <Note
         expandable
         {...{
