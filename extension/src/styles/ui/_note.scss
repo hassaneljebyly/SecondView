@@ -44,8 +44,9 @@
     }
     // reset animation on hover also pauses the animation
     // while user is interacting with the note
-    &:hover::before {
+    &:is(:hover, [aria-expanded='true'])::before {
       animation: none;
+      background-color: transparent;
     }
   }
   &__header[role='button'] {
