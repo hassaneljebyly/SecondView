@@ -19,7 +19,7 @@ import { validateSelectedReasons } from '@shared/utils/validation/noteRatingVali
 import Button from './Button';
 import ErrorMessage from './ErrorMessage';
 import Icon from './Icon';
-import type { PanelsNames } from './Note';
+import type { PanelsNames } from './NoteBlock';
 
 // first tab is opened by default
 // making as a state will reset it to 0 with every render
@@ -60,15 +60,16 @@ export default function NoteRatingTabs({
     []
   ) as (AccurateRatingValue | InaccurateRatingValue)[];
   const tabs = Object.keys(RATINGS_CHECKBOXES_TABS) as RatingTabsType[];
-  const heading =
-    activeTab === 'accurate' ? 'Why was this note helpful?' : 'Why was this note not helpful?';
+  const heading = activeTab === 'accurate' ? 'Why was this useful?' : 'Why wasn’t this useful?';
 
   function handleTabKeyDown(e: KeyboardEvent<HTMLButtonElement>) {
     switch (e.key) {
       case 'ArrowRight':
+        e.preventDefault();
         activeTabIndex = (activeTabIndex + 1) % tabs.length;
         break;
       case 'ArrowLeft':
+        e.preventDefault();
         activeTabIndex = (activeTabIndex - 1 + tabs.length) % tabs.length;
         break;
       case 'Home':
