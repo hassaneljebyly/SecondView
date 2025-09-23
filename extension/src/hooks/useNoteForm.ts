@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import { noteFormId } from '@/components/content/NoteForm';
 import type { FormState, NoteFormButtonConfigMap } from '@/types/components';
+import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
 import { autoFocusFirstInput, autoFocusFirstInputWithError } from '@/utils/dom/autoFocus';
 import { resetForm } from '@/utils/dom/formReset';
 import { getVideoDetails } from '@/utils/dom/youtube';
@@ -137,12 +138,7 @@ export function useNoteForm(): UseNoteFormReturn {
 
   const formErrorId = 'sv-form-global-error';
 
-  const buttonConfig: NoteFormButtonConfigMap = {
-    idle: { text: 'Submit', icon: 'upload' },
-    submitting: { text: 'Submitting', icon: 'loading' },
-    success: { text: 'Done!', icon: 'check' },
-    error: { text: 'Retry', icon: 'error' },
-  };
+  const buttonConfig = BUTTON_STATES_MAP;
 
   return {
     handelSubmit,
