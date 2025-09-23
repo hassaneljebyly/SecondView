@@ -101,12 +101,16 @@
     border: var(--_sv-btn-border-hover);
   }
 
-  &:focus-visible:not(:disabled) {
+  &:focus-visible:not(:disabled, &[role='tab']) {
     background: var(--_sv-btn-bg-focus);
     color: var(--_sv-btn-color-focus);
     border: var(--_sv-btn-border-focus);
     outline: var(--_sv-btn-outline-focus);
     outline-offset: 2px;
+  }
+  &[role='tab']:focus-visible:not(:disabled) {
+    outline: 2px solid var(--sv-blue-43);
+    outline-offset: 3px;
   }
 
   &:disabled {
