@@ -53,7 +53,11 @@ export default function NoteBlock({ note }: { note: NotesFromStorage }) {
     }
   }, [openPanel, openNote]);
   return (
-    <div id={noteBlockId} className='sv-note-wrapper' style={{ height: noteWrapperHight }}>
+    <div
+      id={noteBlockId}
+      className='sv-note-wrapper sv-animation-pop-in'
+      style={{ height: noteWrapperHight }}
+    >
       <Note
         expandable
         {...{
