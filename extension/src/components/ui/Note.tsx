@@ -66,6 +66,12 @@ export default function Note({
         aria-expanded={!expandable || openNote}
         onClick={onNoteOpen}
         ref={noteHeaderRef}
+        tabIndex={0}
+        onKeyDown={e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            onNoteOpen();
+          }
+        }}
       >
         <h3 className='sv-note__category'>{categoryLabel}</h3>
         {expandable && (
@@ -82,7 +88,7 @@ export default function Note({
           />
         )}
       </div>
-      <div className='sv-note__body'>
+      <div className='sv-note__body' inert={!openNote}>
         <p className='sv-note__text'>
           <Linkify text={noteContent} />
         </p>
