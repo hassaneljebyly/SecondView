@@ -21,6 +21,10 @@
       svg {
         fill: var(--sv-error-color);
       }
+
+      option {
+        color: black;
+      }
     }
   }
 
@@ -76,7 +80,6 @@
   &__time-input {
     max-width: 15ch;
   }
-
   &__textarea {
     resize: vertical;
     min-height: 150px;

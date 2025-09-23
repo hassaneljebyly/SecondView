@@ -23,6 +23,9 @@
   padding-block: var(--_sv-input-py);
   margin: 0;
   appearance: none;
+  &::placeholder {
+    color: var(--sv-gray-400);
+  }
 
   &:hover:not(:disabled) {
     --_sv-input-border-color: var(--_sv-input-border-color-hover);
