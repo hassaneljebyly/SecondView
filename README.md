@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/icons/logo_256px.png" alt="Logo"></img>
+  <img src="./extension/public/icons/logo_256px.png" alt="Logo"></img>
 </p>
 
 # 🎥 SecondView – Community Driven Fact Checking for YouTube
