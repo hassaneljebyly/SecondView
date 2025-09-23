@@ -16,6 +16,7 @@
 }
 .sv-animation--panel-show:not([inert]) {
   visibility: visible;
+  animation: pop-in 250ms;
 }
 .sv-animation--panel-hide[inert] {
   animation: pop-out 250ms;
