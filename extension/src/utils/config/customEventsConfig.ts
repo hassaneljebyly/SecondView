@@ -5,4 +5,5 @@ export const CUSTOM_EVENTS = [
   'form:reset',
   'note:show',
   'note:close',
+  'note:promoteQueue',
 ] as const;

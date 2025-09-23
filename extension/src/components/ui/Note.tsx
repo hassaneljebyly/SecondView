@@ -6,8 +6,8 @@ import type { NotesFromStorage } from '@shared/types/schemas';
 import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
 
 import Button from './Button';
-import Linkify from './Linkify';
 import type { PanelsNames } from './NoteBlock';
+import Linkify from '../helpers/Linkify';
 
 export const noteComponentId = 'sv-note';
 
@@ -44,7 +44,7 @@ export default function Note({
     if (!noteHeader) return;
     const noteCloseAnimEndEvent = globalEventSingleton.on(
       'animationend',
-      () => globalEventSingleton.emit('note:close'),
+      () => globalEventSingleton.emit('note:close', window, { detail: note }),
       noteHeader
     );
     return () => {
