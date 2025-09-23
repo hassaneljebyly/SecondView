@@ -2,8 +2,7 @@
   &:has([inert]) {
     pointer-events: none;
   }
-  /* 1. Create a root stacking context */
-  isolation: isolate;
+
   /* 2. Add accessible line-height */
   line-height: 1.5;
   /* 3. Improve text rendering */
@@ -64,5 +63,9 @@
   h5,
   h6 {
     text-wrap: balance;
+  }
+
+  fieldset {
+    border: 0;
   }
 }
