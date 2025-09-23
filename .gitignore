@@ -27,3 +27,4 @@ tsconfig.tsbuildinfo
 backend/
 
 mock_video/
+future_ideas.ts
