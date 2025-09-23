@@ -15,11 +15,14 @@
   visibility: hidden;
 }
 .sv-animation--panel-show:not([inert]) {
-  animation: pop-in 250ms;
   visibility: visible;
 }
 .sv-animation--panel-hide[inert] {
   animation: pop-out 250ms;
+}
+
+.sv-animation-pop-in {
+  animation: pop-in 250ms;
 }
 
 @keyframes pop-in {
