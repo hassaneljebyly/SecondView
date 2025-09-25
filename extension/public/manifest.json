@@ -14,13 +14,14 @@
       "48": "./icons/logo_48px.png",
       "128": "./icons/logo_128px.png"
     },
-    "default_title": "SecondView"
+    "default_title": "SecondView",
+    "default_popup": "popup/second-view-popup.html"
   },
   "content_scripts": [
     {
       "matches": ["*://*.youtube.com/*"],
-      "js": ["content/index.js"],
-      "css": ["content/index.css"],
+      "js": ["content/second-view-content.js"],
+      "css": ["content/second-view-content.css"],
       "run_at": "document_idle"
     }
   ],
