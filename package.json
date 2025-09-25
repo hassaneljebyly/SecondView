@@ -4,16 +4,26 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "clean": "rm -rf dist",
+    "clean:content": "rm -rf dist/content",
+    "clean:popup": "rm -rf dist/popup",
     "dev": "vite",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "type-check": "tsc -b",
-    "build": "npm run lint && npm run type-check && vite build",
+    "build": "npm run lint && npm run type-check && npm run build:content && npm run build:popup",
+    "build:content": "npx vite build --config vite.config.content.js",
+    "build:popup": "npx vite build --config vite.config.popup.js",
     "preview": "vite preview"
   },
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
+  "browserslist": [
+    ">0.5%",
+    "last 2 versions",
+    "not dead"
+  ],
   "devDependencies": {
     "@eslint/js": "^9.32.0",
     "@types/chrome": "^0.1.1",

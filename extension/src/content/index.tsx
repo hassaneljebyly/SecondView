@@ -10,7 +10,7 @@ import {
   clearVideoDetailsMap,
 } from '@/utils/scripts/cleanup';
 import injectComponent from '@/utils/scripts/injectComponent';
-import '@/styles/index.scss';
+import '@/styles/content/index.scss';
 
 let pageId = Date.now();
 

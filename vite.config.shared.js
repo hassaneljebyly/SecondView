@@ -2,20 +2,26 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import path from 'path';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
+import autoprefixer from 'autoprefixer';
 
-// https://vite.dev/config/
-export default defineConfig({
+export const baseConfig = defineConfig({
   plugins: [
     react(),
+    // shared static copy
     viteStaticCopy({
       targets: [
         {
           src: 'extension/public/*',
-          dest: '.',
+          dest: '..',
         },
       ],
     }),
   ],
+  css: {
+    postcss: {
+      plugins: [autoprefixer()],
+    },
+  },
   root: '.',
   resolve: {
     alias: {
@@ -33,28 +39,5 @@ export default defineConfig({
     fs: {
       allow: ['..'],
     },
-  },
-  build: {
-    rollupOptions: {
-      input: {
-        // background: path.resolve(__dirname, "extension/src/background.ts"),
-        content: path.resolve(__dirname, 'extension/src/content/index.tsx'),
-        // popup: path.resolve(__dirname, "extension/src/popup/index.html"),
-      },
-      output: {
-        entryFileNames: chunk => {
-          if (chunk.name === 'content') return `${chunk.name}/index.js`;
-          return '[name]/[name].js';
-        },
-        assetFileNames: ({ name }) => {
-          if (name && name.endsWith('.css')) {
-            // [📐 ARCHITECTURE]:  adjust for options, and popup styles
-            return `content/index.css`;
-          }
-          return `[name]`;
-        },
-      },
-    },
-    outDir: 'dist',
   },
 });
