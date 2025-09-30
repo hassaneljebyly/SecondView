@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import '@styles/popup/index.scss';
-import MainPopup from '@/components/popup/MainPopup';
+import ExtensionPopup from '@/components/popup/ExtensionPopup';
 
 const rootElement = document.getElementById('second-view-popup-root');
 const root = ReactDOM.createRoot(rootElement!);
 
 root.render(
   <React.StrictMode>
-    <MainPopup />
+    <ExtensionPopup />
   </React.StrictMode>
 );
