@@ -1,5 +1,16 @@
 export type IconProps = {
-  variant: 'setting' | 'add' | 'check' | 'cancel' | 'error' | 'loading' | 'clock' | 'upload';
+  variant:
+    | 'setting'
+    | 'add'
+    | 'check'
+    | 'cancel'
+    | 'error'
+    | 'loading'
+    | 'clock'
+    | 'upload'
+    | 'copy'
+    | 'paste'
+    | 'edit';
   theme?: 'dark' | 'light';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   animation?: string;
@@ -122,6 +133,45 @@ export default function Icon({ variant, theme, size, animation }: IconProps) {
           aria-hidden='true'
         >
           <path d='M440-320v-326L336-542l-56-58 200-200 200 200-56 58-104-104v326h-80ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z' />
+        </svg>
+      );
+    case 'copy':
+      return (
+        <svg
+          className={`${iconClass}`}
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 -960 960 960'
+          width='24px'
+          height='24px'
+          aria-hidden='true'
+        >
+          <path d='M360-240q-33 0-56.5-23.5T280-320v-480q0-33 23.5-56.5T360-880h360q33 0 56.5 23.5T800-800v480q0 33-23.5 56.5T720-240H360Zm0-80h360v-480H360v480ZM200-80q-33 0-56.5-23.5T120-160v-560h80v560h440v80H200Zm160-240v-480 480Z' />
+        </svg>
+      );
+    case 'paste':
+      return (
+        <svg
+          className={`${iconClass}`}
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 -960 960 960'
+          width='24px'
+          height='24px'
+          aria-hidden='true'
+        >
+          <path d='M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h167q11-35 43-57.5t70-22.5q40 0 71.5 22.5T594-840h166q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-560h-80v120H280v-120h-80v560Zm280-560q17 0 28.5-11.5T520-800q0-17-11.5-28.5T480-840q-17 0-28.5 11.5T440-800q0 17 11.5 28.5T480-760Z' />
+        </svg>
+      );
+    case 'edit':
+      return (
+        <svg
+          className={`${iconClass}`}
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 -960 960 960'
+          width='24px'
+          height='24px'
+          aria-hidden='true'
+        >
+          <path d='M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z' />
         </svg>
       );
   }
