@@ -1,0 +1,32 @@
+.user-card {
+  display: flex;
+  gap: var(--sv-space-sm);
+  padding-inline: var(--sv-space-md);
+  padding-block: var(--sv-space-sm);
+  &__icon {
+    display: block;
+    width: 50px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    svg {
+      width: 100%;
+      display: block;
+      fill: var(--sv-gray-300);
+    }
+  }
+  &__user-id {
+    font-size: var(--sv-font-sm);
+    font-weight: var(--sv-font-weight-medium);
+  }
+  &__body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sv-space-xxs);
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--sv-space-s);
+  }
+}

@@ -1,0 +1,25 @@
+.quick-links {
+  padding-inline: var(--sv-space-md);
+  padding-block: var(--sv-space-md);
+  &__title {
+    font-size: var(--sv-font-md);
+    font-weight: var(--sv-font-weight-medium);
+    margin-bottom: var(--sv-space-md);
+  }
+
+  &__list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: var(--sv-space-s);
+  }
+
+  &__item {
+    font-size: var(--sv-font-sm);
+    font-weight: var(--sv-font-weight-normal);
+    a {
+      text-decoration: none;
+      color: var(--sv-blue-43);
+    }
+  }
+}

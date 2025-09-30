@@ -1,0 +1,23 @@
+.contribution-stats {
+  padding-inline: var(--sv-space-md);
+  padding-block: var(--sv-space-md);
+  &__title {
+    font-size: var(--sv-font-md);
+    font-weight: var(--sv-font-weight-medium);
+    margin-bottom: var(--sv-space-md);
+  }
+  &__stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: var(--sv-space-s);
+    font-size: var(--sv-font-sm);
+    font-weight: var(--sv-font-weight-medium);
+  }
+  &__stat-label {
+    color: var(--sv-gray-700);
+  }
+  &__stat-value {
+    display: inline-block;
+    margin-left: var(--sv-space-xs);
+  }
+}
