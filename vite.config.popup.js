@@ -1,7 +1,7 @@
 import { mergeConfig, defineConfig } from 'vite';
 import path from 'path';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
-import { baseConfig } from './vite.config.shared.js';
+import baseConfig from './vite.config.shared.js';
 
 export default defineConfig(() =>
   mergeConfig(baseConfig, {
