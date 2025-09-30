@@ -4,7 +4,7 @@ import path from 'path';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import autoprefixer from 'autoprefixer';
 
-export const baseConfig = defineConfig({
+export default defineConfig({
   plugins: [
     react(),
     // shared static copy

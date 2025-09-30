@@ -7,7 +7,7 @@
     "clean": "rm -rf dist",
     "clean:content": "rm -rf dist/content",
     "clean:popup": "rm -rf dist/popup",
-    "dev": "vite",
+    "dev": "vite --config vite.config.content.js",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "type-check": "tsc -b",
     "build": "npm run lint && npm run type-check && npm run build:content && npm run build:popup",
