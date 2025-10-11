@@ -1,6 +1,25 @@
+import { useState, type ChangeEvent } from 'react';
+
+import { autoFocusUserIdInput } from '@/utils/dom/autoFocus';
+
 import Button from '../ui/Button';
 
+// [🚀 FEATURE]: add copy user id feature }
+const userIdFromStorage = 'user_abc12354545454545424';
 export default function UserCard() {
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [userID, setUserID] = useState(userIdFromStorage);
+  function handleUserIdEdit() {
+    if (!isEditing) autoFocusUserIdInput();
+    setIsEditing(!isEditing);
+  }
+
+  function handleUserIDChange(e: ChangeEvent<HTMLInputElement>) {
+    const target = e.target as HTMLInputElement | null;
+    if (target) {
+      setUserID(target.value);
+    }
+  }
   return (
     <section className='user-card sv-divider sv-divider--bottom'>
       <div className='user-card__avatar'>
@@ -13,11 +32,35 @@ export default function UserCard() {
 
       <div className='user-card__body'>
         <div className='user-card__header'>
-          <span className='user-card__user-id'>user_abc12354545454545424</span>
+          {isEditing ? (
+            <>
+              <label htmlFor='userid' className='sv-sr-only'>
+                Your user id
+              </label>
+              <input
+                type='text'
+                id='sv-userid'
+                maxLength={25}
+                name='userid'
+                value={userID}
+                placeholder='Enter your user ID'
+                onChange={handleUserIDChange}
+              />
+            </>
+          ) : (
+            <span className='user-card__user-id'>{userID}</span>
+          )}
         </div>
 
         <div className='user-card__actions'>
-          <Button text='Paste ID' icon={{ variant: 'edit' }} shape='rounded' size='xs' iconOnly />
+          <Button
+            text='Paste ID'
+            icon={{ variant: isEditing ? 'upload' : 'edit' }}
+            shape='rounded'
+            size='xs'
+            iconOnly
+            actions={{ onClick: handleUserIdEdit }}
+          />
           <Button text='Copy ID' icon={{ variant: 'copy' }} shape='rounded' size='xs' iconOnly />
         </div>
       </div>

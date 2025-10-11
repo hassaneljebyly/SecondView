@@ -3,6 +3,25 @@
   gap: var(--sv-space-sm);
   padding-inline: var(--sv-space-md);
   padding-block: var(--sv-space-sm);
+  &__header {
+    input[type='text'] {
+      display: block;
+      width: fit-content;
+      field-sizing: content;
+      padding-inline: var(--sv-space-xxs);
+      padding-block: var(--sv-space-xxs);
+      font-size: var(--sv-font-sm);
+      font-weight: var(--sv-font-weight-medium);
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      width: 26ch;
+      outline: none;
+    }
+
+    input[type='text']:focus-visible {
+      border-color: var(--sv-black-1);
+    }
+  }
   &__icon {
     display: block;
     width: 50px;
@@ -22,7 +41,8 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: var(--sv-space-xxs);
+    gap: var(--sv-space-xs);
+    flex-grow: 1;
   }
 
   &__actions {

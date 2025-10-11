@@ -12,6 +12,13 @@ export function autoFocusFirstInputWithError() {
     });
   });
 }
+export function autoFocusUserIdInput() {
+  requestAnimationFrame(() => {
+    (document.querySelector("input[id='sv-userid']") as HTMLInputElement)?.focus({
+      preventScroll: true,
+    });
+  });
+}
 
 export function autoFocusActiveTab(tabId: string) {
   requestAnimationFrame(() => {
