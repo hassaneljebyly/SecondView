@@ -1,0 +1,13 @@
+.sv-import-success {
+  li {
+    margin-bottom: var(--sv-space-xs);
+    font-weight: var(--sv-font-weight-medium);
+    color: var(--sv-gray-600);
+    span {
+      color: var(--sv-black-1);
+    }
+  }
+  &__section-title {
+    margin-top: var(--sv-space-lg);
+  }
+}

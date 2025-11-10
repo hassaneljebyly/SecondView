@@ -26,11 +26,42 @@
     color: var(--sv-gray-800);
     text-decoration: none;
   }
+  &__hint span {
+    font-weight: var(--sv-font-weight-medium);
+    color: var(--sv-black-1);
+  }
   &__section:not(.sv-profile-overview__header) {
     padding-inline: var(--_sv-widget-xp);
     > b {
       display: block;
       margin-block: var(--sv-space-md);
     }
+  }
+  &__section--header {
+    display: flex;
+    align-items: center;
+    gap: var(--sv-space-sm);
+    padding-block: var(--sv-space-sm);
+    margin-bottom: var(--sv-space-sm);
+  }
+  &__info-list {
+    margin-left: var(--_sv-popup-xp);
+    margin-top: var(--sv-space-sm);
+    margin-bottom: var(--sv-space-lg);
+    padding-left: var(--_sv-popup-xp);
+  }
+  &__action {
+    display: flex;
+    gap: var(--sv-space-lg);
+    margin-top: var(--sv-space-lg);
+  }
+  label {
+    display: block;
+    margin-bottom: var(--sv-space-xs);
+    margin-top: var(--sv-space-lg);
+  }
+  input {
+    display: block;
+    width: 100%;
   }
 }
