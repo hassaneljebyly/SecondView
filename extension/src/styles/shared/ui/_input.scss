@@ -27,10 +27,10 @@
     color: var(--sv-gray-400);
   }
 
-  &:hover:not(:disabled) {
+  &:hover:not(:disabled, :read-only) {
     --_sv-input-border-color: var(--_sv-input-border-color-hover);
   }
-  &:focus-visible:not(:disabled) {
+  &:focus-visible:not(:disabled, :read-only) {
     --_sv-input-border-color: var(--_sv-input-border-color-focus);
     --_sv-input-outline-color: var(--_sv-input-outline-color-focus);
   }
