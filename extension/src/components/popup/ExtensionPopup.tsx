@@ -1,5 +1,9 @@
-import Button from '../ui/Button';
+import ProfileOverviewCard from './ProfileOverviewCard';
 
 export default function MainPopup() {
-  return <div className='popup'>hello world</div>;
+  return (
+    <div className='popup'>
+      <ProfileOverviewCard />
+    </div>
+  );
 }
