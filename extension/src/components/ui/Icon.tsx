@@ -10,7 +10,9 @@ export type IconProps = {
     | 'upload'
     | 'copy'
     | 'paste'
-    | 'edit';
+    | 'edit'
+    | 'login'
+    | 'shield';
   theme?: 'dark' | 'light';
   size?: 'xs' | 'sm' | 'md' | 'lg';
   animation?: string;
@@ -172,6 +174,33 @@ export default function Icon({ variant, theme, size, animation }: IconProps) {
           aria-hidden='true'
         >
           <path d='M200-200h57l391-391-57-57-391 391v57Zm-80 80v-170l528-527q12-11 26.5-17t30.5-6q16 0 31 6t26 18l55 56q12 11 17.5 26t5.5 30q0 16-5.5 30.5T817-647L290-120H120Zm640-584-56-56 56 56Zm-141 85-28-29 57 57-29-28Z' />
+        </svg>
+      );
+    case 'shield':
+      return (
+        <svg
+          className={`${iconClass}`}
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 -960 960 960'
+          width='24px'
+          height='24px'
+          aria-hidden='true'
+        >
+          <path d='M480-80q-139-35-229.5-159.5T160-516v-244l320-120 320 120v244q0 152-90.5 276.5T480-80Zm0-84q104-33 172-132t68-220v-189l-240-90-240 90v189q0 121 68 220t172 132Zm0-316Z' />
+        </svg>
+      );
+
+    case 'login':
+      return (
+        <svg
+          className={`${iconClass}`}
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 -960 960 960'
+          width='24px'
+          height='24px'
+          aria-hidden='true'
+        >
+          <path d='M480-120v-80h280v-560H480v-80h280q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H480Zm-80-160-55-58 102-102H120v-80h327L345-622l55-58 200 200-200 200Z' />
         </svg>
       );
   }
