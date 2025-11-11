@@ -4,15 +4,15 @@
   display: flex;
   align-items: start;
   gap: var(--sv-space-xs);
-  background-color: hsl(35, 100%, 95%);
-  color: hsl(35, 100%, 44%);
-  border: 1px solid hsla(35, 100%, 44%, 0.25);
+  background-color: hsl(37, 92%, 95%);
+  color: hsl(29, 81%, 43%);
+  border: 1px solid hsla(36, 94%, 55%, 0.418);
   border-radius: var(--sv-border-radius-4);
   padding: var(--sv-space-xs);
   margin-top: var(--sv-space-s);
   svg {
     width: var(--sv-icon-sm);
     height: var(--sv-icon-sm);
-    fill: hsl(35, 100%, 44%);
+    fill: hsl(29, 81%, 43%);
   }
 }

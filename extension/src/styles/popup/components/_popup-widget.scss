@@ -1,19 +1,51 @@
-.popup {
-  --_sv-popup-radius: var(--sv-border-radius-12);
-  --_sv-popup-xp: var(--sv-space-s);
-  --_sv-popup-yp: var(--sv-space-s);
-  border-radius: var(--_sv-popup-radius);
-  padding-inline: var(--_sv-popup-xp);
-  padding-block: var(--_sv-popup-yp);
-  border: 1px solid rgba(211, 211, 211, 0.842);
+.sv-popup {
+  position: relative;
+  overflow: hidden;
+  transition: height 150ms ease;
 }
-
 .sv-popup-widget {
   --_sv-widget-xp: var(--sv-space-md);
   --_sv-widget-yp: var(--sv-space-md);
   box-shadow: 0px 0px 10px 4px hsla(0, 0%, 0%, 0.25);
-  border-radius: calc(var(--_sv-popup-radius) / 2);
+  border-radius: calc(var(--_sv-widget-radius) / 2);
   padding-bottom: var(--sv-space-xl);
+  &__inner-container {
+    --_sv-widget-radius: var(--sv-border-radius-12);
+    --_sv-widget-xp: var(--sv-space-s);
+    --_sv-widget-yp: var(--sv-space-s);
+    border-radius: var(--_sv-widget-radius);
+    padding-inline: var(--_sv-widget-xp);
+    padding-block: var(--_sv-widget-yp);
+    border: 1px solid rgba(211, 211, 211, 0.842);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--sv-white);
+    transition: translate 250ms ease;
+  }
+  &__inner-container:has(&--hidden) {
+    translate: 100%;
+    visibility: hidden;
+    transition: visibility 0ms;
+    z-index: -10;
+  }
+  &__inner-container:not([inert]) {
+    pointer-events: all;
+  }
+  &__inner-container:has(&--center) {
+    translate: 0%;
+    z-index: 10;
+  }
+  &__inner-container:has(&--left) {
+    translate: -100%;
+    z-index: 1;
+  }
+  &__inner-container:has(&--right) {
+    translate: 100%;
+    z-index: 1;
+  }
+
   &__section-title {
     font-size: var(--sv-font-sm);
     font-weight: var(--sv-font-weight-bold);
@@ -45,10 +77,10 @@
     margin-bottom: var(--sv-space-sm);
   }
   &__info-list {
-    margin-left: var(--_sv-popup-xp);
+    margin-left: var(--_sv-widget-xp);
     margin-top: var(--sv-space-sm);
     margin-bottom: var(--sv-space-lg);
-    padding-left: var(--_sv-popup-xp);
+    padding-left: var(--_sv-widget-xp);
   }
   &__action {
     display: flex;

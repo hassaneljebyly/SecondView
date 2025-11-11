@@ -10,8 +10,8 @@
   }
   &__cover-image {
     width: 100%;
-    border-top-left-radius: calc(var(--_sv-popup-radius) / 2);
-    border-top-right-radius: calc(var(--_sv-popup-radius) / 2);
+    border-top-left-radius: calc(var(--_sv-widget-radius) / 2);
+    border-top-right-radius: calc(var(--_sv-widget-radius) / 2);
     pointer-events: none;
     user-select: none;
     mask-image: linear-gradient(to bottom, white 20%, transparent 100%);
