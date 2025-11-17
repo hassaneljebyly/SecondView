@@ -11,6 +11,10 @@ import {
 } from '@/utils/scripts/cleanup';
 import injectComponent from '@/utils/scripts/injectComponent';
 import '@/styles/content/index.scss';
+// uncomment css for popup for future test
+// import '@/styles/popup/index.scss';
+
+// console.log("remove import '@/styles/popup/index.scss';");
 
 let pageId = Date.now();
 
