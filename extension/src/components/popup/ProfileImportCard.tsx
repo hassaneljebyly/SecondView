@@ -24,7 +24,11 @@ export default function ProfileImportCard() {
             Username:
           </label>
           <div className='sv-profile-import__input-container'>
-            <input id='sv-username-editable' className='sv-input' placeholder='fancy-face12345' />
+            <input
+              id='sv-username-editable'
+              className='sv-input'
+              placeholder='second-view-1a2b3c4d'
+            />
           </div>
           <label
             htmlFor='sv-access-key-editable'
