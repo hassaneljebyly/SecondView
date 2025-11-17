@@ -88,6 +88,7 @@ export default function ProfileOverviewCard() {
         <div className='sv-popup-widget__section sv-profile-overview__footer'>
           <b className='sv-divider sv-divider--top' />
           <ul className='sv-profile-overview__footer-list'>
+            {/* // [🧱 REFACTOR]: don't forget about, Guide, Privacy, Terms, and Report Bug links */}
             <li>
               <a className='sv-popup-widget__links' href='#'>
                 Guide
