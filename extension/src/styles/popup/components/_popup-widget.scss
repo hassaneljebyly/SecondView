@@ -69,6 +69,18 @@
       margin-block: var(--sv-space-md);
     }
   }
+  &__error-wrapper {
+    margin-top: var(--sv-space-sm);
+    position: absolute;
+    width: calc(100% - var(--_sv-widget-xp) * 2);
+    left: calc(var(--_sv-widget-xp));
+    translate: 0% 300%;
+    visibility: hidden;
+    &--has-error {
+      translate: 0% 415%;
+      visibility: visible;
+    }
+  }
   &__section--header {
     display: flex;
     align-items: center;
