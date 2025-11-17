@@ -136,6 +136,7 @@
 
   &__icon {
     display: block;
+    width: var(--_sv-btn-icon-size);
   }
   &__icon:not(:has(svg)) {
     display: none;
