@@ -25,13 +25,3 @@ export default function MainPopup() {
     </div>
   );
 }
-
-export function generateCopyAllText({
-  userName,
-  accessKey,
-}: {
-  userName: string;
-  accessKey: string;
-}) {
-  return `SecondView - Profile Sync\nUsername: ${userName}\nAccess Key: ${accessKey}\nKeep this information secure. You'll need both to sync your profile to other devices.`;
-}
