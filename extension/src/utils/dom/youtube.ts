@@ -5,6 +5,7 @@ import { IS_DEV } from '../config/loggerConfig';
 import { logger } from '../lib/logger';
 
 // [🧹 CLEANUP]: make getVideoDetails store scrapped data on a map
+// [🛑 BLOCKER]: fix scrapping video data issue, and possible make them optional so the whole thing doesn't fail because video data wasn't there
 
 // export only to clear old data during clean
 export const videoDetailsMap = new Map<keyof VideoMetaData, string | number>();
