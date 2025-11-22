@@ -1,11 +1,14 @@
 import { useNavigation } from '@/hooks/useNavigation';
+import useProfile from '@/hooks/useProfile';
 
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
 
 export default function ProfileImportCard() {
   const { handleNavigation, widgetStateClass, isInert } = useNavigation('ProfileImportCard');
-
+  const {
+    profile: { userName },
+  } = useProfile();
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -47,8 +50,8 @@ export default function ProfileImportCard() {
           <div className='sv-reminders'>
             <Icon variant='error' />
             <p>
-              You have an existing profile: Happy-Wolf-xyz789 (5 notes, 12 ratings). Importing will
-              replace it permanently
+              You have an existing profile: {userName} (5 notes, 12 ratings). Importing will replace
+              it permanently
             </p>
           </div>
         </div>

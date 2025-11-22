@@ -3,6 +3,7 @@ import { MOUNTED_ROOTS } from '@/utils/config/componentInjectConfig';
 import { INJECT_TASK } from '@/utils/config/injectTasksConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
 import { logger } from '@/utils/lib/logger';
+import { DevStoreModel } from '@/utils/lib/storage';
 import {
   cleanUp,
   cleanupMountedRoots,
@@ -13,7 +14,7 @@ import injectComponent from '@/utils/scripts/injectComponent';
 import '@/styles/content/index.scss';
 // uncomment css for popup for future test
 // import '@/styles/popup/index.scss';
-
+import { createNewUserAndAccessKey } from '@shared/utils/format/generateUserName';
 // console.log("remove import '@/styles/popup/index.scss';");
 
 let pageId = Date.now();
@@ -49,6 +50,7 @@ function init() {
   }
 }
 if (IS_DEV) {
+  DevStoreModel.initializeStoreIfNoneExist('profile', createNewUserAndAccessKey);
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(init);
   });

@@ -1,9 +1,13 @@
 import { useNavigation } from '@/hooks/useNavigation';
+import useProfile from '@/hooks/useProfile';
 
 import Button from '../ui/Button';
 
 export default function ProfileOverviewCard() {
   const { handleNavigation, widgetStateClass, isInert } = useNavigation('ProfileOverviewCard');
+  const {
+    profile: { userName },
+  } = useProfile();
 
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
@@ -31,9 +35,7 @@ export default function ProfileOverviewCard() {
           </div>
         </div>
         <div className='sv-popup-widget__section sv-profile-overview__user'>
-          <p className='sv-popup-widget__section-title sv-profile-overview__username'>
-            Lucky-Cookie-fd278299
-          </p>
+          <p className='sv-popup-widget__section-title sv-profile-overview__username'>{userName}</p>
           <p className='sv-profile-overview__badge'>Trusted Contributor</p>
         </div>
         <div className='sv-popup-widget__section sv-profile-overview__stats'>

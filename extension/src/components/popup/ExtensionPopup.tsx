@@ -8,9 +8,6 @@ import ImportSuccessCard from './ImportSuccessCard';
 import ProfileImportCard from './ProfileImportCard';
 import ProfileOverviewCard from './ProfileOverviewCard';
 
-export const fakeUserName = 'Lucky-Cookie-fd278299';
-export const fakeAccessKey = 'f81d4fae-7dec-11d0-a765-00a0c91e6bf6';
-
 export default function MainPopup() {
   const [widgetHight, setWidgetHight] = useState('');
   return (

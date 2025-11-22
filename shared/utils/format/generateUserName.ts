@@ -1,3 +1,5 @@
+import type { Profile } from '@/types/storage';
+
 import { ADJECTIVES, NOUNS } from '../config/userNameLists';
 
 /**
@@ -56,4 +58,13 @@ export function generateRandomUserName(): string {
   const randCode = generateRandomCode();
   const randSep = getRandomSeparators();
   return `${adj}${randSep}${noun}${randSep}${randCode}`;
+}
+
+export function createNewUserAndAccessKey(): Profile {
+  const userName = generateRandomUserName();
+  const accessKey = crypto.randomUUID();
+  return {
+    userName,
+    accessKey,
+  };
 }

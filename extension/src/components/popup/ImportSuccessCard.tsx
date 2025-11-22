@@ -1,10 +1,14 @@
 import { useNavigation } from '@/hooks/useNavigation';
+import useProfile from '@/hooks/useProfile';
 
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
 
 export default function ImportSuccessCard() {
   const { handleNavigation, widgetStateClass, isInert } = useNavigation('ImportSuccessCard');
+  const {
+    profile: { userName },
+  } = useProfile();
 
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
@@ -17,7 +21,7 @@ export default function ImportSuccessCard() {
         </div>
         <div className='sv-popup-widget__section'>
           <p className='sv-popup-widget__hint'>
-            Welcome back, <span>Fancy-Face-abcd1234!</span>
+            Welcome back, <span>{userName}!</span>
           </p>
           <p className='sv-popup-widget__section-title sv-import-success__section-title'>
             Your Stats:

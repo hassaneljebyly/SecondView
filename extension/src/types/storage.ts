@@ -7,6 +7,8 @@ export type Profile = {
   accessKey: string;
 };
 
+export type ProfileKeys = keyof Profile;
+
 /**
  * Defines the shape of the data stored for the "settings" domain.
  */
