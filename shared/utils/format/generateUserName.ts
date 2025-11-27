@@ -15,49 +15,37 @@ export function getRandomString(): string {
 }
 
 /**
- * Generates a random code of specified length.
- * It trims or pads a random string to ensure the code has exactly `len` characters.
+ * Generates a cryptographically secure 6-character hexadecimal string.
  *
- * @param {number} [len=8] - The desired length of the random code.
- * @returns {string} A random code string of length `len`.
+ * This function creates a 3-byte `Uint8Array`, fills it with random values
+ * using `crypto.getRandomValues`, and converts the bytes into a lowercase
+ * hex string. The result is always 6 hex characters (e.g., `"a3f91c"`).
+ *
+ * @returns {string} A randomly generated 6-character hexadecimal string.
  */
-export function generateRandomCode(len: number = 8): string {
-  const trimmedRandomString = getRandomString().substring(0, len);
-  const randomCode = trimmedRandomString.padEnd(len, getRandomString());
-  return randomCode;
+export function randomHex6(): string {
+  const UinArray = new Uint8Array(3);
+  const randomBitArray = Array.from(crypto.getRandomValues(UinArray));
+  const hexCodeString = randomBitArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hexCodeString;
 }
-
 /**
- * Returns a random separator character from a predefined list.
- * The possible separators are an empty string (''), a hyphen ('-'), or an underscore ('_').
+ * Generates a random username composed of an adjective, a noun, and a 6-character hex code.
  *
- * @returns {string} A randomly selected separator character.
- */
-export function getRandomSeparators(): string {
-  const separators = ['', '-', '_'];
-  return separators[Math.floor(Math.random() * separators.length)] ?? '';
-}
-
-/**
- * Generates a random username composed of:
- * - A random adjective
- * - A random separator (empty string, hyphen, or underscore)
- * - A random noun
- * - Another separator
- * - A random code (from {@link generateRandomCode})
+ * The final format looks like: `AdjectiveNoun_ABC123`
  *
- * Example output: `"Lucky-Cookie-fd278299"`
+ * @function
+ * @returns {string} A randomly generated username string.
  *
- * @returns {string} A randomly generated username.
- *
- * @throws {ReferenceError} If `NOUNS`, `ADJECTIVES`, or `generateRandomCode` are not defined in scope.
+ * @example
+ * const username = generateRandomUserName();
+ * // "SwiftTiger_A3F9B2"
  */
 export function generateRandomUserName(): string {
-  const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)];
-  const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
-  const randCode = generateRandomCode();
-  const randSep = getRandomSeparators();
-  return `${adj}${randSep}${noun}${randSep}${randCode}`;
+  const noun = getRandomItemFromArray(NOUNS);
+  const adj = getRandomItemFromArray(ADJECTIVES);
+  const randCode = randomHex6();
+  return `${adj}${noun}_${randCode}`;
 }
 
 export function createNewUserAndAccessKey(): Profile {
@@ -67,4 +55,22 @@ export function createNewUserAndAccessKey(): Profile {
     userName,
     accessKey,
   };
+}
+
+/**
+ * Returns a random item from a given array using cryptographically secure randomness.
+ *
+ * This function uses the Web Crypto API to generate a random number,
+ * ensuring better randomness than `Math.random()`.
+ *
+ * @template T
+ * @param {Array<T>} array - The array to pick a random item from. Must not be empty.
+ * @returns {T} A randomly selected item from the input array.
+ */
+export function getRandomItemFromArray<T>(array: Array<T>): T {
+  const UinArray = new Uint32Array(1);
+  const randomCryptoNumber = Number(crypto.getRandomValues(UinArray));
+  const randomIndex = Math.floor((randomCryptoNumber / 2 ** 32) * (array.length - 1));
+
+  return array[randomIndex] as T;
 }
