@@ -1,5 +1,7 @@
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
+import { IS_DEV } from '@/utils/config/loggerConfig';
+import { createNewUserAndAccessKey } from '@shared/utils/format/generateUserName';
 
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
@@ -8,6 +10,7 @@ export default function ProfileImportCard() {
   const { handleNavigation, widgetStateClass, isInert } = useNavigation('ProfileImportCard');
   const {
     profile: { userName },
+    updateStorageField,
   } = useProfile();
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
@@ -80,12 +83,15 @@ export default function ProfileImportCard() {
               text='Import'
               shape='rounded'
               actions={{
-                onClick: () =>
+                onClick: () => {
+                  // [🧹 CLEANUP]: this line is for dev only, remove when done
+                  if (IS_DEV) updateStorageField(createNewUserAndAccessKey());
                   handleNavigation({
                     leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
                     centerWidget: 'ImportFailCard',
                     rightWidget: [],
-                  }),
+                  });
+                },
               }}
             />
           </div>

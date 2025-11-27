@@ -8,7 +8,7 @@ export default function ProfileOverviewCard() {
   const {
     profile: { userName },
   } = useProfile();
-
+  const avatarBgColor = `#${userName.split('_').at(-1)}`;
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -21,8 +21,12 @@ export default function ProfileOverviewCard() {
               src='https://i.imgur.com/05YkqBj.png'
               alt='Cover'
             />
-            <div className='sv-profile-overview__avatar-container' aria-hidden>
-              <span className='sv-profile-overview__username-initials'>L</span>
+            <div
+              className='sv-profile-overview__avatar-container'
+              aria-hidden
+              style={{ backgroundColor: avatarBgColor }}
+            >
+              <span className='sv-profile-overview__username-initials'>{userName.charAt(0)}</span>
               {/* [🚀 FEATURE]: maybe in future add custom image */}
               <img className='sv-profile-overview__avatar-img' src={undefined} alt='' />
             </div>
