@@ -1,6 +1,5 @@
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
-import { IS_DEV } from '@/utils/config/loggerConfig';
 import { createNewUserAndAccessKey } from '@shared/utils/format/generateUserName';
 
 import Button from '../ui/Button';
