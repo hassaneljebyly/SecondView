@@ -44,7 +44,8 @@ export class StoreModel<Key extends StoreModelsKeys> {
   async update<K extends Partial<StoreModels[Key]>>(partial: K): Promise<void> {
     const { [this.storeKey]: oldData = null } = await chrome.storage.local.get([this.storeKey]);
     if (!oldData) {
-      // [⚙️ TECH DEBT]: figure out how to safely and properly handle corrupt or deleted storage after initialization
+      // TECHDEBT(me/#5): ⚙️ safely handle corrupt or deleted storage after initialization
+      // Issue: https://github.com/hassaneljebyly/SecondView/issues/5
       throw new Error(`Missing state for store "${this.storeKey}".`);
     }
     // merge old and new data,

@@ -4,7 +4,8 @@ import type { VideoMetaData } from '@shared/types/youtube-data';
 import { IS_DEV } from '../config/loggerConfig';
 import { logger } from '../lib/logger';
 
-// [🧱 REFACTOR]: get video data later via api
+// REFACTOR(me/#8): 🧱 Fetch video data from API instead of current method
+// Issue: https://github.com/hassaneljebyly/SecondView/issues/8
 export function getVideoDetails(): VideoMetaData {
   if (IS_DEV) return testVideoDetails;
   try {

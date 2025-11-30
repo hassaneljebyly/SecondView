@@ -27,7 +27,10 @@ export default function ProfileOverviewCard() {
               style={{ backgroundColor: avatarBgColor }}
             >
               <span className='sv-profile-overview__username-initials'>{userName.charAt(0)}</span>
-              {/* [🚀 FEATURE]: maybe in future add custom image */}
+              {/*
+               * // TODO(me/#3): 📝 Add custom image support
+               * // Issue: https://github.com/hassaneljebyly/SecondView/issues/3
+               */}
               <img className='sv-profile-overview__avatar-img' src={undefined} alt='' />
             </div>
             <Button
@@ -94,7 +97,10 @@ export default function ProfileOverviewCard() {
         <div className='sv-popup-widget__section sv-profile-overview__footer'>
           <b className='sv-divider sv-divider--top' />
           <ul className='sv-profile-overview__footer-list'>
-            {/* // [🧱 REFACTOR]: don't forget about, Guide, Privacy, Terms, and Report Bug links */}
+            {/*
+            // REFACTOR(me/#7): 🧱 Add Guide, Privacy, Terms, and Report Bug links
+            // Issue: https://github.com/hassaneljebyly/SecondView/issues/7
+            */}
             <li>
               <a className='sv-popup-widget__links' href='#'>
                 Guide

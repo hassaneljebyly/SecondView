@@ -9,7 +9,8 @@ export default function ErrorMessage({
   errorMessage: string;
   global?: boolean;
 }) {
-  // [🎨 UI/UX]: create better error component
+  // REFACTOR(me/#1): 🧱 create better error component
+  // Issue: https://github.com/hassaneljebyly/SecondView/issues/1
   return (
     <div className={`sv-form__error-message-wrapper${global ? ' sv-error--global' : ''}`}>
       <Icon size='sm' variant='error' />

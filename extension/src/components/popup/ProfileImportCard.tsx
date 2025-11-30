@@ -48,7 +48,10 @@ export default function ProfileImportCard() {
               placeholder='xxxx-xxxx-xxxx-xxxx-xxxx'
             />
           </div>
-          {/* // [🧱 REFACTOR]: move to its own component */}
+          {/*
+             // REFACTOR(me/#6): 🧱 move reminder/alert to its own component
+             // https://github.com/hassaneljebyly/SecondView/issues/6
+             */}
           <div className='sv-reminders'>
             <Icon variant='error' />
             <p>
@@ -83,7 +86,8 @@ export default function ProfileImportCard() {
               shape='rounded'
               actions={{
                 onClick: () => {
-                  // [🚀 FEATURE]:  build actual import feature
+                  // TODO(me/#2): 📝 Build actual import feature
+                  // Issue: https://github.com/hassaneljebyly/SecondView/issues/2
                   updateStorageField(createNewUserAndAccessKey());
                   handleNavigation({
                     leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],

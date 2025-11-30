@@ -112,7 +112,8 @@ export default function NoteRatingTabs({
             inaccurate: {},
           });
           onCancel();
-          // [🚀 FEATURE]: finish data schema `userid`...
+          // TODO(me/#4): 📝 finish data schema implementation (waiting for backend)
+          // Issue: https://github.com/hassaneljebyly/SecondView/issues/4
           logger.info({ noteId, vote: activeTab, reasons: selectedRatingReasons });
         }, 4000);
       } else {

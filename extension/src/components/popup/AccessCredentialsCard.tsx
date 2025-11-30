@@ -119,7 +119,10 @@ export default function AccessCredentialsCard() {
           <div
             className={`sv-popup-widget__error-wrapper${errorMessage.length ? ' sv-popup-widget__error-wrapper--has-error' : ''}`}
           >
-            {/* // [🧱 REFACTOR]: improve error displaying */}
+            {/*
+             // REFACTOR(me/#6): 🧱 improve error displaying fot popup
+             // Issue: https://github.com/hassaneljebyly/SecondView/issues/6
+             */}
             <ErrorMessage id='sv-error-all' global errorMessage={errorMessage} />
           </div>
           <ReadOnlyFieldCopy
