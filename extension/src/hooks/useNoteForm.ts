@@ -19,6 +19,8 @@ import { extractSourcesFromNote } from '@shared/utils/format/sourceParsing';
 import { timeStringToSeconds } from '@shared/utils/validation/helpers';
 import { validateForm } from '@shared/utils/validation/validationChainClient';
 
+import useProfile from './useProfile';
+
 /**
  * Custom hook for managing the lifecycle of a "Note Form".
  *
@@ -36,6 +38,9 @@ export function useNoteForm(): UseNoteFormReturn {
   const [openForm, setOpenForm] = useState(false);
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [errors, setErrors] = useState<ValidationErrors>({});
+  const {
+    profile: { userName },
+  } = useProfile();
 
   function handleFormToggle() {
     setOpenForm(prev => !prev);
@@ -90,8 +95,7 @@ export function useNoteForm(): UseNoteFormReturn {
         const payload: NoteSubmissionPayload = {
           videoMetaData,
           note: {
-            // [🧱 REFACTOR]: get actual current user ID
-            userId: 'u_fakeUser_123',
+            userId: userName,
             startTimeSeconds: timeStringToSeconds(startTime, TIME_STAMP_REGEX) as number,
             endTimeSeconds: timeStringToSeconds(endTime, TIME_STAMP_REGEX) as number,
             category: category as NoteCategoryKeys,

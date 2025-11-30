@@ -84,8 +84,8 @@ export default function ProfileImportCard() {
               shape='rounded'
               actions={{
                 onClick: () => {
-                  // [🧹 CLEANUP]: this line is for dev only, remove when done
-                  if (IS_DEV) updateStorageField(createNewUserAndAccessKey());
+                  // [🚀 FEATURE]:  build actual import feature
+                  updateStorageField(createNewUserAndAccessKey());
                   handleNavigation({
                     leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
                     centerWidget: 'ImportFailCard',
