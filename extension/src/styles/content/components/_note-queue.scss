@@ -1,8 +1,8 @@
 .sv-note-queue {
   position: absolute;
-  bottom: 20%;
+  left: 50%;
+  translate: -50% -75px;
   z-index: 999;
-  translate: 12px -75px;
   list-style: none;
 
   display: flex;
