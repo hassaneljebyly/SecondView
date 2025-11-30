@@ -16,6 +16,7 @@ export default function Button({
   aria,
   actions,
   text,
+  noDarkMode,
 }: ButtonProps) {
   const classes = [
     'sv-button',
@@ -34,6 +35,7 @@ export default function Button({
       tabIndex={tabIndex}
       {...aria}
       {...actions}
+      data-no-dark-mode={noDarkMode ? '' : undefined}
     >
       <span className='sv-button__icon' aria-hidden='true'>
         {icon && <Icon {...icon} />}
@@ -57,4 +59,5 @@ type ButtonProps = {
   aria?: React.AriaAttributes;
   actions?: React.ButtonHTMLAttributes<HTMLButtonElement>;
   text: string;
+  noDarkMode?: boolean;
 };

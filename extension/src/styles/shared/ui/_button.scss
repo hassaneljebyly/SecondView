@@ -170,7 +170,7 @@
   }
 }
 
-html[dark] .sv-button--light {
+html[dark] .sv-button--light:not([data-no-dark-mode]) {
   --_sv-btn-bg: var(--sv-black-15);
   --_sv-btn-color: var(--sv-white);
   --_sv-btn-border: 0px solid transparent;
@@ -193,7 +193,7 @@ html[dark] .sv-button--light {
   --_sv-btn-border-disabled: 0px solid transparent;
   --_sv-btn-outline-disabled: none;
 }
-html[dark] .sv-button--dark {
+html[dark] .sv-button--dark:not([data-no-dark-mode]) {
   --_sv-btn-bg: var(--sv-gray-100);
   --_sv-btn-color: var(--sv-black-6);
 
@@ -215,7 +215,7 @@ html[dark] .sv-button--dark {
   --_sv-btn-outline-disabled: none;
 }
 
-html[dark] .sv-button--blue {
+html[dark] .sv-button--blue:not([data-no-dark-mode]) {
   --_sv-btn-bg: var(--sv-blue-62);
   --_sv-btn-color: var(--sv-black-6);
 

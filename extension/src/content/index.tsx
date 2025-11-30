@@ -4,12 +4,7 @@ import { INJECT_TASK } from '@/utils/config/injectTasksConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
 import { logger } from '@/utils/lib/logger';
 import { DevStoreModel } from '@/utils/lib/storage';
-import {
-  cleanUp,
-  cleanupMountedRoots,
-  clearEvents,
-  clearVideoDetailsMap,
-} from '@/utils/scripts/cleanup';
+import { cleanUp, cleanupMountedRoots, clearEvents } from '@/utils/scripts/cleanup';
 import injectComponent from '@/utils/scripts/injectComponent';
 import '@/styles/content/index.scss';
 // uncomment css for popup for future test
@@ -59,7 +54,7 @@ if (IS_DEV) {
     setTimeout(init);
   });
   document.addEventListener('yt-navigate-start', () => {
-    cleanUp([clearVideoDetailsMap, clearEvents, () => cleanupMountedRoots(MOUNTED_ROOTS)]);
+    cleanUp([clearEvents, () => cleanupMountedRoots(MOUNTED_ROOTS)]);
     // change page snapshot id on each navigation start
     pageId = Date.now();
   });

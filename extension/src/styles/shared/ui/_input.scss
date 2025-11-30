@@ -41,7 +41,7 @@
     --_sv-input-outline-color-focus: var(--sv-error-color) !important;
   }
 
-  html[dark] & {
+  html[dark] &:not([data-no-dark-mode]) {
     & {
       /* default */
       --_sv-input-color: var(--sv-white);

@@ -8,7 +8,7 @@
     border-top: 0;
   }
 
-  html[dark] & {
+  html[dark] &:not([data-no-dark-mode]) {
     & {
       --_sv-divider-bg: var(--sv-white-alpha-10);
     }

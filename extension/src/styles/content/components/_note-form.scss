@@ -12,7 +12,7 @@
     pointer-events: none;
   }
 
-  html[dark] & {
+  html[dark] &:not([data-no-dark-mode]) {
     & {
       --_sv-form-bg-color: var(--sv-black-15);
       --_sv-form-text-color: var(--sv-white);

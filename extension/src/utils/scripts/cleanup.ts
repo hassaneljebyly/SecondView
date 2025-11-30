@@ -1,11 +1,7 @@
 import type { Root } from 'react-dom/client';
 
-import { videoDetailsMap } from '../dom/youtube';
 import { globalEventSingleton } from '../lib/events';
 
-export function clearVideoDetailsMap() {
-  videoDetailsMap.clear();
-}
 export function clearEvents() {
   globalEventSingleton.destroy();
 }

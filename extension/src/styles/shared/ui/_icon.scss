@@ -6,7 +6,7 @@
   flex-shrink: 0;
 }
 html[dark] {
-  .sv-icon {
+  .sv-icon:not([data-no-dark-mode]) {
     fill: var(--sv-white, white);
   }
 }

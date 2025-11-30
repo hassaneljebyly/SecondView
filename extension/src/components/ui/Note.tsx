@@ -82,6 +82,7 @@ export default function Note({
             icon={{
               variant: 'cancel',
             }}
+            noDarkMode
             actions={{
               onClick: onNoteClose,
             }}
@@ -100,6 +101,7 @@ export default function Note({
             actions={{
               onClick: handleOpenRatingPanel,
             }}
+            noDarkMode
           />
         </div>
       </div>

@@ -156,6 +156,7 @@ export default function NoteRatingTabs({
                   'aria-selected': activeTab === tab,
                   'aria-controls': 'sv-tab-panel',
                 }}
+                noDarkMode
                 actions={{
                   onClick: () => setActiveTab(tab),
                   onKeyDown: handleTabKeyDown,
@@ -180,7 +181,7 @@ export default function NoteRatingTabs({
                   <span className='sv-sr-only'>{description}</span>
                   <span className='sv-note-rating__description-wrapper' aria-hidden='true'>
                     <span className='sv-note-rating__description'>{description}</span>
-                    <Icon variant='error' size='sm' theme='dark' />
+                    <Icon variant='error' size='sm' theme='dark' noDarkMode />
                   </span>
                   <input
                     id={value}
@@ -198,7 +199,7 @@ export default function NoteRatingTabs({
           </div>
 
           <div className='sv-note-rating__action'>
-            <Button text='Cancel' shape='pill' actions={{ onClick: onCancel }} />
+            <Button text='Cancel' shape='pill' actions={{ onClick: onCancel }} noDarkMode />
             <Button
               text={BUTTON_STATES_MAP[formSubmissionState]['text']}
               shape='pill'
@@ -206,6 +207,7 @@ export default function NoteRatingTabs({
               type='submit'
               icon={{ variant: BUTTON_STATES_MAP[formSubmissionState]['icon'] }}
               disabled={Boolean(!selectedRatingReasons.length)}
+              noDarkMode
             />
           </div>
         </fieldset>
