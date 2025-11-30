@@ -12,7 +12,7 @@
     "dev:popup": "vite --config vite.config.popup.js",
     "lint": "eslint . --ext .ts,.tsx,.js,.jsx",
     "type-check": "tsc -b",
-    "build": "npm run lint && npm run type-check && npm run build:content && npm run build:popup && build:background",
+    "build": "npm run lint && npm run type-check && npm run build:content && npm run build:popup && npm run build:background",
     "build:content": "npx vite build --config vite.config.content.js",
     "build:popup": "npx vite build --config vite.config.popup.js",
     "build:background": "npx vite build --config vite.config.background.js",
