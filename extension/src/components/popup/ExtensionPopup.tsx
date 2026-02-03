@@ -5,6 +5,7 @@ import { NavigationContextProvider } from '@/context/NavigationContext';
 import AccessCredentialsCard from './AccessCredentialsCard';
 import ImportFailCard from './ImportFailCard';
 import ImportSuccessCard from './ImportSuccessCard';
+import Onboarding from './Onboarding';
 import ProfileImportCard from './ProfileImportCard';
 import ProfileOverviewCard from './ProfileOverviewCard';
 
@@ -13,11 +14,12 @@ export default function MainPopup() {
   return (
     <div className='sv-popup' style={{ height: widgetHight }}>
       <NavigationContextProvider setWidgetHight={setWidgetHight}>
-        <ImportSuccessCard />
-        <ImportFailCard />
+        <Onboarding />
+        <ProfileOverviewCard />
         <ProfileImportCard />
         <AccessCredentialsCard />
-        <ProfileOverviewCard />
+        <ImportSuccessCard />
+        <ImportFailCard />
       </NavigationContextProvider>
     </div>
   );

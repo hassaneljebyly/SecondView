@@ -1,51 +1,39 @@
 import { useEffect, useState } from 'react';
 
-import type { Profile, ProfileKeys } from '@/types/storage';
-import { IS_DEV } from '@/utils/config/loggerConfig';
-import { logger } from '@/utils/lib/logger';
-import { DevStoreModel, StoreModel } from '@/utils/lib/storage';
-
-const profileStore = IS_DEV ? new DevStoreModel('profile') : new StoreModel('profile');
+import { initialUser, type InitialUser } from '@/api/apiHandlers/user';
+import type { User } from '@/api/types/user';
+import type { StoreUpdater } from '@/types/storage';
+import { profileStore } from '@/utils/lib/storage';
+import type { NestedKeyOf } from '@shared/types/helpers';
+import { getNestedValue } from '@shared/utils/helpers/objectHelpers';
 
 export default function useProfile() {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  async function getField<K extends ProfileKeys>(field: K): Promise<Profile[K] | null> {
-    try {
-      const result = (await profileStore.get(field)) as Profile[K] | null;
-      return result;
-    } catch (error) {
-      logger.error(`Something went wrong while getting ${field}`, error);
-      return null;
-    }
+  const [profile, setProfile] = useState<InitialUser>(initialUser);
+  function pick(fieldSelector: NestedKeyOf<InitialUser>) {
+    return getNestedValue(profile, fieldSelector);
   }
-
-  async function updateStoredProfile<K extends Partial<Profile>>(partial: K) {
-    try {
-      profileStore.update(partial);
-    } catch (error) {
-      logger.error(`Something went wrong while updating Profile width ${partial}`, error);
-    }
+  function update<T extends NestedKeyOf<InitialUser>>(
+    fieldSelector: T,
+    handler: StoreUpdater<User, T>
+  ) {
+    return profileStore.update(fieldSelector, handler);
   }
 
   useEffect(() => {
-    if (!profile) {
+    if (profile.user.id === null) {
       profileStore.get().then(result => {
-        if (typeof result === 'object') setProfile(result);
+        if (result.status === 'ready' && result.storeValue.user.id !== null) {
+          setProfile(result.storeValue);
+        }
       });
     }
-
-    const profileSubscriber = profileStore.onChange(newVal => {
-      setProfile(newVal);
+    const profileChangeEvent = profileStore.onChange('*', (_oldProfile, newProfile) => {
+      setProfile(newProfile);
     });
-
     return () => {
-      profileSubscriber();
+      profileChangeEvent();
     };
   });
 
-  return {
-    profile: profile || { userName: 'N/A', accessKey: 'N/A' },
-    readStorageField: getField,
-    updateStorageField: updateStoredProfile,
-  };
+  return { profile, pick, update };
 }

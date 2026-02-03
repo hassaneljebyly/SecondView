@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
+import type { User } from '@/api/types/user';
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
-import type { ProfileKeys } from '@/types/storage';
 import { logger } from '@/utils/lib/logger';
 import { generateCopyAllText, generateCredentialsFile } from '@/utils/scripts/copy-credential';
 
@@ -10,7 +10,7 @@ import Button from '../ui/Button';
 import ErrorMessage from '../ui/ErrorMessage';
 import Icon from '../ui/Icon';
 
-type SaveAction = ProfileKeys | 'all' | 'file';
+type SaveAction = keyof Pick<User['user'], 'accessKey' | 'username'> | 'all' | 'file';
 
 type SaveState = {
   status: 'idle' | 'saving' | 'saved' | 'error';
@@ -24,14 +24,14 @@ const initialSaveState: SaveState = {
 };
 
 const initialSaveMap: SaveStateMap = {
-  userName: initialSaveState,
+  username: initialSaveState,
   accessKey: initialSaveState,
   all: initialSaveState,
   file: initialSaveState,
 };
 
 const errorsMap: Record<SaveAction, string> = {
-  userName:
+  username:
     "We couldn't complete the requested action: copying the user name. Please Clipboard permissions or try again.",
   accessKey:
     "We couldn't complete the requested action: copying the access key. Please Clipboard permissions or try again.",
@@ -41,11 +41,13 @@ const errorsMap: Record<SaveAction, string> = {
 
 const stateDelay = 1500;
 export default function AccessCredentialsCard() {
-  const { handleNavigation, widgetStateClass, isInert } = useNavigation('AccessCredentialsCard');
+  const { setNavigation, widgetStateClass, isInert } = useNavigation('AccessCredentialsCard');
   const [saveActionState, setSaveActionState] = useState<SaveStateMap>(initialSaveMap);
   const {
-    profile: { userName, accessKey },
+    profile: { user },
   } = useProfile();
+  const username = user.username || 'N/A';
+  const accessKey = user.accessKey || 'N/A';
   function handleCredentialsSave(saveAction: SaveAction) {
     const updateStatus = (
       action: SaveAction,
@@ -62,7 +64,7 @@ export default function AccessCredentialsCard() {
     try {
       if (saveAction === 'file') {
         const { success, errorMessage } = generateCredentialsFile({
-          userName: userName,
+          userName: username,
           accessKey: accessKey,
         });
 
@@ -75,11 +77,11 @@ export default function AccessCredentialsCard() {
         }
       } else {
         const itemsToCopyMap: Record<Exclude<SaveAction, 'file'>, string> = {
-          userName: userName,
-          accessKey: accessKey,
+          username,
+          accessKey,
           all: generateCopyAllText({
-            userName: userName,
-            accessKey: accessKey,
+            username,
+            accessKey,
           }),
         };
         navigator.clipboard.writeText(itemsToCopyMap[saveAction]).then(() => {
@@ -128,9 +130,9 @@ export default function AccessCredentialsCard() {
           <ReadOnlyFieldCopy
             label='Username'
             id='sv-username-readonly'
-            value={userName}
-            copiedState={saveActionState['userName']['status']}
-            onCopy={() => handleCredentialsSave('userName')}
+            value={username}
+            copiedState={saveActionState['username']['status']}
+            onCopy={() => handleCredentialsSave('username')}
           />
           <ReadOnlyFieldCopy
             label='Access key'
@@ -169,7 +171,7 @@ export default function AccessCredentialsCard() {
             shape='rounded'
             actions={{
               onClick: () =>
-                handleNavigation({
+                setNavigation({
                   leftWidget: [],
                   centerWidget: 'ProfileOverviewCard',
                   rightWidget: ['AccessCredentialsCard'],

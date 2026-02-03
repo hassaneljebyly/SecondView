@@ -1,3 +1,5 @@
+import type React from 'react';
+
 import type { IconProps } from '@/components/ui/Icon';
 
 export type NoteFormButtonConfig = {
@@ -14,7 +16,8 @@ export type WidgetType =
   | 'AccessCredentialsCard'
   | 'ProfileImportCard'
   | 'ImportSuccessCard'
-  | 'ImportFailCard';
+  | 'ImportFailCard'
+  | 'Onboarding';
 export type NavigationState = {
   leftWidget: WidgetType[];
   centerWidget: WidgetType;
@@ -22,5 +25,5 @@ export type NavigationState = {
 };
 export type NavigationContextValue = {
   navigation: NavigationState;
-  handleNavigation: (args: NavigationState) => void;
+  setNavigation: React.Dispatch<React.SetStateAction<NavigationState>>;
 };

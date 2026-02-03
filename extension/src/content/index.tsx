@@ -1,15 +1,16 @@
+import { initialUser } from '@/api/apiHandlers/user';
 import type { Retries } from '@/types';
 import { MOUNTED_ROOTS } from '@/utils/config/componentInjectConfig';
 import { INJECT_TASK } from '@/utils/config/injectTasksConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
 import { logger } from '@/utils/lib/logger';
-import { DevStoreModel } from '@/utils/lib/storage';
+import { LocalStorageStoreModel, profileStore } from '@/utils/lib/storage';
 import { cleanUp, cleanupMountedRoots, clearEvents } from '@/utils/scripts/cleanup';
 import injectComponent from '@/utils/scripts/injectComponent';
 import '@/styles/content/index.scss';
-// uncomment css for popup for future test
+// uncomment css for popup for future test, comment it out before build also check render tasks
 // import '@/styles/popup/index.scss';
-import { createNewUserAndAccessKey } from '@shared/utils/format/generateUserName';
+
 // console.log("remove import '@/styles/popup/index.scss';");
 
 let pageId = Date.now();
@@ -45,7 +46,7 @@ function init() {
   }
 }
 if (IS_DEV) {
-  DevStoreModel.initializeStoreIfNoneExist('profile', createNewUserAndAccessKey);
+  LocalStorageStoreModel.initializeStoreIfNoneExist('profile', () => initialUser);
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(init);
   });
@@ -54,7 +55,11 @@ if (IS_DEV) {
     setTimeout(init);
   });
   document.addEventListener('yt-navigate-start', () => {
-    cleanUp([clearEvents, () => cleanupMountedRoots(MOUNTED_ROOTS)]);
+    cleanUp([
+      clearEvents,
+      () => cleanupMountedRoots(MOUNTED_ROOTS),
+      () => profileStore.removeAllListeners(),
+    ]);
     // change page snapshot id on each navigation start
     pageId = Date.now();
   });

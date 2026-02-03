@@ -1,13 +1,13 @@
 import { logger } from '../lib/logger';
 
 export function generateCopyAllText({
-  userName,
+  username,
   accessKey,
 }: {
-  userName: string;
+  username: string;
   accessKey: string;
 }) {
-  return `SecondView - Profile Sync\nUsername: ${userName}\nAccess Key: ${accessKey}\nKeep this information secure. You'll need both to sync your profile to other devices.`;
+  return `SecondView - Profile Sync\nUsername: ${username}\nAccess Key: ${accessKey}\nKeep this information secure. You'll need both to sync your profile to other devices.`;
 }
 
 export function generateCredentialsFile({

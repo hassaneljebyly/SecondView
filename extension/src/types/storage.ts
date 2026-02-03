@@ -1,13 +1,5 @@
-/**
- * Defines the shape of the data stored for the "profile" domain.
- * Only store-related code should rely on this.
- */
-export type Profile = {
-  userName: string;
-  accessKey: string;
-};
-
-export type ProfileKeys = keyof Profile;
+import type { User } from '@/api/types/user';
+import type { DeepNullable, NestedKeyOf, NestedValue } from '@shared/types/helpers';
 
 /**
  * Defines the shape of the data stored for the "settings" domain.
@@ -17,22 +9,23 @@ export type Settings = {
   theme: string;
 };
 
-/**
- * Mapping of all store keys to their corresponding data shape.
- *
- * Internal use only: helps StoreModel infer types automatically.
- * Do NOT use directly for unrelated objects.
- */
+export type StoreState<T> =
+  | { status: 'uninitialized' }
+  | { status: 'ready'; storeValue: T }
+  | { status: 'error' };
+
 export type StoreModels = {
-  profile: Profile;
+  profile: User;
   settings: Settings;
 };
 
-/**
- * The valid keys that can be passed to StoreModel.
- *
- * Use this for type safety when creating a store:
- *   new StoreModel('profile') // ✅ allowed
- *   new StoreModel('invalidKey') // ❌ TypeScript will error
- */
-export type StoreModelsKeys = keyof StoreModels;
+export type StoreUpdater<Obj extends object, Path extends string> = (
+  prev: DeepNullable<NestedValue<Obj, Path>>
+) => NestedValue<Obj, Path>;
+
+export type GetValueResult<
+  T extends keyof StoreModels,
+  F extends NestedKeyOf<StoreModels[T]> | undefined = undefined,
+> = F extends undefined
+  ? DeepNullable<StoreModels[T]>
+  : NestedValue<StoreModels[T], F & string> | null;

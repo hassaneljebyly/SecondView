@@ -12,9 +12,9 @@ export const INJECT_TASK: InjectTask[] = [
   NoteDisplayQueueTask,
   // uncomment for when testing popup
   // {
-  //   domTargetSelector: '#popup-mock',
-  //   rootWrapperId: '',
-  //   componentId: '',
-  //   component: <MainPopup />,
+  // domTargetSelector: '#popup-mock',
+  // rootWrapperId: '',
+  // componentId: '',
+  // component: <MainPopup />,
   // },
 ];
