@@ -8,10 +8,10 @@ import { LocalStorageStoreModel, profileStore } from '@/utils/lib/storage';
 import { cleanUp, cleanupMountedRoots, clearEvents } from '@/utils/scripts/cleanup';
 import injectComponent from '@/utils/scripts/injectComponent';
 import '@/styles/content/index.scss';
-// uncomment css for popup for future test
-import '@/styles/popup/index.scss';
+// uncomment css for popup for future test, comment it out before build also check render tasks
+// import '@/styles/popup/index.scss';
 
-console.log("remove import '@/styles/popup/index.scss';");
+// console.log("remove import '@/styles/popup/index.scss';");
 
 let pageId = Date.now();
 

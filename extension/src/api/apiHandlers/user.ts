@@ -16,8 +16,9 @@ export const initialUser: InitialUser = {
 
 export function generateUserHandler(_options?: unknown): RequestHandler<User> {
   const controller = new AbortController();
+  // TODO(me): 📝 enable RLS and add actual urls before first release
   const LOCAL_URL = 'http://127.0.0.1:54321/functions/v1/create-user';
-  const PROD_URL = 'https://<project-id>.supabase.co/functions/v1/create-user';
+  // const PROD_URL = 'https://<project-id>.supabase.co/functions/v1/create-user';
 
   const URL = LOCAL_URL;
 

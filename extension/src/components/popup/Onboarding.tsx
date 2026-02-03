@@ -4,6 +4,7 @@ import { generateUserHandler } from '@/api/apiHandlers/user';
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
 import useRequest from '@/hooks/useRequest';
+import { logger } from '@/utils/lib/logger';
 import { profileStore } from '@/utils/lib/storage';
 
 import Button from '../ui/Button';
@@ -35,7 +36,7 @@ export default function Onboarding() {
       setData(null);
     }
     if (isError) {
-      console.log('show global error', isError);
+      logger.error('show global error', isError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isError, profile]); // only data, isError and profile are needed

@@ -7,6 +7,8 @@ import { logger } from '@/utils/lib/logger';
 export type RequestHandler<T> = {
   abortRequest: (reason?: unknown) => void;
   fetchHandler: () => Promise<Response>;
+  /** @internal T is used as a phantom generic only */
+  __responseType?: T;
 };
 
 export default function useRequest<H extends RequestHandler<unknown>>(requestHandler: () => H) {
