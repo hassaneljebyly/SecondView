@@ -1,64 +1,98 @@
-import type { StoreModels, StoreModelsKeys } from '@/types/storage';
+import type { StorageChangeEvent } from '@/types';
+import type { GetValueResult, StoreModels, StoreState, StoreUpdater } from '@/types/storage';
+import type { DeepNullable, NestedKeyOf, NestedValue } from '@shared/types/helpers';
+import { getNestedValue, updateNestedValue } from '@shared/utils/helpers/objectHelpers';
 
-type Subscriber<T> = (newVal: T, oldVal: T) => void;
-export class StoreModel<Key extends StoreModelsKeys> {
-  private subscribers: Map<'__any__' | keyof StoreModels[Key], Subscriber<StoreModels[Key]>[]> =
-    new Map();
-  private storeKey: Key;
+import { globalEventSingleton } from './events';
+import { logger } from './logger';
+import { IS_DEV } from '../config/loggerConfig';
 
+type Listener = (changes: { [key: string]: chrome.storage.StorageChange }) => void;
+
+/**
+ * Strongly-typed Chrome storage-backed store abstraction.
+ * Provides typed get/update/set access with nested key support and change listeners.
+ */
+export class StoreModel<Key extends keyof StoreModels> {
+  /** Storage key associated with this store */
+  storeKey: Key;
+  /** Registry of active change listeners for cleanup */
+  listenersRegistry: Set<Listener>;
+
+  /**
+   * Creates a new StoreModel instance bound to a specific storage key.
+   * @param storeKey - Key of the store inside chrome.storage.local
+   */
   constructor(storeKey: Key) {
     this.storeKey = storeKey;
+    this.listenersRegistry = new Set();
   }
-
   /**
-   * Gets the full store object or a specific field value.
+   * Reads data from the store.
    *
-   * @template Field
-   * @param {?Field} [field] - Optional field to retrieve. If omitted, returns the whole store.
-   * @returns {Promise<StoreModels[Key] | StoreModels[Key][Field] | null>}
-   *   Returns `null` if the store is missing or an error occurs.
+   * @param fieldsSelector - Optional nested field path to retrieve (e.g 'user.id').
+   * @returns Store state:
+   *  - `{ status: 'uninitialized' }` if no value exists
+   *  - `{ status: 'ready', storeValue }` when data is available
+   *  - `{ status: 'error' }` on failure
    */
-  async get<Field extends keyof StoreModels[Key]>(
-    field?: Field
-  ): Promise<StoreModels[Key] | StoreModels[Key][Field] | null> {
+  async get<F extends NestedKeyOf<StoreModels[Key]> | undefined = undefined>(
+    fieldsSelector?: F
+  ): Promise<StoreState<GetValueResult<Key, F>>> {
     try {
-      const result = await chrome.storage.local.get([this.storeKey]);
-      const data = result[this.storeKey] as StoreModels[Key] | undefined;
-
-      if (!data) return null;
-
-      return field ? data[field] : data;
-    } catch (err) {
-      console.error(`Something went wrong while getting "${this.storeKey}"`, err);
-      return null;
+      const res = await chrome.storage.local.get([this.storeKey]);
+      if (!Object.keys(res).length) return { status: 'uninitialized' };
+      const storeValue = fieldsSelector
+        ? getNestedValue(res[this.storeKey], fieldsSelector)
+        : res[this.storeKey];
+      return { status: 'ready', storeValue };
+    } catch (error) {
+      logger.error(
+        `Storage Error: Something went wrong while getting ${fieldsSelector} from ${this.storeKey}`,
+        error
+      );
+      return { status: 'error' };
     }
   }
-
   /**
-   * Updates storage with specified partial object
+   * Updates a nested field using a functional updater.
    *
-   * @async
-   * @param {K} partial of all targeted fields
-   * @returns {Promise<void>}
+   * @param fieldsSelector - Nested field path to update.
+   * @param updater - Function receiving previous value and returning new value.
+   *
+   * @remarks
+   * - Throws if the field does not exist.
+   * - Ensures read-modify-write consistency.
    */
-  async update<K extends Partial<StoreModels[Key]>>(partial: K): Promise<void> {
-    const { [this.storeKey]: oldData = null } = await chrome.storage.local.get([this.storeKey]);
-    if (!oldData) {
-      // TECHDEBT(me/#5): ⚙️ safely handle corrupt or deleted storage after initialization
-      // Issue: https://github.com/hassaneljebyly/SecondView/issues/5
-      throw new Error(`Missing state for store "${this.storeKey}".`);
+  async update<T extends NestedKeyOf<StoreModels[Key]>>(
+    fieldsSelector: T,
+    updater: StoreUpdater<StoreModels[Key], T>
+  ): Promise<void> {
+    try {
+      const result = await this.get();
+      if (result.status === 'ready') {
+        const { storeValue } = result;
+        // @ts-expect-error - complaining about field, no idea why, works anyways
+        const previousValue = getNestedValue(storeValue, fieldsSelector);
+        if (previousValue === undefined)
+          throw Error(
+            `Couldn't continue updating ${this.storeKey} store, because ${fieldsSelector} doesn't exist`
+          );
+        const newVal = updater(previousValue as DeepNullable<NestedValue<StoreModels[Key], T>>);
+        // @ts-expect-error - complaining about field, no idea why, works anyways
+        const updatedVersion = updateNestedValue(storeValue, fieldsSelector, newVal);
+        this.set(updatedVersion, storeValue);
+      } else {
+        throw Error(
+          `Couldn't continue updating ${fieldsSelector} in ${this.storeKey} store, ${JSON.stringify(result)}`
+        );
+      }
+    } catch (error) {
+      logger.error(
+        `Something went wrong while updating ${fieldsSelector} in ${this.storeKey} store`,
+        error
+      );
     }
-    // merge old and new data,
-    const newData: StoreModels[Key] = { ...oldData, ...partial };
-
-    await chrome.storage.local.set({ [this.storeKey]: newData });
-
-    const changedKeys = Object.keys(partial) as (keyof StoreModels[Key])[];
-    for (const key of changedKeys) {
-      this.emit(key, newData, oldData);
-    }
-
-    this.emit('__any__', newData, oldData);
   }
 
   async clear(): Promise<void> {
@@ -66,164 +100,233 @@ export class StoreModel<Key extends StoreModelsKeys> {
   }
 
   /**
-   * Handles registering subscribers to storage change
+   * Overwrites the entire store value.
    *
-   * @param {Subscriber<StoreModels[Key]>} callback takes (newVal, oldVal) as value
-   * @param {K[]} [keys=[]] provide [] or no value to be notified when any change occurs.
-   *  or provide ["specificField",...] to only listen to specified fields/keys
-   * @returns {() => void}
+   * @param updatedVersion - New store state to persist.
    */
-  onChange<K extends keyof StoreModels[Key]>(
-    callback: Subscriber<StoreModels[Key]>,
-    keys: K[] = []
-  ): () => void {
-    // determine which keys to watch:
-    // - providing no keys or an empty array ([]), means:
-    //   watch for any change in the storage, which is
-    //   represent with the "__any__" key.
-    // - otherwise, watch only the keys provided..
-    const keyList: (K | '__any__')[] = keys.length === 0 ? ['__any__'] : keys;
-    const uniqueKeys = new Set(keyList);
+  async set(newValue: DeepNullable<StoreModels[Key]>, _oldValue: DeepNullable<StoreModels[Key]>) {
+    await chrome.storage.local.set({ [this.storeKey]: newValue });
+  }
+  /**
+   * Subscribes to changes in the store or a specific nested field.
+   *
+   * @param fieldsSelector - Either '*' to watch the entire store or a nested field path.
+   * @param handler - Callback fired when the watched value changes.
+   *
+   * @returns Cleanup function to unsubscribe the listener.
+   *
+   * @example
+   * store.onChange('profile.name', (oldVal, newVal) => {})
+   * store.onChange('*', (oldStore, newStore) => {})
+   */
+  onChange<
+    Target extends '*' | NestedKeyOf<StoreModels[Key]>,
+    T extends Target extends '*'
+      ? DeepNullable<StoreModels[Key]>
+      : NestedValue<StoreModels[Key], Target>,
+  >(fieldsSelector: Target, handler: (oldVal: T, newVal: T) => void) {
+    const listener = (changes: { [key: string]: chrome.storage.StorageChange }) => {
+      for (const [key, change] of Object.entries(changes)) {
+        if (this.storeKey === key) {
+          const { oldValue, newValue } = change;
 
-    // register callback for each key
-    for (const key of uniqueKeys) {
-      const existing = this.subscribers.get(key) ?? [];
-      // prevent accidental duplicate subscriptions
-      if (!existing.includes(callback)) {
-        existing.push(callback);
-        this.subscribers.set(key, existing);
-      }
-    }
+          if (fieldsSelector === '*') {
+            handler(oldValue as T, newValue as T);
+          } else {
+            const nestedOldValue = getNestedValue(oldValue, fieldsSelector) as T;
+            const nestedNewValue = getNestedValue(newValue, fieldsSelector) as T;
 
-    // return unsubscribe function
-    return () => {
-      for (const key of uniqueKeys) {
-        const existing = this.subscribers.get(key);
-        if (!existing) continue;
-
-        const updated = existing.filter(cb => cb !== callback);
-        this.subscribers.set(key, updated);
-
-        // final cleanup: remove key entirely when no subscribers remain
-        if (updated.length === 0) {
-          this.subscribers.delete(key);
+            if (
+              nestedOldValue !== undefined &&
+              nestedNewValue !== undefined &&
+              nestedNewValue !== nestedOldValue // skip if values are the same
+            ) {
+              handler(nestedOldValue, nestedNewValue);
+            }
+          }
         }
       }
     };
+
+    this.listenersRegistry.add(listener);
+    chrome.storage.local.onChanged.addListener(listener);
+
+    return () => {
+      chrome.storage.local.onChanged.removeListener(listener);
+      this.listenersRegistry.delete(listener);
+    };
+  }
+  /**
+   * Removes all registered change listeners.
+   *
+   * @remarks
+   * Intended for cleanup during teardown or disposal.
+   */
+  removeAllListeners() {
+    this.listenersRegistry.forEach(listener => {
+      chrome.storage.local.onChanged.removeListener(listener);
+    });
+    this.listenersRegistry.clear();
   }
 
   /**
-   * Notifies all subscribers to storage change
+   * Initializes a store with default values if it does not already exist.
    *
-   * @private
-   * @param {(K | '__any__')} key takes specificField to watch for its change, or `__any__` to watch for any change
-   * @param {StoreModels[Key]} newVal new storage value after it's updated
-   * @param {StoreModels[Key]} oldVal old storage value before the update
+   * @param storeKey - Store key to initialize.
+   * @param defaultValues - Lazy factory for default store state.
    */
-  private emit<K extends keyof StoreModels[Key]>(
-    key: K | '__any__',
-    newVal: StoreModels[Key],
-    oldVal: StoreModels[Key]
+  static async initializeStoreIfNoneExist<K extends keyof StoreModels>(
+    storeKey: K,
+    defaultValues: () => DeepNullable<StoreModels[K]>
   ) {
-    // skip notifying subscribers if values didn't change
-    if (key !== '__any__' && oldVal[key] === newVal[key]) return;
-    const targetSubscribers = this.subscribers.get(key) || [];
-    if (targetSubscribers) {
-      for (const subscriber of targetSubscribers) {
-        subscriber(newVal, oldVal);
+    try {
+      const result = await chrome.storage.local.get([storeKey]);
+      if (!result[storeKey] || !Object.keys(result[storeKey]).length) {
+        await chrome.storage.local.set({ [storeKey]: defaultValues() });
       }
-    }
-  }
-
-  /**
-   * Ensures that a given store key exists in chrome.storage.local.
-   *
-   * If the store does not exist (e.g., first run or storage was cleared),
-   * this method will initialize it with default values returned by the provided callback.
-   *
-   * @template Key - A valid key of StoreModels.
-   * @param {Key} storeKey - The store key to check and initialize if missing.
-   * @param {() => StoreModels[Key]} defaultValuesCallback -
-   *   A callback that returns the default value for the store.
-   *   This is used only if the store is missing.
-   * @returns {Promise<void>} Resolves once the store exists or has been initialized.
-   *
-   * @example
-   * await StoreModel.initializeStoreIfNoneExist('profile', () => createNewUserAndAccessKey());
-   */
-  static async initializeStoreIfNoneExist<Key extends StoreModelsKeys>(
-    storeKey: Key,
-    defaultValuesCallback: () => StoreModels[Key]
-  ): Promise<void> {
-    const result = await chrome.storage.local.get([storeKey]);
-    if (!result[storeKey]) {
-      await chrome.storage.local.set({ [storeKey]: defaultValuesCallback() });
+    } catch (error) {
+      logger.error(`Failed to initialize store ${storeKey}`, error);
     }
   }
 }
 
-//  mirror chrome.storage.local for dev
-export class DevStoreModel<Key extends StoreModelsKeys> extends StoreModel<Key> {
+// ----------------------------------------
+// Storage used during dev
+// ----------------------------------------
+
+export class LocalStorageStoreModel<Key extends keyof StoreModels> extends StoreModel<Key> {
+  localListenersRegistry: Set<(e: Event) => void>;
   constructor(storeKey: Key) {
     super(storeKey);
+    this.localListenersRegistry = new Set();
   }
 
-  private readFromLocalStorage(): StoreModels[Key] | null {
+  override async get<F extends NestedKeyOf<StoreModels[Key]> | undefined = undefined>(
+    fieldsSelector?: F | undefined
+  ): Promise<StoreState<GetValueResult<Key, F>>> {
     try {
-      const raw = window.localStorage.getItem(this['storeKey']);
-      if (!raw) return null;
-      return JSON.parse(raw) as StoreModels[Key];
-    } catch {
-      return null;
+      const raw = window.localStorage.getItem(this.storeKey);
+      const res = JSON.parse(raw || '{}');
+      if (!Object.keys(res).length) return { status: 'uninitialized' };
+      const storeValue = fieldsSelector
+        ? getNestedValue(res[this.storeKey], fieldsSelector)
+        : res[this.storeKey];
+      return { status: 'ready', storeValue };
+    } catch (error) {
+      logger.error(
+        `Storage Error: Something went wrong while getting ${fieldsSelector} from ${this.storeKey}`,
+        error
+      );
+      return { status: 'error' };
     }
   }
-
-  private writeToLocalStorage(obj: StoreModels[Key]): void {
-    window.localStorage.setItem(this['storeKey'], JSON.stringify(obj));
-  }
-
-  private removeFromLocalStorage(): void {
-    window.localStorage.removeItem(this['storeKey']);
-  }
-
-  override async get<Field extends keyof StoreModels[Key]>(
-    field?: Field
-  ): Promise<StoreModels[Key] | StoreModels[Key][Field] | null> {
-    const data = this.readFromLocalStorage();
-    if (!data) return null;
-    return field ? data[field] : data;
-  }
-
-  override async update<K extends Partial<StoreModels[Key]>>(partial: K): Promise<void> {
-    const oldData = this.readFromLocalStorage();
-    if (!oldData) {
-      throw new Error(`Missing state for store "${this['storeKey']}".`);
-    }
-
-    const newData = { ...oldData, ...partial } as StoreModels[Key];
-
-    this.writeToLocalStorage(newData);
-
-    // Everything else stays the same (emit logic still works)
-    const changedKeys = Object.keys(partial) as (keyof StoreModels[Key])[];
-    for (const key of changedKeys) {
-      this['emit'](key, newData, oldData);
-    }
-
-    this['emit']('__any__', newData, oldData);
-  }
-
-  override async clear(): Promise<void> {
-    this.removeFromLocalStorage();
-  }
-
-  static override async initializeStoreIfNoneExist<Key extends StoreModelsKeys>(
-    storeKey: Key,
-    defaultValuesCallback: () => StoreModels[Key]
+  // @ts-expect-error — TS generic variance limitation with recursive conditional types
+  override async update<T extends NestedKeyOf<StoreModels[Key]>>(
+    fieldsSelector: T,
+    updater: StoreUpdater<StoreModels[Key], T>
   ): Promise<void> {
-    const raw = window.localStorage.getItem(storeKey);
-    if (!raw) {
-      window.localStorage.setItem(storeKey, JSON.stringify(defaultValuesCallback()));
+    try {
+      const result = await this.get();
+      if (result.status === 'ready') {
+        const { storeValue } = result;
+        // @ts-expect-error - complaining about field, no idea why, works anyways
+        const previousValue = getNestedValue(storeValue, fieldsSelector);
+        if (previousValue === undefined)
+          throw Error(
+            `Couldn't continue updating ${this.storeKey} store, because ${fieldsSelector} doesn't exist`
+          );
+        const newVal = updater(previousValue as DeepNullable<NestedValue<StoreModels[Key], T>>);
+        // @ts-expect-error - complaining about field, no idea why, works anyways
+        const updatedVersion = updateNestedValue(storeValue, fieldsSelector, newVal);
+        this.set(updatedVersion, storeValue);
+      } else {
+        throw Error(
+          `Couldn't continue updating ${fieldsSelector} in ${this.storeKey} store, ${JSON.stringify(result)}`
+        );
+      }
+    } catch (error) {
+      logger.error(
+        `Something went wrong while updating ${fieldsSelector} in ${this.storeKey} store`,
+        error
+      );
+    }
+  }
+  override async clear(): Promise<void> {
+    window.localStorage.removeItem(this.storeKey);
+  }
+  override async set(
+    newValue: DeepNullable<StoreModels[Key]>,
+    _oldValue: DeepNullable<StoreModels[Key]>
+  ): Promise<void> {
+    globalEventSingleton.emit('LocalStorage:changed', window, {
+      detail: { key: this.storeKey, oldValue: _oldValue, newValue },
+    });
+    window.localStorage.setItem(this.storeKey, JSON.stringify({ [this.storeKey]: newValue }));
+  }
+
+  override onChange<
+    Target extends '*' | NestedKeyOf<StoreModels[Key]>,
+    T extends Target extends '*'
+      ? DeepNullable<StoreModels[Key]>
+      : NestedValue<StoreModels[Key], Target>,
+  >(fieldsSelector: Target, handler: (oldVal: T, newVal: T) => void): () => void {
+    const listener = (e: Event) => {
+      const { detail } = e as CustomEvent<StorageChangeEvent<Key>>;
+      const { key, ...change } = detail;
+      if (this.storeKey === key) {
+        const { oldValue, newValue } = change;
+
+        if (fieldsSelector === '*') {
+          handler(oldValue as T, newValue as T);
+        } else {
+          // @ts-expect-error - complaining about field, no idea why, works anyways
+          const nestedOldValue = getNestedValue(oldValue, fieldsSelector) as T;
+          // @ts-expect-error - complaining about field, no idea why, works anyways
+          const nestedNewValue = getNestedValue(newValue, fieldsSelector) as T;
+
+          if (
+            nestedOldValue !== undefined &&
+            nestedNewValue !== undefined &&
+            nestedNewValue !== nestedOldValue // skip if values are the same
+          ) {
+            handler(nestedOldValue, nestedNewValue);
+          }
+        }
+      }
+    };
+    this.localListenersRegistry.add(listener);
+    const storageEvent = globalEventSingleton.on('LocalStorage:changed', listener);
+
+    return () => {
+      storageEvent.disconnectEvent();
+      this.localListenersRegistry.delete(listener);
+    };
+  }
+
+  override removeAllListeners(): void {
+    this.localListenersRegistry.forEach(listener => {
+      window.removeEventListener('LocalStorage:changed', listener);
+    });
+    this.localListenersRegistry.clear();
+  }
+
+  static override async initializeStoreIfNoneExist<K extends keyof StoreModels>(
+    storeKey: K,
+    defaultValues: () => DeepNullable<StoreModels[K]>
+  ): Promise<void> {
+    try {
+      const raw = window.localStorage.getItem(storeKey);
+      const res = JSON.parse(raw || '{}');
+
+      if (!res[storeKey] || !Object.keys(res[storeKey]).length) {
+        window.localStorage.setItem(storeKey, JSON.stringify({ [storeKey]: defaultValues() }));
+      }
+    } catch (error) {
+      logger.error(`Failed to initialize store ${storeKey}`, error);
     }
   }
 }
+
+export const profileStore = IS_DEV
+  ? new LocalStorageStoreModel('profile')
+  : new StoreModel('profile');
