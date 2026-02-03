@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 
 import { NavigationContext } from '@/context/NavigationContext';
 import type { NavigationState, WidgetType } from '@/types/components';
@@ -18,12 +18,12 @@ import type { NavigationState, WidgetType } from '@/types/components';
  *
  * @returns {{
  *   navigation: NavigationState,
- *   handleNavigation: (args: NavigationState) => void,
+ *   setNavigation: React.Dispatch<React.SetStateAction<NavigationState>>,
  *   widgetStateClass: string,
  *   isInert: boolean
  * }} An object containing:
  * - `navigation`: The current navigation state with left, center, and right widgets.
- * - `handleNavigation`: A function to update the navigation state.
+ * - `setNavigation`: A function to update the navigation state.
  * - `widgetStateClass`: A string representing the widget’s CSS class for visual positioning.
  * - `isInert`: A boolean indicating whether the widget should be non-interactive (true if not in the center position).
  *
@@ -40,7 +40,7 @@ import type { NavigationState, WidgetType } from '@/types/components';
  */
 export function useNavigation(widget: WidgetType): {
   navigation: NavigationState;
-  handleNavigation: (args: NavigationState) => void;
+  setNavigation: React.Dispatch<React.SetStateAction<NavigationState>>;
   widgetStateClass: string;
   isInert: boolean;
 } {
@@ -50,7 +50,7 @@ export function useNavigation(widget: WidgetType): {
     throw new Error('Something went wrong with contextAPI');
   }
 
-  const { navigation, handleNavigation } = navigationContext;
+  const { navigation, setNavigation } = navigationContext;
 
   let widgetStateClass = 'sv-popup-widget--hidden';
   let isInert = false;
@@ -58,5 +58,5 @@ export function useNavigation(widget: WidgetType): {
   if (navigation['leftWidget'].includes(widget)) widgetStateClass = 'sv-popup-widget--left';
   if (navigation['rightWidget'].includes(widget)) widgetStateClass = 'sv-popup-widget--right';
   isInert = !widgetStateClass.includes('center');
-  return { navigation, handleNavigation, widgetStateClass, isInert };
+  return { navigation, setNavigation, widgetStateClass, isInert };
 }

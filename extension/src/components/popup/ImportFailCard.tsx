@@ -1,10 +1,14 @@
 import { useNavigation } from '@/hooks/useNavigation';
+import useProfile from '@/hooks/useProfile';
 
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
 
 export default function ImportFailCard() {
-  const { handleNavigation, widgetStateClass, isInert } = useNavigation('ImportFailCard');
+  const { setNavigation, widgetStateClass, isInert } = useNavigation('ImportFailCard');
+  const { profile } = useProfile();
+  const profileExists = profile.user.id !== null;
+
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -33,8 +37,8 @@ export default function ImportFailCard() {
             shape='rounded'
             actions={{
               onClick: () =>
-                handleNavigation({
-                  leftWidget: ['ProfileOverviewCard'],
+                setNavigation({
+                  leftWidget: [profileExists ? 'ProfileOverviewCard' : 'Onboarding'],
                   centerWidget: 'ProfileImportCard',
                   rightWidget: ['ImportFailCard'],
                 }),

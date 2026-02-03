@@ -1,14 +1,15 @@
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
 
+import { strToHsl } from '../helpers/usernameToHsl';
 import Button from '../ui/Button';
 
 export default function ProfileOverviewCard() {
-  const { handleNavigation, widgetStateClass, isInert } = useNavigation('ProfileOverviewCard');
-  const {
-    profile: { userName },
-  } = useProfile();
-  const avatarBgColor = `#${userName.split('_').at(-1)}`;
+  const { setNavigation, widgetStateClass, isInert } = useNavigation('ProfileOverviewCard');
+
+  const { profile } = useProfile();
+  const username = profile.user.username || 'N/A';
+  const avatarBgColor = strToHsl(username);
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -26,7 +27,7 @@ export default function ProfileOverviewCard() {
               aria-hidden
               style={{ backgroundColor: avatarBgColor }}
             >
-              <span className='sv-profile-overview__username-initials'>{userName.charAt(0)}</span>
+              <span className='sv-profile-overview__username-initials'>{username.charAt(0)}</span>
               {/*
                * // TODO(me/#3): 📝 Add custom image support
                * // Issue: https://github.com/hassaneljebyly/SecondView/issues/3
@@ -42,7 +43,7 @@ export default function ProfileOverviewCard() {
           </div>
         </div>
         <div className='sv-popup-widget__section sv-profile-overview__user'>
-          <p className='sv-popup-widget__section-title sv-profile-overview__username'>{userName}</p>
+          <p className='sv-popup-widget__section-title sv-profile-overview__username'>{username}</p>
           <p className='sv-profile-overview__badge'>Trusted Contributor</p>
         </div>
         <div className='sv-popup-widget__section sv-profile-overview__stats'>
@@ -72,12 +73,13 @@ export default function ProfileOverviewCard() {
               text='Access Key'
               shape='rounded'
               actions={{
-                onClick: () =>
-                  handleNavigation({
-                    leftWidget: ['ProfileOverviewCard'],
+                onClick: () => {
+                  setNavigation({
+                    leftWidget: ['ProfileOverviewCard', 'Onboarding'],
                     centerWidget: 'AccessCredentialsCard',
                     rightWidget: [],
-                  }),
+                  });
+                },
               }}
             />
             <Button
@@ -85,8 +87,8 @@ export default function ProfileOverviewCard() {
               shape='rounded'
               actions={{
                 onClick: () =>
-                  handleNavigation({
-                    leftWidget: ['ProfileOverviewCard'],
+                  setNavigation({
+                    leftWidget: ['ProfileOverviewCard', 'Onboarding'],
                     centerWidget: 'ProfileImportCard',
                     rightWidget: ['ImportFailCard', 'ImportSuccessCard'],
                   }),

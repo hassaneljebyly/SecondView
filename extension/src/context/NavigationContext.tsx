@@ -1,5 +1,6 @@
 import React, { createContext, useEffect, useState, type JSX } from 'react';
 
+import useProfile from '@/hooks/useProfile';
 import type { NavigationContextValue, NavigationState } from '@/types/components';
 
 export const NavigationContext = createContext<NavigationContextValue | null>(null);
@@ -29,28 +30,28 @@ export function NavigationContextProvider({
   children: JSX.Element[];
   setWidgetHight: React.Dispatch<React.SetStateAction<string>>;
 }): JSX.Element {
+  const { profile } = useProfile();
   const [navigation, setNavigation] = useState<NavigationState>({
     leftWidget: [],
-    centerWidget: 'ProfileOverviewCard',
+    centerWidget: profile.user.id === null ? 'Onboarding' : 'ProfileOverviewCard',
     rightWidget: ['AccessCredentialsCard', 'ProfileImportCard'],
   });
 
-  function handleNavigation({ leftWidget, centerWidget, rightWidget }: NavigationState) {
-    setNavigation({ leftWidget, centerWidget, rightWidget });
-  }
+  const contextValue = { navigation, setNavigation };
 
-  const contextValue = { navigation, handleNavigation };
   useEffect(() => {
     requestAnimationFrame(() => {
-      const activeWidget = document.querySelector(
-        '.sv-popup-widget__inner-container:has(.sv-popup-widget--center)'
-      );
+      setTimeout(() => {
+        const activeWidget = document.querySelector(
+          '.sv-popup-widget__inner-container:has(.sv-popup-widget--center)'
+        );
 
-      const popupContainer = document.querySelector('.sv-popup');
-      if (activeWidget && popupContainer) {
-        const height = getComputedStyle(activeWidget)['height'];
-        setWidgetHight(height);
-      }
+        const popupContainer = document.querySelector('.sv-popup');
+        if (activeWidget && popupContainer) {
+          const height = getComputedStyle(activeWidget)['height'];
+          setWidgetHight(height);
+        }
+      }, 0);
     });
   });
   return <NavigationContext.Provider value={contextValue}>{children}</NavigationContext.Provider>;

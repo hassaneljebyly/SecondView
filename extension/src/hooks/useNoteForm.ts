@@ -39,7 +39,9 @@ export function useNoteForm(): UseNoteFormReturn {
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [errors, setErrors] = useState<ValidationErrors>({});
   const {
-    profile: { userName },
+    profile: {
+      user: { id },
+    },
   } = useProfile();
 
   function handleFormToggle() {
@@ -95,7 +97,7 @@ export function useNoteForm(): UseNoteFormReturn {
         const payload: NoteSubmissionPayload = {
           videoMetaData,
           note: {
-            userId: userName,
+            userId: id || 'N/A',
             startTimeSeconds: timeStringToSeconds(startTime, TIME_STAMP_REGEX) as number,
             endTimeSeconds: timeStringToSeconds(endTime, TIME_STAMP_REGEX) as number,
             category: category as NoteCategoryKeys,

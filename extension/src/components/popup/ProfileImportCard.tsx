@@ -1,16 +1,18 @@
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
-import { createNewUserAndAccessKey } from '@shared/utils/format/generateUserName';
 
 import Button from '../ui/Button';
 import Icon from '../ui/Icon';
 
 export default function ProfileImportCard() {
-  const { handleNavigation, widgetStateClass, isInert } = useNavigation('ProfileImportCard');
+  const { setNavigation, widgetStateClass, isInert } = useNavigation('ProfileImportCard');
+
   const {
-    profile: { userName },
-    updateStorageField,
+    profile: {
+      user: { username },
+    },
   } = useProfile();
+
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -52,13 +54,15 @@ export default function ProfileImportCard() {
              // REFACTOR(me/#6): 🧱 move reminder/alert to its own component
              // https://github.com/hassaneljebyly/SecondView/issues/6
              */}
-          <div className='sv-reminders'>
-            <Icon variant='error' />
-            <p>
-              You have an existing profile: {userName} (5 notes, 12 ratings). Importing will replace
-              it permanently
-            </p>
-          </div>
+          {username && (
+            <div className='sv-reminders'>
+              <Icon variant='error' />
+              <p>
+                You have an existing profile: {username} (5 notes, 12 ratings). Importing will
+                replace it permanently
+              </p>
+            </div>
+          )}
         </div>
         <div className='sv-popup-widget__section'>
           <b className='sv-divider sv-divider--top' />
@@ -74,9 +78,9 @@ export default function ProfileImportCard() {
               shape='rounded'
               actions={{
                 onClick: () =>
-                  handleNavigation({
+                  setNavigation({
                     leftWidget: [],
-                    centerWidget: 'ProfileOverviewCard',
+                    centerWidget: username !== null ? 'ProfileOverviewCard' : 'Onboarding',
                     rightWidget: ['ProfileImportCard'],
                   }),
               }}
@@ -88,8 +92,7 @@ export default function ProfileImportCard() {
                 onClick: () => {
                   // TODO(me/#2): 📝 Build actual import feature
                   // Issue: https://github.com/hassaneljebyly/SecondView/issues/2
-                  updateStorageField(createNewUserAndAccessKey());
-                  handleNavigation({
+                  setNavigation({
                     leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
                     centerWidget: 'ImportFailCard',
                     rightWidget: [],

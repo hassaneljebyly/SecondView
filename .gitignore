@@ -28,3 +28,4 @@ backend/
 
 mock_video/
 future_ideas.ts
+*.env.*

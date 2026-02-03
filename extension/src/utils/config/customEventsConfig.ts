@@ -1,3 +1,4 @@
+// DOCS(me): 📘 create events map to infer custom events instead of type casting
 export const CUSTOM_EVENTS = [
   'form:toggle',
   'form:open',
@@ -6,4 +7,5 @@ export const CUSTOM_EVENTS = [
   'note:show',
   'note:close',
   'note:promoteQueue',
+  'LocalStorage:changed',
 ] as const;

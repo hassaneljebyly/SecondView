@@ -5,11 +5,12 @@ import Button from '../ui/Button';
 import Icon from '../ui/Icon';
 
 export default function ImportSuccessCard() {
-  const { handleNavigation, widgetStateClass, isInert } = useNavigation('ImportSuccessCard');
+  const { setNavigation, widgetStateClass, isInert } = useNavigation('ImportSuccessCard');
   const {
-    profile: { userName },
+    profile: {
+      user: { username },
+    },
   } = useProfile();
-
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -21,7 +22,7 @@ export default function ImportSuccessCard() {
         </div>
         <div className='sv-popup-widget__section'>
           <p className='sv-popup-widget__hint'>
-            Welcome back, <span>{userName}!</span>
+            Welcome back, <span>{username || 'N/A'}!</span>
           </p>
           <p className='sv-popup-widget__section-title sv-import-success__section-title'>
             Your Stats:
@@ -45,9 +46,9 @@ export default function ImportSuccessCard() {
             shape='rounded'
             actions={{
               onClick: () =>
-                handleNavigation({
+                setNavigation({
                   leftWidget: [],
-                  centerWidget: 'ProfileOverviewCard',
+                  centerWidget: username !== null ? 'ProfileOverviewCard' : 'Onboarding',
                   rightWidget: ['ImportSuccessCard'],
                 }),
             }}
