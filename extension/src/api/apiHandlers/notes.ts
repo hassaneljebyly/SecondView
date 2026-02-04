@@ -17,7 +17,6 @@ export function getNotes(): RequestHandler<NoteResponse[], [string, User['user']
       const LOCAL_URL = `http://127.0.0.1:54321/functions/v1/fetch-notes?${search}`;
       // const PROD_URL = `https://<project-id>.supabase.co/functions/v1/fetch-notes?${search}`;
       const URL = LOCAL_URL; // change to PROD_URL in production
-      // DOCS(me): 📘 remove `body: JSON.stringify(noteBody),` from docs in `./docs/endpoints/fetch-notes.md`
 
       return fetch(URL, {
         method: 'GET',

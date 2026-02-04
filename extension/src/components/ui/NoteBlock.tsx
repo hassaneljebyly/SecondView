@@ -11,12 +11,13 @@ export type PanelsNames = 'notePanel' | 'ratingPanel';
 
 export const noteBlockId = 'sv-note-wrapper';
 export default function NoteBlock({ note }: { note: NoteResponse }) {
-  const { id } = note;
+  const { id, isOwn, alreadyRated } = note;
   const [openNote, setOpenNote] = useState(false);
   const leftPanelRef = useRef<HTMLDivElement | null>(null);
   const rightPanelRef = useRef<HTMLDivElement | null>(null);
   const [openPanel, setOpenPanel] = useState<PanelsNames>('notePanel');
   const [noteWrapperHight, setNoteWrapperHight] = useState('');
+  const allowRating = !isOwn && !alreadyRated;
   function handleOpenNote() {
     setOpenNote(true);
     // when a user interacts with the queued note `queueSlot`, it indicates they are
@@ -70,12 +71,14 @@ export default function NoteBlock({ note }: { note: NoteResponse }) {
           onNoteOpen: handleOpenNote,
         }}
       />
-      <NoteRatingTabs
-        noteId={id}
-        panelRef={rightPanelRef}
-        onCancel={handleOpenNotePanel}
-        openPanel={openPanel}
-      />
+      {allowRating && (
+        <NoteRatingTabs
+          noteId={id}
+          panelRef={rightPanelRef}
+          onCancel={handleOpenNotePanel}
+          openPanel={openPanel}
+        />
+      )}
     </div>
   );
 }
