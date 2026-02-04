@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useState,
   type ChangeEvent,
   type FormEvent,
@@ -6,7 +7,11 @@ import {
   type RefObject,
 } from 'react';
 
+import { submitRating } from '@/api/apiHandlers/ratings';
 import type { NoteResponse } from '@/api/types/notes';
+import type { RatingSubmissionPayload } from '@/api/types/ratings';
+import useProfile from '@/hooks/useProfile';
+import useRequest from '@/hooks/useRequest';
 import type { FormState } from '@/types/components';
 import type { RatingFlagsState, RatingTabsType } from '@/types/noteRating';
 import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
@@ -38,6 +43,8 @@ export default function NoteRatingTabs({
   openPanel: PanelsNames;
   onCancel: () => void;
 }) {
+  const { run: runSubmitRating, data, isError, isLoading } = useRequest(submitRating);
+  const { pick } = useProfile();
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<RatingTabsType>('accurate');
@@ -97,35 +104,54 @@ export default function NoteRatingTabs({
       },
     });
   }
+
   function handleRatingSubmit(e: FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
-      setFormSubmissionState('submitting');
       const expectedCheckBoxValues = RATINGS_CHECKBOXES_TABS[activeTab].map(({ value }) => value);
       const isValid = validateSelectedReasons(selectedRatingReasons, expectedCheckBoxValues);
       if (isValid) {
+        const userId = pick('user.id');
+        const signingKey = pick('user.signingKey');
+        const ratingData: RatingSubmissionPayload = {
+          noteData: {
+            noteId,
+          },
+          ratingData: {
+            vote: activeTab,
+            reasons: selectedRatingReasons,
+          },
+        };
+        if (!userId || !signingKey) {
+          logger.error('Unauthorized action, please add a global message');
+          return;
+        }
         setError('');
-        setTimeout(() => {
-          setFormSubmissionState('idle');
-          setRatingFlags({
-            accurate: {},
-            inaccurate: {},
-          });
-          onCancel();
-          // TODO(me/#4): 📝 finish data schema implementation (waiting for backend)
-          // Issue: https://github.com/hassaneljebyly/SecondView/issues/4
-          logger.info({ noteId, vote: activeTab, reasons: selectedRatingReasons });
-        }, 4000);
+        runSubmitRating(userId, signingKey, ratingData);
       } else {
         // validation failed, user tampered with input or invalid state
         setError('Invalid Input!');
       }
     } catch (error) {
       logger.error('Something Went wrong While Submitting Note Rating', error);
-      setFormSubmissionState('error');
       setError('Something Went Wrong! Please try again later');
     }
   }
+  useEffect(() => {
+    if (isLoading) {
+      setFormSubmissionState('submitting');
+    } else if (isError) {
+      const { message } = isError;
+      setError(message);
+      setFormSubmissionState('error');
+    } else if (!isLoading && !isError) {
+      setFormSubmissionState('idle');
+    } else if (data) {
+      setFormSubmissionState('success');
+      onCancel();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, data, isError]);
   return (
     <div
       className='sv-note-rating'
