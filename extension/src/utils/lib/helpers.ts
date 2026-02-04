@@ -1,3 +1,4 @@
+import type { NoteResponse } from '@/api/types/notes';
 import type { NotesFromStorage } from '@shared/types/schemas';
 
 type SegmentPercentParams = {
@@ -54,11 +55,11 @@ export function getSegmentPercentRange({
  * @param noteList - Array of notes loaded from storage.
  * @returns Map keyed by `endTimeSeconds` for fast lookups.
  */
-export function buildNotesMap(noteList: NotesFromStorage[]) {
-  const notesMap = new Map<number, NotesFromStorage>();
+export function buildNotesMap(noteList: NoteResponse[]) {
+  const notesMap = new Map<number, NoteResponse>();
   for (const note of noteList) {
-    const { endTimeSeconds } = note;
-    notesMap.set(endTimeSeconds, note);
+    const { endTime } = note;
+    notesMap.set(endTime, note);
   }
   return notesMap;
 }

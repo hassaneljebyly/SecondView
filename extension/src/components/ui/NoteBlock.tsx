@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react';
 
+import type { NoteResponse } from '@/api/types/notes';
 import { autoFocusFirstTab, autoFocusRateItButton } from '@/utils/dom/autoFocus';
 import { globalEventSingleton } from '@/utils/lib/events';
-import type { NotesFromStorage } from '@shared/types/schemas';
 
 import Note from './Note';
 import NoteRatingTabs from './NoteRatingTabs';
@@ -10,8 +10,8 @@ import NoteRatingTabs from './NoteRatingTabs';
 export type PanelsNames = 'notePanel' | 'ratingPanel';
 
 export const noteBlockId = 'sv-note-wrapper';
-export default function NoteBlock({ note }: { note: NotesFromStorage }) {
-  const { noteId } = note;
+export default function NoteBlock({ note }: { note: NoteResponse }) {
+  const { id } = note;
   const [openNote, setOpenNote] = useState(false);
   const leftPanelRef = useRef<HTMLDivElement | null>(null);
   const rightPanelRef = useRef<HTMLDivElement | null>(null);
@@ -71,7 +71,7 @@ export default function NoteBlock({ note }: { note: NotesFromStorage }) {
         }}
       />
       <NoteRatingTabs
-        noteId={noteId}
+        noteId={id}
         panelRef={rightPanelRef}
         onCancel={handleOpenNotePanel}
         openPanel={openPanel}

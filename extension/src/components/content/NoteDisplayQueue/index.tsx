@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 
+import type { NoteResponse } from '@/api/types/notes';
 import NoteBlock from '@/components/ui/NoteBlock';
 import { globalEventSingleton } from '@/utils/lib/events';
-import type { NotesFromStorage } from '@shared/types/schemas';
 
-export type QueueType = [NotesFromStorage | null, NotesFromStorage | null];
+export type QueueType = [NoteResponse | null, NoteResponse | null];
 
 export const noteDisplayQueueId = 'sv-note-queue';
 export default function NoteDisplayQueue() {
   const [noteQueue, setNoteQueue] = useState<QueueType>([null, null]);
   function handleNoteCloseEvent(e: Event) {
-    const { detail: noteToClose } = e as CustomEvent<NotesFromStorage>;
-    const { noteId } = noteToClose;
+    const { detail: noteToClose } = e as CustomEvent<NoteResponse>;
+    const { id } = noteToClose;
     const newNoteQueue = noteQueue.map(note => {
-      if (note && note['noteId'] === noteId) {
+      if (note && note['id'] === id) {
         return null;
       }
       return note;
@@ -24,21 +24,21 @@ export default function NoteDisplayQueue() {
   function handleNotePromoteEvent(e: Event) {
     // `openedNote` is note that was opened and possibly the note
     // that should get promoted to activeSlot
-    const { detail: openedNote } = e as CustomEvent<NotesFromStorage>;
+    const { detail: openedNote } = e as CustomEvent<NoteResponse>;
     const [, activeSlot] = noteQueue;
     // if there's an active note
     // and note opened is a note in queueSlot
-    if (activeSlot && activeSlot['noteId'] !== openedNote['noteId']) {
+    if (activeSlot && activeSlot['id'] !== openedNote['id']) {
       setNoteQueue([null, openedNote]);
     }
   }
 
   function handleNoteShowEvent(e: Event) {
-    const { detail: dispatchedNote } = e as CustomEvent<NotesFromStorage>;
+    const { detail: dispatchedNote } = e as CustomEvent<NoteResponse>;
     setNoteQueue(prev => {
       const [queueSlot, activeSlot] = prev;
       // prevents duplicates
-      if (activeSlot && activeSlot['noteId'] === dispatchedNote['noteId']) {
+      if (activeSlot && activeSlot['id'] === dispatchedNote['id']) {
         return prev;
       }
       if (!activeSlot) {
@@ -82,10 +82,10 @@ export default function NoteDisplayQueue() {
         const slotKey = i === 0 ? 'queueSlot' : 'activeSlot';
         if (note) {
           // the key worked but a new note was treated like the old one by react,
-          // so slotKey for empty `<li/>` and `noteId` for when `note !== null`
-          const { noteId } = note;
+          // so slotKey for empty `<li/>` and `id` for when `note !== null`
+          const { id } = note;
           return (
-            <li key={noteId}>
+            <li key={id}>
               <NoteBlock note={note} />
             </li>
           );

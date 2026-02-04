@@ -4,13 +4,14 @@ import { initialUser, type InitialUser } from '@/api/apiHandlers/user';
 import type { User } from '@/api/types/user';
 import type { StoreUpdater } from '@/types/storage';
 import { profileStore } from '@/utils/lib/storage';
-import type { NestedKeyOf } from '@shared/types/helpers';
+import type { NestedKeyOf, NestedValue } from '@shared/types/helpers';
 import { getNestedValue } from '@shared/utils/helpers/objectHelpers';
 
 export default function useProfile() {
   const [profile, setProfile] = useState<InitialUser>(initialUser);
-  function pick(fieldSelector: NestedKeyOf<InitialUser>) {
-    return getNestedValue(profile, fieldSelector);
+  function pick<T extends NestedKeyOf<InitialUser>>(fieldSelector: T): NestedValue<InitialUser, T> {
+    // getNestedValue returns undefined if the key doesn't exist, highly unlikely, so just ignore for now
+    return getNestedValue(profile, fieldSelector)!;
   }
   function update<T extends NestedKeyOf<InitialUser>>(
     fieldSelector: T,

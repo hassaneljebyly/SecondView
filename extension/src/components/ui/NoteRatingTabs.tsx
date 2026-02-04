@@ -6,6 +6,7 @@ import {
   type RefObject,
 } from 'react';
 
+import type { NoteResponse } from '@/api/types/notes';
 import type { FormState } from '@/types/components';
 import type { RatingFlagsState, RatingTabsType } from '@/types/noteRating';
 import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
@@ -13,7 +14,6 @@ import { RATINGS_CHECKBOXES_TABS } from '@/utils/config/notRatingConfig';
 import { autoFocusActiveTab } from '@/utils/dom/autoFocus';
 import { logger } from '@/utils/lib/logger';
 import type { AccurateRatingValue, InaccurateRatingValue } from '@shared/types/noteRating';
-import type { NotesFromStorage } from '@shared/types/schemas';
 import { validateSelectedReasons } from '@shared/utils/validation/noteRatingValidation';
 
 import Button from './Button';
@@ -33,7 +33,7 @@ export default function NoteRatingTabs({
   openPanel,
   onCancel,
 }: {
-  noteId: NotesFromStorage['noteId'];
+  noteId: NoteResponse['id'];
   panelRef: RefObject<HTMLDivElement | null>;
   openPanel: PanelsNames;
   onCancel: () => void;

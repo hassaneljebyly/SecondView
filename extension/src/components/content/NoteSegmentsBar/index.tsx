@@ -1,18 +1,20 @@
 import { useEffect } from 'react';
 
+import type { NoteResponse } from '@/api/types/notes';
+import { useNotes } from '@/hooks/useNotes';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { buildNotesMap, getSegmentPercentRange } from '@/utils/lib/helpers';
 import { logger } from '@/utils/lib/logger';
 import { mockNotesDataResponse } from '@shared/mocks/mockDataConfig';
-import type { NotesFromStorage } from '@shared/types/schemas';
 import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
 
 export const noteSegmentsBarId = 'sv-note-segments-bar';
 export default function NoteSegmentsBar() {
   const {
-    noteList,
     videoMetaData: { videoLength },
   } = mockNotesDataResponse;
+  const { notes, isError } = useNotes('dQw4w9WgXcQ');
+
   /*
   This effect attaches listeners to a <video> element to show time-synced notes.
 
@@ -30,7 +32,7 @@ export default function NoteSegmentsBar() {
   In short:
   - `timeupdate` + Set = avoid duplicate note triggers.
   - `seeked` handler = allow notes to reappear if the user goes backwards.
-*/
+  */
 
   useEffect(() => {
     const video = document.querySelector('video') as HTMLVideoElement | null;
@@ -38,11 +40,16 @@ export default function NoteSegmentsBar() {
       logger.error('Could not locate video element');
       return;
     }
-    const notesMap = buildNotesMap(noteList);
+    if (isError) {
+      logger.error('Build Error Global', isError);
+      return;
+    }
+
+    const notesMap = buildNotesMap(notes);
     // track which notes we've already displayed Important because
     // timeupdate fires many times per second (not just once),
     // so without this Set the same note would be triggered repeatedly.
-    const seenNotes = new Set<NotesFromStorage>();
+    const seenNotes = new Set<NoteResponse>();
     // fired continuously as the video's playback time updates
     function handleTimeUpdate() {
       const currentPlayTime = Math.floor(video!.currentTime);
@@ -63,7 +70,7 @@ export default function NoteSegmentsBar() {
         // if the user has jumped backward, allow notes whose endTimeSeconds
         // is still ahead of the new current time to be shown again
         seenNotes.forEach(note => {
-          if (currentTime <= note['endTimeSeconds']) seenNotes.delete(note);
+          if (currentTime <= note['endTime']) seenNotes.delete(note);
         });
       }
     }
@@ -76,17 +83,17 @@ export default function NoteSegmentsBar() {
   });
   return (
     <ul id={noteSegmentsBarId} className='sv-segments-list'>
-      {noteList.map(({ noteId, category, startTimeSeconds, endTimeSeconds }) => {
-        const segmentColor = NOTE_CATEGORIES[category]['color'];
+      {notes.map(({ id, misinfoType, startTime, endTime }) => {
+        const segmentColor = NOTE_CATEGORIES[misinfoType]['color'];
         const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
           videoLength,
-          startTime: startTimeSeconds,
-          endTime: endTimeSeconds,
+          startTime,
+          endTime,
         });
         return (
           <li
             className='sv-segments-list__segment'
-            key={noteId}
+            key={id}
             style={{
               width: segmentWidth,
               left: segmentLeftPos,

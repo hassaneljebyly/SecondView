@@ -59,6 +59,16 @@
     text-transform: capitalize;
     text-indent: calc(var(--_sv-note-px) * 1.25);
   }
+  &__status {
+    color: red;
+    font-size: var(--sv-font-xs);
+    &--pending {
+      color: var(--sv-gray-600);
+    }
+    &--active {
+      color: var(--sv-blue-600);
+    }
+  }
   &__body {
     border-bottom: 1px solid var(--sv-black-alpha-10);
     overflow: hidden;
