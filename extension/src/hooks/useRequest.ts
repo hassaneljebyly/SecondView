@@ -4,15 +4,16 @@ import { fetchWithTimeout } from '@/api/helpers';
 import type { ApiResponse, ErrorApiResponse } from '@/api/types/responses';
 import { logger } from '@/utils/lib/logger';
 
-export type RequestHandler<T> = {
+export type RequestHandler<T, TArgs extends unknown[]> = {
   abortRequest: (reason?: unknown) => void;
-  fetchHandler: () => Promise<Response>;
+  fetchHandler: (...args: TArgs) => Promise<Response>;
   /** @internal T is used as a phantom generic only */
   __responseType?: T;
 };
 
-export default function useRequest<H extends RequestHandler<unknown>>(requestHandler: () => H) {
-  type T = H extends RequestHandler<infer R> ? R : never;
+export default function useRequest<T, TArgs extends unknown[]>(
+  requestHandler: () => RequestHandler<T, TArgs>
+) {
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState<null | ErrorApiResponse['error']>(null);
@@ -23,11 +24,11 @@ export default function useRequest<H extends RequestHandler<unknown>>(requestHan
   }
   const { abortRequest, fetchHandler } = requestHandlerRef.current;
 
-  async function run() {
+  async function run(...args: TArgs) {
     try {
       setIsLoading(true);
       setIsError(null);
-      const handlerResponse = await fetchWithTimeout(fetchHandler);
+      const handlerResponse = await fetchWithTimeout(() => fetchHandler(...args));
       const handlerData: ApiResponse<T> = await handlerResponse.json();
       if (!handlerData.success) {
         setIsError(handlerData.error);

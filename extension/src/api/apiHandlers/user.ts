@@ -14,24 +14,24 @@ export const initialUser: InitialUser = {
   },
 };
 
-export function generateUserHandler(_options?: unknown): RequestHandler<User> {
+export function generateUserHandler(): RequestHandler<User, []> {
   const controller = new AbortController();
-  // TODO(me): 📝 enable RLS and add actual urls before first release
-  const LOCAL_URL = 'http://127.0.0.1:54321/functions/v1/create-user';
-  // const PROD_URL = 'https://<project-id>.supabase.co/functions/v1/create-user';
-
-  const URL = LOCAL_URL;
-
   return {
     abortRequest: () => controller.abort(),
-    fetchHandler: () =>
-      fetch(URL, {
+    fetchHandler: () => {
+      // TODO(me): 📝 enable RLS and add actual urls before first release
+      const LOCAL_URL = 'http://127.0.0.1:54321/functions/v1/create-user';
+      // const PROD_URL = 'https://<project-id>.supabase.co/functions/v1/create-user';
+
+      const URL = LOCAL_URL;
+      return fetch(URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${import.meta.env['VITE_SUPABASE_ANON_KEY']}`,
         },
         signal: controller.signal,
-      }),
+      });
+    },
   };
 }
