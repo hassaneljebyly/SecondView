@@ -1,4 +1,5 @@
-import type { FormInputData, Note } from '@shared/types/schemas';
+import type { NoteResponse } from '@/api/types/notes';
+import type { FormInputData } from '@shared/types/schemas';
 
 /**
  * Validates whether a given form data object strictly matches the schema of allowed base form data.
@@ -107,9 +108,9 @@ export function isOverlapping(
 export function findOverlappedSegment(
   segmentStart: number,
   segmentEnd: number,
-  existingNotes: Note[]
+  existingNotes: NoteResponse[]
 ) {
-  return existingNotes.find(({ startTimeSeconds, endTimeSeconds }) =>
-    isOverlapping(segmentStart, segmentEnd, startTimeSeconds, endTimeSeconds)
+  return existingNotes.find(({ startTime, endTime }) =>
+    isOverlapping(segmentStart, segmentEnd, startTime, endTime)
   );
 }

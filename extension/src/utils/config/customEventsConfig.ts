@@ -6,6 +6,9 @@ export const CUSTOM_EVENTS = [
   'form:reset',
   'note:show',
   'note:close',
+  'note:add',
+  'note:remove',
+  'note:replace',
   'note:promoteQueue',
   'LocalStorage:changed',
 ] as const;

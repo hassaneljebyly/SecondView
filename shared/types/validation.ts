@@ -1,5 +1,7 @@
+import type { NoteResponse } from '@/api/types/notes';
+
 import type { NoteCategoryKeysArray } from './noteConstrains';
-import type { FormInputData, Note } from './schemas';
+import type { FormInputData } from './schemas';
 
 export type FormInputDataFields = keyof FormInputData;
 export type NoteFormErrorObjectTarget = FormInputDataFields | 'form';
@@ -13,7 +15,7 @@ export type TimeStampRegexResult = {
 export type ValidationConfig = {
   baseNoteFormFields: FormInputData;
   formData: FormInputData;
-  existingNotes: Note[];
+  existingNotes: NoteResponse[];
   videoLength: number;
   timeStampRegex: RegExp;
   minSegmentLength: number;

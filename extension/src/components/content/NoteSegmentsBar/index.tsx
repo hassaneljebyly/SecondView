@@ -1,19 +1,21 @@
 import { useEffect } from 'react';
 
 import type { NoteResponse } from '@/api/types/notes';
-import { useNotes } from '@/hooks/useNotes';
+import useNotes from '@/hooks/useNotes';
+import { IS_DEV } from '@/utils/config/loggerConfig';
+import { getVideoLength, getYouTubeId } from '@/utils/dom/youtube';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { buildNotesMap, getSegmentPercentRange } from '@/utils/lib/helpers';
 import { logger } from '@/utils/lib/logger';
-import { mockNotesDataResponse } from '@shared/mocks/mockDataConfig';
+import { tempVideoId } from '@shared/mocks/youtube';
 import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
 
 export const noteSegmentsBarId = 'sv-note-segments-bar';
 export default function NoteSegmentsBar() {
-  const {
-    videoMetaData: { videoLength },
-  } = mockNotesDataResponse;
-  const { notes, isError } = useNotes('dQw4w9WgXcQ');
+  const videoLength = IS_DEV ? 182 : getVideoLength();
+  const currentYoutubeVideoId: string | null =
+    (IS_DEV ? tempVideoId : getYouTubeId(window.location.href)) || null;
+  const { notes, isError } = useNotes(currentYoutubeVideoId);
 
   /*
   This effect attaches listeners to a <video> element to show time-synced notes.

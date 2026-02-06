@@ -7,3 +7,5 @@ export const testVideoDetails: VideoMetaData = {
   videoTitle: 'FP2 Highlights | 2025 British Grand Prix',
   videoLength: 182,
 };
+
+export let tempVideoId = testVideoDetails['videoId'];

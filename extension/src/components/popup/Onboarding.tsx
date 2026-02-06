@@ -27,7 +27,7 @@ export default function Onboarding() {
       });
     }
     if (data) {
-      profileStore.set(data, profile);
+      profileStore.set(data['data'], profile);
       setNavigation({
         leftWidget: [],
         centerWidget: 'ProfileOverviewCard',

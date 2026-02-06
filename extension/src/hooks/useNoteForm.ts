@@ -1,16 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
+import { submitNote } from '@/api/apiHandlers/notes';
+import type { NoteSubmissionPayload } from '@/api/types/notes';
 import { noteFormId } from '@/components/content/NoteForm';
 import type { FormState, NoteFormButtonConfigMap } from '@/types/components';
 import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
+import { IS_DEV } from '@/utils/config/loggerConfig';
 import { autoFocusFirstInput, autoFocusFirstInputWithError } from '@/utils/dom/autoFocus';
 import { resetForm } from '@/utils/dom/formReset';
-import { getVideoDetails } from '@/utils/dom/youtube';
+import { getVideoDetails, getYouTubeId } from '@/utils/dom/youtube';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { logger } from '@/utils/lib/logger';
-import { mockNotesDataResponse } from '@shared/mocks/mockDataConfig';
+import { tempVideoId } from '@shared/mocks/youtube';
 import type { NoteCategoryKeys } from '@shared/types/noteConstrains';
-import type { FormInputData, NoteSubmissionPayload } from '@shared/types/schemas';
+import type { FormInputData } from '@shared/types/schemas';
 import type { ValidationConfig, ValidationErrors } from '@shared/types/validation';
 import { validationConstants } from '@shared/utils/config/noteConstrainsConfig';
 import { ACCEPTED_LINKS_FORMAT, TIME_STAMP_REGEX } from '@shared/utils/config/regexConfig';
@@ -19,7 +22,11 @@ import { extractSourcesFromNote } from '@shared/utils/format/sourceParsing';
 import { timeStringToSeconds } from '@shared/utils/validation/helpers';
 import { validateForm } from '@shared/utils/validation/validationChainClient';
 
+import useNotes from './useNotes';
 import useProfile from './useProfile';
+import useRequest from './useRequest';
+
+// TODO(me): 📝 use meta field in the response when it exists
 
 /**
  * Custom hook for managing the lifecycle of a "Note Form".
@@ -38,13 +45,24 @@ export function useNoteForm(): UseNoteFormReturn {
   const [openForm, setOpenForm] = useState(false);
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [errors, setErrors] = useState<ValidationErrors>({});
+  const { profile } = useProfile();
+  const currentYoutubeVideoId: string | null =
+    (IS_DEV ? tempVideoId : getYouTubeId(window.location.href)) || null;
+  const { notes, dispatchNewNote, dispatchRemoveNote, dispatchReplaceNote } =
+    useNotes(currentYoutubeVideoId);
+  const { run, data: newCreatedNoteData, isError, isLoading } = useRequest(submitNote);
+  const optimisticNoteIdRef = useRef<null | string>(null);
+  if (!optimisticNoteIdRef.current) {
+    optimisticNoteIdRef.current = `optimistic_id_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+  }
+  const optimisticNoteId = optimisticNoteIdRef.current;
+
   const {
-    profile: {
-      user: { id },
-    },
-  } = useProfile();
+    user: { id: userId, signingKey, username },
+  } = profile;
 
   function handleFormToggle() {
+    setErrors({});
     setOpenForm(prev => !prev);
     autoFocusFirstInput();
   }
@@ -69,48 +87,55 @@ export function useNoteForm(): UseNoteFormReturn {
       const rawFormData = Object.fromEntries(new FormData(e.currentTarget).entries());
       const noteFormValidationOptions: ValidationConfig = {
         formData: rawFormData as FormInputData,
-        existingNotes: mockNotesDataResponse['noteList'],
+        existingNotes: notes,
         videoLength,
         baseNoteFormFields,
         ...validationConstants,
       };
       const validationResult = validateForm(noteFormValidationOptions);
       if (validationResult.formIsValid) {
-        setFormSubmissionState('submitting');
-        setTimeout(() => {
-          setFormSubmissionState('success');
+        if (!userId || !signingKey || !currentYoutubeVideoId) {
+          logger.error('no user or user key, add global error');
+          return;
+        }
 
-          setTimeout(() => {
-            setFormSubmissionState('idle');
-            // since form.reset() will only rest uncontrolled inputs
-            // It was decided to use an event to reset the uncontrolled and
-            // controlled inputs at the same time
-            globalEventSingleton.emit('form:reset');
-            // to toggle button state
-            globalEventSingleton.emit('form:close');
-            // to close form
-            globalEventSingleton.emit('form:toggle');
-          }, 1000);
-        }, 5000);
-        setErrors({});
         const { startTime, endTime, category, noteContent } = validationResult['formData'];
+        const sources = extractSourcesFromNote(noteContent, ACCEPTED_LINKS_FORMAT);
+        const startTimeSeconds = timeStringToSeconds(startTime, TIME_STAMP_REGEX) as number;
+        const endTimeSeconds = timeStringToSeconds(endTime, TIME_STAMP_REGEX) as number;
         const payload: NoteSubmissionPayload = {
-          videoMetaData,
-          note: {
-            userId: id || 'N/A',
-            startTimeSeconds: timeStringToSeconds(startTime, TIME_STAMP_REGEX) as number,
-            endTimeSeconds: timeStringToSeconds(endTime, TIME_STAMP_REGEX) as number,
+          videoMetaData: { videoId: currentYoutubeVideoId, videoLength },
+          noteData: {
+            startTimeSeconds,
+            endTimeSeconds,
             category: category as NoteCategoryKeys,
             noteContent,
-            sources: extractSourcesFromNote(noteContent, ACCEPTED_LINKS_FORMAT),
+            sources,
           },
         };
-        logger.info(payload);
+        setErrors({});
+        dispatchNewNote({
+          id: optimisticNoteId,
+          videoId: currentYoutubeVideoId,
+          startTime: startTimeSeconds,
+          endTime: endTimeSeconds,
+          misinfoType: category as NoteCategoryKeys,
+          noteText: noteContent,
+          sources,
+          status: 'pending',
+          createdAt: null,
+          createdBy: username!,
+          alreadyRated: true,
+          isOwn: true,
+        });
+        run(userId, signingKey, payload);
       } else {
         autoFocusFirstInputWithError();
         setErrors(validationResult.errors);
       }
     } catch (error) {
+      dispatchRemoveNote(optimisticNoteId);
+      optimisticNoteIdRef.current = null;
       setFormSubmissionState('error');
       const errorText =
         'Oops! Something went wrong while submitting. Please try again in a moment.';
@@ -122,7 +147,47 @@ export function useNoteForm(): UseNoteFormReturn {
   }
 
   useEffect(() => {
-    const resetFormEvent = globalEventSingleton.on('form:reset', () => resetForm(noteFormId));
+    let closeFormTimeOut: ReturnType<typeof setTimeout> | null = null;
+    if (isLoading) {
+      setFormSubmissionState('submitting');
+    } else if (isError) {
+      const { message } = isError;
+      dispatchRemoveNote(optimisticNoteId);
+      setErrors({
+        form: message,
+      });
+      setFormSubmissionState('error');
+    } else if (newCreatedNoteData) {
+      // finish optimistic UI and after that work on the useRequestReturn type
+      setFormSubmissionState('success');
+      dispatchReplaceNote({
+        optimisticId: optimisticNoteId,
+        realNote: newCreatedNoteData['data']['note'],
+      });
+      optimisticNoteIdRef.current = null;
+      closeFormTimeOut = setTimeout(() => {
+        setFormSubmissionState('idle');
+        // since form.reset() will only rest uncontrolled inputs
+        // It was decided to use an event to reset the uncontrolled and
+        // controlled inputs at the same time
+        globalEventSingleton.emit('form:reset');
+        // to toggle button state
+        globalEventSingleton.emit('form:close');
+        // to close form
+        globalEventSingleton.emit('form:toggle');
+      }, 1000); // 1s then close the form
+    }
+
+    return () => {
+      if (closeFormTimeOut !== null) clearTimeout(closeFormTimeOut);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoading, newCreatedNoteData, isError]);
+
+  useEffect(() => {
+    const resetFormEvent = globalEventSingleton.on('form:reset', () => {
+      resetForm(noteFormId);
+    });
     const toggleFormEvent = globalEventSingleton.on('form:toggle', handleFormToggle);
     const escapeKeyEvent = globalEventSingleton.on('keydown', e => {
       if ((e as KeyboardEvent).key === 'Escape' && openForm) {

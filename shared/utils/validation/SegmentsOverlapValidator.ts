@@ -39,8 +39,8 @@ export class SegmentsOverlapValidator extends ValidationHandler {
 
         // If overlap found, provide detailed error message with conflicting segment info
         if (overlappedSegment) {
-          const overlapStart = secondsToTimeString(overlappedSegment.startTimeSeconds);
-          const overlapEnd = secondsToTimeString(overlappedSegment.endTimeSeconds);
+          const overlapStart = secondsToTimeString(overlappedSegment.startTime);
+          const overlapEnd = secondsToTimeString(overlappedSegment.endTime);
           this.errors['form'] =
             `Someone already added a note for ${overlapStart}-${overlapEnd} and your note overlaps with it - choose a different time range or check the existing note.`;
         }
