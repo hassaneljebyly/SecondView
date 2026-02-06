@@ -1,6 +1,10 @@
 import type { RequestHandler } from '@/hooks/useRequest';
+import { getEnvKeys } from '@/utils/lib/helpers';
 
-import type { NoteResponse } from '../types/notes';
+import { createCanonicalMessage } from '../auth/canonicalMessage';
+import { getHMACSignature } from '../auth/hmacSigning';
+import type { CanonicalFields } from '../types/auth';
+import type { CreatedNoteResponse, NoteResponse, NoteSubmissionPayload } from '../types/notes';
 import type { User } from '../types/user';
 
 export function getNotes(): RequestHandler<NoteResponse[], [string, User['user']['id'] | null]> {
@@ -14,17 +18,57 @@ export function getNotes(): RequestHandler<NoteResponse[], [string, User['user']
         ...(userId && { user_id: userId }),
       }).toString();
 
-      const LOCAL_URL = `http://127.0.0.1:54321/functions/v1/fetch-notes?${search}`;
-      // const PROD_URL = `https://<project-id>.supabase.co/functions/v1/fetch-notes?${search}`;
-      const URL = LOCAL_URL; // change to PROD_URL in production
+      const LOCAL_URL = `${getEnvKeys('VITE_SUPABASE_FETCH_NOTES_URL')}?${search}`;
+      const URL = LOCAL_URL;
 
       return fetch(URL, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env['VITE_SUPABASE_ANON_KEY']}`,
+          Authorization: `Bearer ${getEnvKeys('VITE_SUPABASE_ANON_KEY')}`,
         },
         signal: controller.signal,
+      });
+    },
+  };
+}
+
+export function submitNote(): RequestHandler<
+  CreatedNoteResponse,
+  [User['user']['id'], User['user']['signingKey'], NoteSubmissionPayload]
+> {
+  const controller = new AbortController();
+
+  return {
+    abortRequest: () => controller.abort(),
+    fetchHandler: async (userId, signingKey, noteSubmissionPayload) => {
+      const METHOD = 'POST';
+      const REQUEST_URL = getEnvKeys('VITE_SUPABASE_SUBMIT_NOTE_URL');
+      const submitNoteCanonicalFields: CanonicalFields['submit-note'] = {
+        ...noteSubmissionPayload.noteData,
+        ...noteSubmissionPayload.videoMetaData,
+      };
+      const requestTimestamp = new Date().toISOString();
+      const urlPath = new URL(REQUEST_URL).pathname;
+      const canonicalPath = urlPath.replace(/^\/functions\/v\d+/, '');
+      const requestMessage = createCanonicalMessage(
+        canonicalPath,
+        submitNoteCanonicalFields,
+        requestTimestamp,
+        METHOD
+      );
+      const signedRequestMessage = await getHMACSignature(signingKey, requestMessage);
+
+      return fetch(REQUEST_URL, {
+        method: METHOD, // or GET if your function allows
+        headers: {
+          'Request-Timestamp': requestTimestamp,
+          'Request-Signature': `HMAC-SHA256 Credential=${userId}, Signature=${signedRequestMessage}`,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${getEnvKeys('VITE_SUPABASE_ANON_KEY')}`,
+        },
+        signal: controller.signal,
+        body: JSON.stringify(noteSubmissionPayload),
       });
     },
   };
