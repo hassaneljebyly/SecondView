@@ -1,4 +1,5 @@
 import type { RequestHandler } from '@/hooks/useRequest';
+import { getEnvKeys } from '@/utils/lib/helpers';
 
 import { createCanonicalMessage } from '../auth/canonicalMessage';
 import { getHMACSignature } from '../auth/hmacSigning';
@@ -15,10 +16,8 @@ export function submitRating(): RequestHandler<
   return {
     abortRequest: () => controller.abort(),
     fetchHandler: async (userId, signingKey, ratingBody) => {
-      const LOCAL_URL = 'http://127.0.0.1:54321/functions/v1/submit-rating';
-      // const PROD_URL = "https://<project-id>.supabase.co/functions/v1/submit-rating";
       const METHOD = 'POST';
-      const REQUEST_URL = LOCAL_URL; // change to PROD_URL in production
+      const REQUEST_URL = getEnvKeys('VITE_SUPABASE_SUBMIT_RATING_URL');
 
       const submitNoteCanonicalFields: CanonicalFields['submit-rating'] = {
         ...ratingBody.noteData,
@@ -44,8 +43,9 @@ export function submitRating(): RequestHandler<
           'Request-Timestamp': requestTimestamp,
           'Request-Signature': `HMAC-SHA256 Credential=${userId}, Signature=${signedRequestMessage}`,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env['VITE_SUPABASE_ANON_KEY']}`,
+          Authorization: `Bearer ${getEnvKeys('VITE_SUPABASE_ANON_KEY')}`,
         },
+        signal: controller.signal,
         body: JSON.stringify(ratingBody),
       });
     },

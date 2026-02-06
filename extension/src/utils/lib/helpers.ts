@@ -1,5 +1,4 @@
 import type { NoteResponse } from '@/api/types/notes';
-import type { NotesFromStorage } from '@shared/types/schemas';
 
 type SegmentPercentParams = {
   videoLength: number;
@@ -62,4 +61,18 @@ export function buildNotesMap(noteList: NoteResponse[]) {
     notesMap.set(endTime, note);
   }
   return notesMap;
+}
+
+export const ENV_KEYS = [
+  'VITE_SUPABASE_SUBMIT_RATING_URL',
+  'VITE_SUPABASE_SUBMIT_NOTE_URL',
+  'VITE_SUPABASE_FETCH_NOTES_URL',
+  'VITE_SUPABASE_CREATE_USER_URL',
+  'VITE_SUPABASE_ANON_KEY',
+] as const;
+
+type EnvKeys = (typeof ENV_KEYS)[number];
+
+export function getEnvKeys(envKeys: EnvKeys) {
+  return import.meta.env[envKeys];
 }

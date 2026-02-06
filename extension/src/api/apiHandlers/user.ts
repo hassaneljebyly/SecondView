@@ -1,4 +1,5 @@
 import type { RequestHandler } from '@/hooks/useRequest';
+import { getEnvKeys } from '@/utils/lib/helpers';
 import type { DeepNullable } from '@shared/types/helpers';
 
 import type { User } from '../types/user';
@@ -19,16 +20,13 @@ export function generateUserHandler(): RequestHandler<User, []> {
   return {
     abortRequest: () => controller.abort(),
     fetchHandler: () => {
-      // TODO(me): 📝 enable RLS and add actual urls before first release
-      const LOCAL_URL = 'http://127.0.0.1:54321/functions/v1/create-user';
-      // const PROD_URL = 'https://<project-id>.supabase.co/functions/v1/create-user';
+      const URL = getEnvKeys('VITE_SUPABASE_CREATE_USER_URL');
 
-      const URL = LOCAL_URL;
       return fetch(URL, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env['VITE_SUPABASE_ANON_KEY']}`,
+          Authorization: `Bearer ${getEnvKeys('VITE_SUPABASE_ANON_KEY')}`,
         },
         signal: controller.signal,
       });
