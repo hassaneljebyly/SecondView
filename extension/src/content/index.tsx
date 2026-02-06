@@ -3,6 +3,7 @@ import type { Retries } from '@/types';
 import { MOUNTED_ROOTS } from '@/utils/config/componentInjectConfig';
 import { INJECT_TASK } from '@/utils/config/injectTasksConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
+import { globalCacheSingleton } from '@/utils/lib/cache';
 import { logger } from '@/utils/lib/logger';
 import { LocalStorageStoreModel, profileStore } from '@/utils/lib/storage';
 import { cleanUp, cleanupMountedRoots, clearEvents } from '@/utils/scripts/cleanup';
@@ -59,6 +60,7 @@ if (IS_DEV) {
       clearEvents,
       () => cleanupMountedRoots(MOUNTED_ROOTS),
       () => profileStore.removeAllListeners(),
+      () => globalCacheSingleton.clearCacheFor('navigation'),
     ]);
     // change page snapshot id on each navigation start
     pageId = Date.now();

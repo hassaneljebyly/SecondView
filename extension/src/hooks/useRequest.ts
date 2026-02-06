@@ -1,7 +1,14 @@
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { fetchWithTimeout } from '@/api/helpers';
-import type { ApiResponse, ErrorApiResponse } from '@/api/types/responses';
+import type {
+  SuccessApiResponse,
+  ApiResponse,
+  ErrorApiResponse,
+  ApiResponseMeta,
+  ApiResponseDetails,
+} from '@/api/types/responses';
+import { globalCacheSingleton, type CacheConfig } from '@/utils/lib/cache';
 import { logger } from '@/utils/lib/logger';
 
 export type RequestHandler<T, TArgs extends unknown[]> = {
@@ -11,10 +18,54 @@ export type RequestHandler<T, TArgs extends unknown[]> = {
   __responseType?: T;
 };
 
+type useRequestReturn<T, TArgs extends unknown[]> = {
+  data: SuccessApiResponse<T> | null;
+  run: (...args: TArgs) => Promise<void>;
+  isError: {
+    id: number;
+    code: string;
+    message: string;
+    details?: ApiResponseDetails;
+    meta?: ApiResponseMeta;
+  } | null;
+  isLoading: boolean;
+  setData: React.Dispatch<React.SetStateAction<SuccessApiResponse<T> | null>>;
+};
+
+/**
+ * Custom hook for making API requests with optional caching.
+ *
+ * What it does:
+ * - Runs a request using a provided request handler
+ * - Manages loading, error, and response state
+ * - Optionally caches the request result
+ * - Supports aborting the request on unmount
+ *
+ * Returns:
+ * - data: the API response (or null)
+ * - isLoading: true while request is in progress
+ * - isError: error object if request fails
+ * - run: function to run the fetch handler
+ * - setData: manual setter for data
+ * @param {() => RequestHandler<T, TArgs>} requestHandler request handler
+ * @param {CacheConfig} [cacheConfig] optional cache config
+ *
+ * @returns {useRequestReturn<T, TArgs>}
+ * @example
+ * const { data, run, isLoading, isError } = useRequest(
+ *   getNotes,   // request handler factory
+ *   { key: 'user-cache', ttl: 'session' } // optional caching
+ * );
+ *
+ * useEffect(() => {
+ *   run('123'); // pass arguments required by fetchHandler
+ * }, []);
+ */
 export default function useRequest<T, TArgs extends unknown[]>(
-  requestHandler: () => RequestHandler<T, TArgs>
-) {
-  const [data, setData] = useState<T | null>(null);
+  requestHandler: () => RequestHandler<T, TArgs>,
+  cacheConfig?: CacheConfig
+): useRequestReturn<T, TArgs> {
+  const [data, setData] = useState<SuccessApiResponse<T> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState<null | ErrorApiResponse['error']>(null);
   const requestHandlerRef = useRef<ReturnType<typeof requestHandler> | null>(null);
@@ -28,15 +79,32 @@ export default function useRequest<T, TArgs extends unknown[]>(
     try {
       setIsLoading(true);
       setIsError(null);
-      const handlerResponse = await fetchWithTimeout(() => fetchHandler(...args));
-      const handlerData: ApiResponse<T> = await handlerResponse.json();
+
+      let fetchPromise: Promise<ApiResponse<T>>;
+
+      if (cacheConfig) {
+        const cachedPromise = globalCacheSingleton.get<Promise<ApiResponse<T>>>(cacheConfig.key);
+        if (cachedPromise) {
+          fetchPromise = cachedPromise;
+        } else {
+          fetchPromise = fetchWithTimeout(() => fetchHandler(...args)).then(res => res.json());
+          globalCacheSingleton.set(cacheConfig, fetchPromise);
+        }
+      } else {
+        // no caching - just fetch
+        fetchPromise = fetchWithTimeout(() => fetchHandler(...args)).then(res => res.json());
+      }
+
+      const handlerData: ApiResponse<T> = await fetchPromise;
       if (!handlerData.success) {
         setIsError(handlerData.error);
       } else {
-        setData(handlerData.data);
+        setData(handlerData);
       }
     } catch (error) {
-      let errorMessage = 'Something went wrong Please try again later!';
+      let errorMessage = navigator.onLine
+        ? 'Something went wrong Please try again later!'
+        : 'Please check your connection and try again';
       if (error instanceof Error && error.name === 'AbortError') return;
       if (error instanceof Error && error.cause === 'REQUEST_TIMEOUT')
         errorMessage = 'Action is taking too long to complete, check your connection and try again';
