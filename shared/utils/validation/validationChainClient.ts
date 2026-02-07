@@ -48,7 +48,7 @@ function buildValidationChain() {
   noteFormChain
     .setNext(new RequiredFieldsHandler()) // ensure all required fields are present
     .setNext(new TimeStampPatternHandler()) // validate timestamp format
-    .setNext(new StartEndTimeOrderValidator()) // enforce minimum segment length
+    .setNext(new StartEndTimeOrderValidator()) // enforce endtime comes after starttime
     .setNext(new SegmentMinLengthValidator()) // enforce minimum segment length
     .setNext(new SegmentMaxLengthValidator()) // enforce maximum segment length
     .setNext(new EndWithinBoundsValidator()) // ensure segment end time is within video length

@@ -12,7 +12,7 @@ import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
 
 export const noteSegmentsBarId = 'sv-note-segments-bar';
 export default function NoteSegmentsBar() {
-  const videoLength = IS_DEV ? 182 : getVideoLength();
+  const videoLength = getVideoLength();
   const currentYoutubeVideoId: string | null =
     (IS_DEV ? tempVideoId : getYouTubeId(window.location.href)) || null;
   const { notes, isError } = useNotes(currentYoutubeVideoId);

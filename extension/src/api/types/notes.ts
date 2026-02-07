@@ -48,8 +48,7 @@ export type NoteResponse = {
   alreadyRated: boolean;
   isOwn: boolean;
 };
-// DOCS(me): 📘 update backend data response or docs
-// Issue: https://...
+
 export type CreatedNoteResponse = {
   note: NoteResponse;
 };

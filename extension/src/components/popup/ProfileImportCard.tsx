@@ -50,19 +50,21 @@ export default function ProfileImportCard() {
               placeholder='xxxx-xxxx-xxxx-xxxx-xxxx'
             />
           </div>
-          {/*
+          {/* 
              // REFACTOR(me/#6): 🧱 move reminder/alert to its own component
              // https://github.com/hassaneljebyly/SecondView/issues/6
              */}
-          {username && (
-            <div className='sv-reminders'>
-              <Icon variant='error' />
-              <p>
-                You have an existing profile: {username} (5 notes, 12 ratings). Importing will
-                replace it permanently
-              </p>
-            </div>
-          )}
+          {
+            // username && (
+            //   <div className='sv-reminders'>
+            //     <Icon variant='error' />
+            //     <p>
+            //       You have an existing profile: {username} (5 notes, 12 ratings). Importing will
+            //       replace it permanently
+            //     </p>
+            //   </div>
+            // )
+          }
         </div>
         <div className='sv-popup-widget__section'>
           <b className='sv-divider sv-divider--top' />

@@ -12,6 +12,7 @@ import { globalCacheSingleton, type CacheConfig } from '@/utils/lib/cache';
 import { logger } from '@/utils/lib/logger';
 
 export type RequestHandler<T, TArgs extends unknown[]> = {
+  shouldAbort: boolean;
   abortRequest: (reason?: unknown) => void;
   fetchHandler: (...args: TArgs) => Promise<Response>;
   /** @internal T is used as a phantom generic only */
@@ -49,7 +50,14 @@ type useRequestReturn<T, TArgs extends unknown[]> = {
  * - setData: manual setter for data
  * @param {() => RequestHandler<T, TArgs>} requestHandler request handler
  * @param {CacheConfig} [cacheConfig] optional cache config
- *
+ * Note:
+ * - RequestHandler must return:
+ *    - shouldAbort:
+ *      Whether to abort the request when the component unmounts.
+ *      Set to `true` for queries (GET requests) where stale data isn't needed.
+ *      Set to `false` for mutations (POST/PUT/DELETE) that should complete regardless of UI state.
+ *    - abortRequest a function to abort the fetch
+ *    - fetchHandler the fetch
  * @returns {useRequestReturn<T, TArgs>}
  * @example
  * const { data, run, isLoading, isError } = useRequest(
@@ -73,7 +81,7 @@ export default function useRequest<T, TArgs extends unknown[]>(
   if (!requestHandlerRef.current) {
     requestHandlerRef.current = requestHandler();
   }
-  const { abortRequest, fetchHandler } = requestHandlerRef.current;
+  const { abortRequest, fetchHandler, shouldAbort } = requestHandlerRef.current;
 
   async function run(...args: TArgs) {
     try {
@@ -94,7 +102,6 @@ export default function useRequest<T, TArgs extends unknown[]>(
         // no caching - just fetch
         fetchPromise = fetchWithTimeout(() => fetchHandler(...args)).then(res => res.json());
       }
-
       const handlerData: ApiResponse<T> = await fetchPromise;
       if (!handlerData.success) {
         setIsError(handlerData.error);
@@ -119,7 +126,14 @@ export default function useRequest<T, TArgs extends unknown[]>(
     }
   }
 
-  useEffect(() => abortRequest, [abortRequest]);
+  useEffect(() => {
+    return () => {
+      if (shouldAbort) {
+        abortRequest();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return {
     data,

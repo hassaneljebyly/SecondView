@@ -4,8 +4,7 @@ import { ValidationHandler } from './AbstractValidationHandler';
 import { timeStringToSeconds } from './helpers';
 
 /**
- * Validates that the time segment meets the minimum length requirement.
- * Only validates if both time fields are valid and error-free.
+ * Validates that the time segment boundaries are in order
  */
 export class StartEndTimeOrderValidator extends ValidationHandler {
   constructor() {

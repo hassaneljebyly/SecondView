@@ -116,6 +116,7 @@
     margin-bottom: var(--sv-space-xs);
     gap: var(--sv-space-xxs);
     visibility: var(--_sv-error-visibility);
+    white-space: pre-line;
     svg {
       fill: var(--sv-error-color);
     }

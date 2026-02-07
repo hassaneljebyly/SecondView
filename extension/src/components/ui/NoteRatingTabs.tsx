@@ -19,6 +19,7 @@ import { RATINGS_CHECKBOXES_TABS } from '@/utils/config/notRatingConfig';
 import { autoFocusActiveTab } from '@/utils/dom/autoFocus';
 import { logger } from '@/utils/lib/logger';
 import type { AccurateRatingValue, InaccurateRatingValue } from '@shared/types/noteRating';
+import { limitWindowToLocalTime } from '@shared/utils/format/timeStamp';
 import { validateSelectedReasons } from '@shared/utils/validation/noteRatingValidation';
 
 import Button from './Button';
@@ -30,7 +31,7 @@ import type { PanelsNames } from './NoteBlock';
 // making as a state will reset it to 0 with every render
 // too much headache on that one
 let activeTabIndex = 0;
-
+let allowRating = true;
 // reference https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
 export default function NoteRatingTabs({
   noteId,
@@ -43,7 +44,7 @@ export default function NoteRatingTabs({
   openPanel: PanelsNames;
   onCancel: () => void;
 }) {
-  const { run: runSubmitRating, data, isError, isLoading } = useRequest(submitRating);
+  const { run, data, isError, isLoading } = useRequest(submitRating);
   const { pick } = useProfile();
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [error, setError] = useState('');
@@ -104,10 +105,10 @@ export default function NoteRatingTabs({
       },
     });
   }
-
   function handleRatingSubmit(e: FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
+      allowRating = true;
       const expectedCheckBoxValues = RATINGS_CHECKBOXES_TABS[activeTab].map(({ value }) => value);
       const isValid = validateSelectedReasons(selectedRatingReasons, expectedCheckBoxValues);
       if (isValid) {
@@ -126,8 +127,9 @@ export default function NoteRatingTabs({
           logger.error('Unauthorized action, please add a global message');
           return;
         }
+
+        run(userId, signingKey, ratingData);
         setError('');
-        runSubmitRating(userId, signingKey, ratingData);
       } else {
         // validation failed, user tampered with input or invalid state
         setError('Invalid Input!');
@@ -140,15 +142,48 @@ export default function NoteRatingTabs({
   useEffect(() => {
     if (isLoading) {
       setFormSubmissionState('submitting');
-    } else if (isError) {
-      const { message } = isError;
-      setError(message);
-      setFormSubmissionState('error');
-    } else if (!isLoading && !isError) {
-      setFormSubmissionState('idle');
-    } else if (data) {
+      return;
+    }
+
+    if (data && !isError) {
+      allowRating = false;
       setFormSubmissionState('success');
+      setRatingFlags({
+        accurate: {},
+        inaccurate: {},
+      });
+      setFormSubmissionState('idle');
       onCancel();
+      return;
+    }
+
+    if (isError) {
+      const { code, message, meta } = isError;
+      let errorMessage = message;
+      if (code === 'DUPLICATE_VOTE') {
+        setRatingFlags({
+          accurate: {},
+          inaccurate: {},
+        });
+        allowRating = false;
+      } else if (code === 'RATE_LIMIT_EXCEEDED') {
+        let retryAt;
+        if (meta && meta['windowOpensAt']) {
+          const windowOpensAt = meta['windowOpensAt'] as string;
+
+          retryAt = limitWindowToLocalTime(windowOpensAt);
+          errorMessage = `${message}, try again at: ${retryAt}`;
+        }
+        setRatingFlags({
+          accurate: {},
+          inaccurate: {},
+        });
+        allowRating = false;
+      } else if (code === 'INVALID_VOTE_REASON') {
+        errorMessage = 'Invalid Input';
+      }
+      setError(errorMessage);
+      setFormSubmissionState('error');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, data, isError]);
@@ -233,7 +268,7 @@ export default function NoteRatingTabs({
               theme='blue'
               type='submit'
               icon={{ variant: BUTTON_STATES_MAP[formSubmissionState]['icon'] }}
-              disabled={Boolean(!selectedRatingReasons.length)}
+              disabled={Boolean(!selectedRatingReasons.length || !allowRating)}
               noDarkMode
             />
           </div>

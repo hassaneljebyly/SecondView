@@ -58,5 +58,5 @@ export function getYouTubeId(url: string) {
 }
 export function getVideoLength() {
   const videoLength = document.querySelector('video')?.duration;
-  return videoLength as number;
+  return Math.floor(videoLength as number);
 }

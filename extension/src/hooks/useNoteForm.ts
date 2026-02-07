@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 import { submitNote } from '@/api/apiHandlers/notes';
-import type { NoteSubmissionPayload } from '@/api/types/notes';
+import type { NoteResponse, NoteSubmissionPayload } from '@/api/types/notes';
 import { noteFormId } from '@/components/content/NoteForm';
 import type { FormState, NoteFormButtonConfigMap } from '@/types/components';
 import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
 import { autoFocusFirstInput, autoFocusFirstInputWithError } from '@/utils/dom/autoFocus';
 import { resetForm } from '@/utils/dom/formReset';
-import { getVideoDetails, getYouTubeId } from '@/utils/dom/youtube';
+import { getVideoLength, getYouTubeId } from '@/utils/dom/youtube';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { logger } from '@/utils/lib/logger';
 import { tempVideoId } from '@shared/mocks/youtube';
@@ -19,14 +19,13 @@ import { validationConstants } from '@shared/utils/config/noteConstrainsConfig';
 import { ACCEPTED_LINKS_FORMAT, TIME_STAMP_REGEX } from '@shared/utils/config/regexConfig';
 import { baseNoteFormFields } from '@shared/utils/config/schemasConfig';
 import { extractSourcesFromNote } from '@shared/utils/format/sourceParsing';
+import { limitWindowToLocalTime } from '@shared/utils/format/timeStamp';
 import { timeStringToSeconds } from '@shared/utils/validation/helpers';
 import { validateForm } from '@shared/utils/validation/validationChainClient';
 
 import useNotes from './useNotes';
 import useProfile from './useProfile';
 import useRequest from './useRequest';
-
-// TODO(me): 📝 use meta field in the response when it exists
 
 /**
  * Custom hook for managing the lifecycle of a "Note Form".
@@ -48,7 +47,7 @@ export function useNoteForm(): UseNoteFormReturn {
   const { profile } = useProfile();
   const currentYoutubeVideoId: string | null =
     (IS_DEV ? tempVideoId : getYouTubeId(window.location.href)) || null;
-  const { notes, dispatchNewNote, dispatchRemoveNote, dispatchReplaceNote } =
+  const { notes, dispatchNewNote, dispatchRemoveNote, dispatchReplaceNote, updateNotes } =
     useNotes(currentYoutubeVideoId);
   const { run, data: newCreatedNoteData, isError, isLoading } = useRequest(submitNote);
   const optimisticNoteIdRef = useRef<null | string>(null);
@@ -70,7 +69,6 @@ export function useNoteForm(): UseNoteFormReturn {
   function handleFormClose() {
     setOpenForm(false);
   }
-
   async function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
@@ -79,11 +77,10 @@ export function useNoteForm(): UseNoteFormReturn {
       // in a SPA environments(YouTube in this case)
       // the form may be dynamically removed or replaced
       if (!(form instanceof HTMLFormElement)) {
-        console.error('Form submit event missing a valid form target');
+        logger.error('Form submit event missing a valid form target');
         return;
       }
-      const videoMetaData = getVideoDetails();
-      const { videoLength } = videoMetaData;
+      const videoLength = getVideoLength();
       const rawFormData = Object.fromEntries(new FormData(e.currentTarget).entries());
       const noteFormValidationOptions: ValidationConfig = {
         formData: rawFormData as FormInputData,
@@ -151,14 +148,28 @@ export function useNoteForm(): UseNoteFormReturn {
     if (isLoading) {
       setFormSubmissionState('submitting');
     } else if (isError) {
-      const { message } = isError;
+      const { message, code, meta } = isError;
       dispatchRemoveNote(optimisticNoteId);
-      setErrors({
-        form: message,
-      });
       setFormSubmissionState('error');
+      if (code === 'BAD_REQUEST_VALIDATION_FAILED' && meta && meta['validationResult']) {
+        setErrors(meta['validationResult']);
+      } else if (code === 'RATE_LIMIT_EXCEEDED' && meta && meta['tryAgainAfter']) {
+        setErrors({
+          form: `${message}. Try again at:\n${limitWindowToLocalTime(meta['tryAgainAfter'] as string)}`,
+        });
+      } else if (code === 'RESOURCE_CONFLICT' && meta && meta['overlappingNotes']) {
+        if ((meta['overlappingNotes'] as NoteResponse[]).length) {
+          updateNotes(meta['overlappingNotes'] as NoteResponse[]);
+        }
+        setErrors({
+          form: message,
+        });
+      } else {
+        setErrors({
+          form: message,
+        });
+      }
     } else if (newCreatedNoteData) {
-      // finish optimistic UI and after that work on the useRequestReturn type
       setFormSubmissionState('success');
       dispatchReplaceNote({
         optimisticId: optimisticNoteId,

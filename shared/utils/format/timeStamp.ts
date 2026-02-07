@@ -1,3 +1,5 @@
+import { logger } from '@/utils/lib/logger';
+
 /**
  * Converts a number of seconds into a formatted time string.
  *
@@ -29,4 +31,23 @@ export function secondsToTimeString(seconds: number): string {
   ].filter(Boolean); // remove nulls (when hours = 0)
 
   return timeParts.join(':');
+}
+
+/**
+ * converts ISO string to local time string format
+ *
+ * @param {string} retryAt ISO string in UTC (e.g 2026-02-07T15:30:00Z)
+ * @returns {string} local time string (e.g Feb 7, 2026, 4:30 PM) return empty string if error happened
+ */
+export function limitWindowToLocalTime(retryAt: string): string {
+  try {
+    const date = new Date(retryAt);
+    return date.toLocaleString(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+    });
+  } catch (error) {
+    logger.error(error);
+    return '';
+  }
 }

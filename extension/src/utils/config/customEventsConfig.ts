@@ -9,6 +9,7 @@ export const CUSTOM_EVENTS = [
   'note:add',
   'note:remove',
   'note:replace',
+  'note:updateNotes',
   'note:promoteQueue',
   'LocalStorage:changed',
 ] as const;

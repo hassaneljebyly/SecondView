@@ -36,6 +36,9 @@ export default function useNotes(videoId: string | null) {
   function dispatchRemoveNote(optimisticId: string) {
     globalEventSingleton.emit('note:remove', window, { detail: optimisticId });
   }
+  function updateNotes(newNotes: NoteResponse[]) {
+    globalEventSingleton.emit('note:updateNotes', window, { detail: newNotes });
+  }
 
   useEffect(() => {
     if (data) {
@@ -45,6 +48,18 @@ export default function useNotes(videoId: string | null) {
       const { detail: newNote } = e as CustomEvent<NoteResponse>;
       setNotes(prevNotes => {
         return [...prevNotes, newNote];
+      });
+    });
+    const updateNotesEvents = globalEventSingleton.on('note:updateNotes', e => {
+      const { detail: newNotes } = e as CustomEvent<NoteResponse[]>;
+      setNotes(prevNotes => {
+        let uniqueMap = new Map<string, NoteResponse>();
+        [...prevNotes, ...newNotes].forEach(noteItem => {
+          uniqueMap.set(noteItem.id, noteItem);
+        });
+        let updateNotesList: NoteResponse[] = Array.from(uniqueMap.values());
+        uniqueMap.clear();
+        return updateNotesList;
       });
     });
     const replaceNoteEvent = globalEventSingleton.on('note:replace', e => {
@@ -69,6 +84,7 @@ export default function useNotes(videoId: string | null) {
       addNewNoteEvent.disconnectEvent();
       replaceNoteEvent.disconnectEvent();
       removeNoteEvent.disconnectEvent();
+      updateNotesEvents.disconnectEvent();
     };
   }, [data]);
 
@@ -106,6 +122,7 @@ export default function useNotes(videoId: string | null) {
     dispatchNewNote,
     dispatchReplaceNote,
     dispatchRemoveNote,
+    updateNotes,
     notes,
   };
 }
