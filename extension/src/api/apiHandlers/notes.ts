@@ -11,6 +11,7 @@ export function getNotes(): RequestHandler<NoteResponse[], [string, User['user']
   const controller = new AbortController();
 
   return {
+    shouldAbort: true,
     abortRequest: () => controller.abort(),
     fetchHandler: (videoId, userId) => {
       const search = new URLSearchParams({
@@ -40,6 +41,7 @@ export function submitNote(): RequestHandler<
   const controller = new AbortController();
 
   return {
+    shouldAbort: false,
     abortRequest: () => controller.abort(),
     fetchHandler: async (userId, signingKey, noteSubmissionPayload) => {
       const METHOD = 'POST';

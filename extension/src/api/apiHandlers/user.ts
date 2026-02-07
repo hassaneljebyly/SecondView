@@ -18,6 +18,7 @@ export const initialUser: InitialUser = {
 export function generateUserHandler(): RequestHandler<User, []> {
   const controller = new AbortController();
   return {
+    shouldAbort: false,
     abortRequest: () => controller.abort(),
     fetchHandler: () => {
       const URL = getEnvKeys('VITE_SUPABASE_CREATE_USER_URL');

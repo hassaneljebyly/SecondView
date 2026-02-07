@@ -14,12 +14,12 @@ export function submitRating(): RequestHandler<
   const controller = new AbortController();
 
   return {
+    shouldAbort: false,
     abortRequest: () => controller.abort(),
     fetchHandler: async (userId, signingKey, ratingBody) => {
       const METHOD = 'POST';
       const REQUEST_URL = getEnvKeys('VITE_SUPABASE_SUBMIT_RATING_URL');
-
-      const submitNoteCanonicalFields: CanonicalFields['submit-rating'] = {
+      const submitRatingCanonicalFields: CanonicalFields['submit-rating'] = {
         ...ratingBody.noteData,
         ...ratingBody.ratingData,
       };
@@ -30,7 +30,7 @@ export function submitRating(): RequestHandler<
       const requestTimestamp = new Date().toISOString();
       const requestMessage = createCanonicalMessage(
         canonicalPath,
-        submitNoteCanonicalFields,
+        submitRatingCanonicalFields,
         requestTimestamp,
         METHOD
       );
