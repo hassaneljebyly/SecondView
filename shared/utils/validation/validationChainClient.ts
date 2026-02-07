@@ -9,6 +9,7 @@ import { RequiredFieldsHandler } from './RequiredFieldsHandler';
 import { SegmentMaxLengthValidator } from './SegmentMaxLengthValidator';
 import { SegmentMinLengthValidator } from './SegmentMinLengthValidator';
 import { SegmentsOverlapValidator } from './SegmentsOverlapValidator';
+import { StartEndTimeOrderValidator } from './StartEndTimeOrderValidator';
 import { TimeStampPatternHandler } from './TimeStampPatternHandler';
 
 /**
@@ -47,8 +48,7 @@ function buildValidationChain() {
   noteFormChain
     .setNext(new RequiredFieldsHandler()) // ensure all required fields are present
     .setNext(new TimeStampPatternHandler()) // validate timestamp format
-    // BUG(me/#11): 🐞 Validate timestamp range: ensure startTime is before endTime
-    // Issue: https://github.com/hassaneljebyly/SecondView/issues/11
+    .setNext(new StartEndTimeOrderValidator()) // enforce minimum segment length
     .setNext(new SegmentMinLengthValidator()) // enforce minimum segment length
     .setNext(new SegmentMaxLengthValidator()) // enforce maximum segment length
     .setNext(new EndWithinBoundsValidator()) // ensure segment end time is within video length
