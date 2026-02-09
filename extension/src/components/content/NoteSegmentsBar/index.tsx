@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 
 import type { NoteResponse } from '@/api/types/notes';
 import useNotes from '@/hooks/useNotes';
+import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
 import { getVideoLength, getYouTubeId } from '@/utils/dom/youtube';
 import { globalEventSingleton } from '@/utils/lib/events';
@@ -40,13 +41,25 @@ export default function NoteSegmentsBar() {
     const video = document.querySelector('video') as HTMLVideoElement | null;
     if (!video) {
       logger.error('Could not locate video element');
+      globalEventSingleton.emit('snackBar:show', window, {
+        detail: {
+          text: 'Could not locate video element',
+          status: 'error',
+        } as ShowSnackBarEvent,
+      });
       return;
     }
     if (isError) {
-      logger.error('Build Error Global', isError);
+      // TODO(me): 📝 make retry function after implementing notes cash
+      logger.error('Something went wrong while fetching notes', isError.message);
+      globalEventSingleton.emit('snackBar:show', window, {
+        detail: {
+          text: "Couldn't get notes for video",
+          status: 'error',
+        } as ShowSnackBarEvent,
+      });
       return;
     }
-
     const notesMap = buildNotesMap(notes);
     // track which notes we've already displayed Important because
     // timeupdate fires many times per second (not just once),

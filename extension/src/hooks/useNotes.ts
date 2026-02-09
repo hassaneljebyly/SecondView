@@ -26,7 +26,6 @@ export default function useNotes(videoId: string | null) {
     ttl: 'navigation',
   });
   const [notes, setNotes] = useState<NoteResponse[]>([]);
-
   function dispatchNewNote(newNote: NoteResponse) {
     globalEventSingleton.emit('note:add', window, { detail: newNote });
   }
