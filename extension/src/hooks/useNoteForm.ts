@@ -178,14 +178,6 @@ export function useNoteForm(): UseNoteFormReturn {
       optimisticNoteIdRef.current = null;
       closeFormTimeOut = setTimeout(() => {
         setFormSubmissionState('idle');
-        // since form.reset() will only rest uncontrolled inputs
-        // It was decided to use an event to reset the uncontrolled and
-        // controlled inputs at the same time
-        globalEventSingleton.emit('form:reset');
-        // to toggle button state
-        globalEventSingleton.emit('form:close');
-        // to close form
-        globalEventSingleton.emit('form:toggle');
       }, 1000); // 1s then close the form
     }
 
