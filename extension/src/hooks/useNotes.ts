@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { getNotes } from '@/api/apiHandlers/notes';
 import type { NoteResponse } from '@/api/types/notes';
+import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { logger } from '@/utils/lib/logger';
 import { profileStore } from '@/utils/lib/storage';
@@ -91,6 +92,12 @@ export default function useNotes(videoId: string | null) {
   useEffect(() => {
     if (!videoId) {
       logger.error("Couldn't get video id");
+      globalEventSingleton.emit('snackBar:show', window, {
+        detail: {
+          text: "Couldn't get video id",
+          status: 'error',
+        } as ShowSnackBarEvent,
+      });
       return;
     }
     let userId: string | null = null;

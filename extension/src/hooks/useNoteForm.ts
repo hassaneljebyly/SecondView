@@ -5,6 +5,7 @@ import type { NoteResponse, NoteSubmissionPayload } from '@/api/types/notes';
 import { noteFormId } from '@/components/content/NoteForm';
 import type { FormState, NoteFormButtonConfigMap } from '@/types/components';
 import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
+import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
 import { IS_DEV } from '@/utils/config/loggerConfig';
 import { autoFocusFirstInput, autoFocusFirstInputWithError } from '@/utils/dom/autoFocus';
 import { resetForm } from '@/utils/dom/formReset';
@@ -77,9 +78,23 @@ export function useNoteForm(): UseNoteFormReturn {
       // in a SPA environments(YouTube in this case)
       // the form may be dynamically removed or replaced
       if (!(form instanceof HTMLFormElement)) {
+        globalEventSingleton.emit('snackBar:show', window, {
+          detail: { text: 'Something went wrong, try again', status: 'error' } as ShowSnackBarEvent,
+        });
         logger.error('Form submit event missing a valid form target');
         return;
       }
+
+      if (!userId || !signingKey || !currentYoutubeVideoId) {
+        globalEventSingleton.emit('snackBar:show', window, {
+          detail: {
+            text: 'Need a valid profile to continue, please click the extension icon to generate a profile or import one',
+            status: 'error',
+          } as ShowSnackBarEvent,
+        });
+        return;
+      }
+
       const videoLength = getVideoLength();
       const rawFormData = Object.fromEntries(new FormData(e.currentTarget).entries());
       const noteFormValidationOptions: ValidationConfig = {
@@ -91,11 +106,6 @@ export function useNoteForm(): UseNoteFormReturn {
       };
       const validationResult = validateForm(noteFormValidationOptions);
       if (validationResult.formIsValid) {
-        if (!userId || !signingKey || !currentYoutubeVideoId) {
-          logger.error('no user or user key, add global error');
-          return;
-        }
-
         const { startTime, endTime, category, noteContent } = validationResult['formData'];
         const sources = extractSourcesFromNote(noteContent, ACCEPTED_LINKS_FORMAT);
         const startTimeSeconds = timeStringToSeconds(startTime, TIME_STAMP_REGEX) as number;

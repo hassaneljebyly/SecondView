@@ -11,5 +11,13 @@ export const CUSTOM_EVENTS = [
   'note:replace',
   'note:updateNotes',
   'note:promoteQueue',
+  'snackBar:show',
   'LocalStorage:changed',
 ] as const;
+
+export type ShowSnackBarEvent = {
+  status?: 'default' | 'success' | 'error' | 'warning' | 'info';
+  text: string;
+  actionLabel?: string;
+  action?: () => void;
+};

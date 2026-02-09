@@ -1,5 +1,33 @@
 .sv-snackbar {
-  background-color: var(--sv-gray-100);
+  --sv-snackbar-bg: var(--sv-gray-100);
+  --sv-snackbar-text: var(--sv-black-1);
+  --sv-snackbar-action-text: hsl(207, 90%, 68%);
+  background: var(--sv-snackbar-bg);
+  color: var(--sv-snackbar-text);
+
+  &--error {
+    --sv-snackbar-bg: var(--sv-red-100);
+    --sv-snackbar-text: var(--sv-error-color);
+    --sv-snackbar-action-text: var(--sv-error-color);
+  }
+
+  // &--success {
+  //   --sv-snackbar-bg: var(...);
+  //   --sv-snackbar-text: var(...);
+  //   --sv-snackbar-action-text: var(..);
+  // }
+
+  // &--warning {
+  //   --sv-snackbar-bg: var(...);
+  //   --sv-snackbar-text: var(...);
+  //   --sv-snackbar-action-text: var(..);
+  // }
+
+  // &--info {
+  //   --sv-snackbar-bg: var(...);
+  //   --sv-snackbar-text: var(...);
+  //   --sv-snackbar-action-text: var(..);
+  // }
   box-shadow: var(--sv-shadow-popup);
   font-size: var(--sv-font-sm);
   font-weight: var(--sv-font-weight-normal);
@@ -23,6 +51,7 @@
   &__text {
     padding-block: var(--sv-space-xs);
     padding-right: var(--sv-space-xs);
+    color: var(--sv-snackbar-text);
   }
   &__controls {
     display: flex;
@@ -33,7 +62,7 @@
   &__action {
     padding-inline: var(--sv-space-sm);
     button {
-      color: var(--sv-blue-43) !important;
+      color: var(--sv-snackbar-action-text) !important;
     }
   }
   &__close {
