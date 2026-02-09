@@ -25,6 +25,10 @@
 .sv-animation-pop-in {
   animation: pop-in 250ms;
 }
+.sv-animation-pop-in-initial {
+  opacity: 0;
+  transform: translateY(25%) scale(0.9);
+}
 
 @keyframes pop-in {
   0% {

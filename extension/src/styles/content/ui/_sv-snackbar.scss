@@ -1,0 +1,49 @@
+.sv-snackbar {
+  background-color: var(--sv-gray-100);
+  box-shadow: var(--sv-shadow-popup);
+  font-size: var(--sv-font-sm);
+  font-weight: var(--sv-font-weight-normal);
+  padding-left: var(--sv-space-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  min-height: 48px;
+  height: fit-content;
+  width: 100%;
+  max-width: 375px;
+  border: 1px solid var(--sv-black-alpha-05);
+  border-radius: var(--sv-border-radius-8);
+  &:has(:not(.sv-snackbar__close)) {
+    padding-right: var(--sv-space-xs);
+  }
+  &:has(.sv-snackbar__close) {
+    padding-right: 0;
+  }
+  &__text {
+    padding-block: var(--sv-space-xs);
+    padding-right: var(--sv-space-xs);
+  }
+  &__controls {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+  &__action {
+    padding-inline: var(--sv-space-sm);
+    button {
+      color: var(--sv-blue-43) !important;
+    }
+  }
+  &__close {
+    padding-inline: var(--sv-space-sm);
+  }
+  button {
+    background-color: transparent;
+    padding-inline: 0;
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+}
