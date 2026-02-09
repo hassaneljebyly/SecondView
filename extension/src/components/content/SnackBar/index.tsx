@@ -104,6 +104,7 @@ export default function SnackBar() {
             text='close notification'
             icon={{ variant: 'cancel', size: 'xs' }}
             iconOnly
+            noDarkMode
             actions={{ onClick: hideSnackBar }}
           />
         </div>
