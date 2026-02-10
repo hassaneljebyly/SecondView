@@ -3,7 +3,9 @@ import { useEffect, useState } from 'react';
 import { getNotes } from '@/api/apiHandlers/notes';
 import type { NoteResponse } from '@/api/types/notes';
 import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
+import { globalCacheSingleton, type CacheConfig, type CachedNotesMap } from '@/utils/lib/cache';
 import { globalEventSingleton } from '@/utils/lib/events';
+import { mapValuesToArray } from '@/utils/lib/helpers';
 import { logger } from '@/utils/lib/logger';
 import { profileStore } from '@/utils/lib/storage';
 
@@ -14,80 +16,75 @@ type ReplaceNoteEventParams = {
   realNote: NoteResponse;
 };
 
+/**
+ * Notes are shared across multiple React roots.
+ * The global cache is the single source of truth.
+ * Local React state only mirrors cache changes.
+ */
 export default function useNotes(videoId: string | null) {
+  const notesFetchCacheConfig: CacheConfig = {
+    key: `fetch.notesOf=${videoId}`,
+    ttl: 'navigation',
+  };
+
+  const notesCacheConfig: CacheConfig = {
+    key: `notesOf=${videoId}`,
+    ttl: 'navigation',
+  };
+
   const {
     data,
     run: runGetNotes,
     isError,
     isLoading,
     setData,
-  } = useRequest(getNotes, {
-    key: `fetch.notesOf=${videoId}`,
-    ttl: 'navigation',
-  });
+  } = useRequest(getNotes, notesFetchCacheConfig);
+
+  // local state is a projection of the cache
   const [notes, setNotes] = useState<NoteResponse[]>([]);
-  function dispatchNewNote(newNote: NoteResponse) {
-    globalEventSingleton.emit('note:add', window, { detail: newNote });
+
+  // cache mutation commands
+  // add a note (optimistic or real) to the shared cache
+  function dispatchNewNotes(newNotes: NoteResponse[]) {
+    const notesMap = globalCacheSingleton.get<CachedNotesMap>(notesCacheConfig.key) ?? new Map();
+    newNotes.forEach(newNoteItem => {
+      notesMap.set(newNoteItem.id, newNoteItem);
+    });
+    globalCacheSingleton.set(notesCacheConfig, notesMap);
   }
 
+  // replace an optimistic note with the real one
   function dispatchReplaceNote({ optimisticId, realNote }: ReplaceNoteEventParams) {
-    globalEventSingleton.emit('note:replace', window, { detail: { optimisticId, realNote } });
-  }
-  function dispatchRemoveNote(optimisticId: string) {
-    globalEventSingleton.emit('note:remove', window, { detail: optimisticId });
-  }
-  function updateNotes(newNotes: NoteResponse[]) {
-    globalEventSingleton.emit('note:updateNotes', window, { detail: newNotes });
+    const notesMap = globalCacheSingleton.get<CachedNotesMap>(notesCacheConfig.key) ?? new Map();
+
+    notesMap.delete(optimisticId);
+    notesMap.set(realNote.id, realNote);
+
+    globalCacheSingleton.set(notesCacheConfig, notesMap);
   }
 
+  // remove a note from the shared cache
+  function dispatchRemoveNote(noteId: string) {
+    const notesMap = globalCacheSingleton.get<CachedNotesMap>(notesCacheConfig.key) ?? new Map();
+
+    notesMap.delete(noteId);
+    globalCacheSingleton.set(notesCacheConfig, notesMap);
+  }
+
+  // Cache => React sync
   useEffect(() => {
-    if (data) {
-      setNotes(data['data']);
-    }
-    const addNewNoteEvent = globalEventSingleton.on('note:add', e => {
-      const { detail: newNote } = e as CustomEvent<NoteResponse>;
-      setNotes(prevNotes => {
-        return [...prevNotes, newNote];
-      });
-    });
-    const updateNotesEvents = globalEventSingleton.on('note:updateNotes', e => {
-      const { detail: newNotes } = e as CustomEvent<NoteResponse[]>;
-      setNotes(prevNotes => {
-        let uniqueMap = new Map<string, NoteResponse>();
-        [...prevNotes, ...newNotes].forEach(noteItem => {
-          uniqueMap.set(noteItem.id, noteItem);
-        });
-        let updateNotesList: NoteResponse[] = Array.from(uniqueMap.values());
-        uniqueMap.clear();
-        return updateNotesList;
-      });
-    });
-    const replaceNoteEvent = globalEventSingleton.on('note:replace', e => {
-      const {
-        detail: { optimisticId, realNote },
-      } = e as CustomEvent<ReplaceNoteEventParams>;
-      setNotes(prevNotes => {
-        return prevNotes.map(noteItem => {
-          if (noteItem.id === optimisticId) return realNote;
-          return noteItem;
-        });
-      });
-    });
-    const removeNoteEvent = globalEventSingleton.on('note:remove', e => {
-      const { detail: optimisticId } = e as CustomEvent<string>;
-      setNotes(prevNotes => {
-        const newNotes = prevNotes.filter(noteItem => noteItem.id !== optimisticId);
-        return newNotes;
-      });
-    });
-    return () => {
-      addNewNoteEvent.disconnectEvent();
-      replaceNoteEvent.disconnectEvent();
-      removeNoteEvent.disconnectEvent();
-      updateNotesEvents.disconnectEvent();
-    };
-  }, [data]);
+    if (!data) return;
+    const notesMap = globalCacheSingleton.get<CachedNotesMap>(notesCacheConfig.key) || new Map();
 
+    data.data.forEach(note => {
+      notesMap.set(note.id, note);
+    });
+
+    globalCacheSingleton.set(notesCacheConfig, notesMap);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
+  // fetch on video change
   useEffect(() => {
     if (!videoId) {
       logger.error("Couldn't get video id");
@@ -99,36 +96,54 @@ export default function useNotes(videoId: string | null) {
       });
       return;
     }
+
     let userId: string | null = null;
+
     profileStore
       .get('user.id')
       .then(result => {
         if (result.status === 'ready') {
           userId = result.storeValue;
-          runGetNotes(videoId, userId); // run with userId or null
-        } else {
-          runGetNotes(videoId, userId); // run without user id if store wasn't initialized
+          runGetNotes(videoId, userId);
         }
       })
       .catch(error => {
         logger.error('Something went wrong while getting userId from storage', error);
-        runGetNotes(videoId, userId); // still run if there was ever an issue
+        runGetNotes(videoId, userId);
       });
 
+    // subscribe to cache changes.
+    // every root updates its local React state from the cache.
+    const unsubscribe = globalCacheSingleton.onChange<CachedNotesMap>(
+      notesCacheConfig.key,
+      (_old, newNotes) => {
+        setNotes(mapValuesToArray(newNotes));
+      }
+    );
+
     return () => {
+      // Prevent stale data from leaking between video IDs
       setData(null);
+      unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoId]); // only care about video id change
+  }, [videoId]);
 
+  if (isError) {
+    logger.error("Couldn't fetch notes");
+    globalEventSingleton.emit('snackBar:show', window, {
+      detail: {
+        text: "Couldn't get notes for this video",
+        status: 'error',
+      } as ShowSnackBarEvent,
+    });
+  }
   return {
     isError,
     isLoading,
-    setNotes,
-    dispatchNewNote,
+    notes,
+    dispatchNewNotes,
     dispatchReplaceNote,
     dispatchRemoveNote,
-    updateNotes,
-    notes,
   };
 }

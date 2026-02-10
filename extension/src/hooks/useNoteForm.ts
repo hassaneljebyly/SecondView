@@ -28,6 +28,8 @@ import useNotes from './useNotes';
 import useProfile from './useProfile';
 import useRequest from './useRequest';
 
+export const optimisticIdPrefix = 'optimistic_id_';
+
 /**
  * Custom hook for managing the lifecycle of a "Note Form".
  *
@@ -48,12 +50,12 @@ export function useNoteForm(): UseNoteFormReturn {
   const { profile } = useProfile();
   const currentYoutubeVideoId: string | null =
     (IS_DEV ? tempVideoId : getYouTubeId(window.location.href)) || null;
-  const { notes, dispatchNewNote, dispatchRemoveNote, dispatchReplaceNote, updateNotes } =
+  const { notes, dispatchNewNotes, dispatchRemoveNote, dispatchReplaceNote } =
     useNotes(currentYoutubeVideoId);
   const { run, data: newCreatedNoteData, isError, isLoading } = useRequest(submitNote);
   const optimisticNoteIdRef = useRef<null | string>(null);
   if (!optimisticNoteIdRef.current) {
-    optimisticNoteIdRef.current = `optimistic_id_${Date.now()}_${Math.random().toString(16).slice(2)}`;
+    optimisticNoteIdRef.current = `${optimisticIdPrefix}${Date.now()}_${Math.random().toString(16).slice(2)}`;
   }
   const optimisticNoteId = optimisticNoteIdRef.current;
 
@@ -70,6 +72,7 @@ export function useNoteForm(): UseNoteFormReturn {
   function handleFormClose() {
     setOpenForm(false);
   }
+
   async function handelSubmit(e: React.FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
@@ -96,7 +99,7 @@ export function useNoteForm(): UseNoteFormReturn {
       }
 
       const videoLength = getVideoLength();
-      const rawFormData = Object.fromEntries(new FormData(e.currentTarget).entries());
+      const rawFormData = Object.fromEntries(new FormData(form).entries());
       const noteFormValidationOptions: ValidationConfig = {
         formData: rawFormData as FormInputData,
         existingNotes: notes,
@@ -121,20 +124,22 @@ export function useNoteForm(): UseNoteFormReturn {
           },
         };
         setErrors({});
-        dispatchNewNote({
-          id: optimisticNoteId,
-          videoId: currentYoutubeVideoId,
-          startTime: startTimeSeconds,
-          endTime: endTimeSeconds,
-          misinfoType: category as NoteCategoryKeys,
-          noteText: noteContent,
-          sources,
-          status: 'pending',
-          createdAt: null,
-          createdBy: username!,
-          alreadyRated: true,
-          isOwn: true,
-        });
+        dispatchNewNotes([
+          {
+            id: optimisticNoteId,
+            videoId: currentYoutubeVideoId,
+            startTime: startTimeSeconds,
+            endTime: endTimeSeconds,
+            misinfoType: category as NoteCategoryKeys,
+            noteText: noteContent,
+            sources,
+            status: 'pending',
+            createdAt: null,
+            createdBy: username!,
+            alreadyRated: true,
+            isOwn: true,
+          },
+        ]);
         run(userId, signingKey, payload);
       } else {
         autoFocusFirstInputWithError();
@@ -169,7 +174,7 @@ export function useNoteForm(): UseNoteFormReturn {
         });
       } else if (code === 'RESOURCE_CONFLICT' && meta && meta['overlappingNotes']) {
         if ((meta['overlappingNotes'] as NoteResponse[]).length) {
-          updateNotes(meta['overlappingNotes'] as NoteResponse[]);
+          dispatchNewNotes(meta['overlappingNotes'] as NoteResponse[]);
         }
         setErrors({
           form: message,
@@ -188,7 +193,7 @@ export function useNoteForm(): UseNoteFormReturn {
       optimisticNoteIdRef.current = null;
       closeFormTimeOut = setTimeout(() => {
         setFormSubmissionState('idle');
-      }, 1000); // 1s then close the form
+      }, 2000); // 2s then close the form
     }
 
     return () => {
