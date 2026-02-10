@@ -76,3 +76,7 @@ type EnvKeys = (typeof ENV_KEYS)[number];
 export function getEnvKeys(envKeys: EnvKeys) {
   return import.meta.env[envKeys];
 }
+
+export function mapValuesToArray<K, V>(map: Map<K, V>): V[] {
+  return Array.from(map.values());
+}

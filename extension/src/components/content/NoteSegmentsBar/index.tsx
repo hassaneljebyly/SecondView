@@ -50,14 +50,7 @@ export default function NoteSegmentsBar() {
       return;
     }
     if (isError) {
-      // TODO(me): 📝 make retry function after implementing notes cash
-      logger.error('Something went wrong while fetching notes', isError.message);
-      globalEventSingleton.emit('snackBar:show', window, {
-        detail: {
-          text: "Couldn't get notes for video",
-          status: 'error',
-        } as ShowSnackBarEvent,
-      });
+      logger.error(isError.message);
       return;
     }
     const notesMap = buildNotesMap(notes);

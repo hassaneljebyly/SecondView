@@ -5,12 +5,6 @@
   background: var(--sv-snackbar-bg);
   color: var(--sv-snackbar-text);
 
-  &--error {
-    --sv-snackbar-bg: var(--sv-red-100);
-    --sv-snackbar-text: var(--sv-error-color);
-    --sv-snackbar-action-text: var(--sv-error-color);
-  }
-
   // &--success {
   //   --sv-snackbar-bg: var(...);
   //   --sv-snackbar-text: var(...);
@@ -42,6 +36,13 @@
   max-width: 375px;
   border: 1px solid var(--sv-black-alpha-05);
   border-radius: var(--sv-border-radius-8);
+
+  &--error {
+    --sv-snackbar-bg: var(--sv-red-100);
+    --sv-snackbar-text: var(--sv-error-color);
+    --sv-snackbar-action-text: var(--sv-error-color);
+  }
+
   &:has(:not(.sv-snackbar__close)) {
     padding-right: var(--sv-space-xs);
   }
