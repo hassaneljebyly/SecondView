@@ -1,3 +1,5 @@
+import { useRef, useState } from 'react';
+
 import Button from '@/components/ui/Button';
 import ErrorMessage from '@/components/ui/ErrorMessage';
 import { useNoteForm } from '@/hooks/useNoteForm';
@@ -23,8 +25,17 @@ export default function NoteForm() {
     formErrorId,
     buttonConfig,
   } = useNoteForm();
+  const [formHasValue, setFormHasValue] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
   return (
     <form
+      ref={formRef}
+      onInput={e => {
+        const inputs = Object.fromEntries(new FormData(e.currentTarget).entries());
+        const hasValue = Object.values(inputs).every(v => (v as string).trim() !== '');
+
+        setFormHasValue(hasValue);
+      }}
       id={noteFormId}
       className={formClassName}
       aria-errormessage={formErrorId}
@@ -76,7 +87,7 @@ export default function NoteForm() {
         </div>
         <div className='sv-form__action sv-form-fieldset-grid__item--full sv-divider sv-divider--top'>
           <Button
-            disabled={formSubmissionState === 'submitting'}
+            disabled={formSubmissionState === 'submitting' || !formHasValue}
             type='submit'
             text={buttonConfig[formSubmissionState]['text']}
             theme='blue'
