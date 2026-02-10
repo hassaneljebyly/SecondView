@@ -10,6 +10,7 @@ import {
 import { submitRating } from '@/api/apiHandlers/ratings';
 import type { NoteResponse } from '@/api/types/notes';
 import type { RatingSubmissionPayload } from '@/api/types/ratings';
+import { optimisticIdPrefix } from '@/hooks/useNoteForm';
 import useProfile from '@/hooks/useProfile';
 import useRequest from '@/hooks/useRequest';
 import type { FormState } from '@/types/components';
@@ -69,7 +70,7 @@ export default function NoteRatingTabs({
   ) as (AccurateRatingValue | InaccurateRatingValue)[];
   const tabs = Object.keys(RATINGS_CHECKBOXES_TABS) as RatingTabsType[];
   const heading = activeTab === 'accurate' ? 'Why was this useful?' : 'Why wasn’t this useful?';
-
+  const isOptimistic = noteId.startsWith(optimisticIdPrefix);
   function handleTabKeyDown(e: KeyboardEvent<HTMLButtonElement>) {
     switch (e.key) {
       case 'ArrowRight':
@@ -261,14 +262,26 @@ export default function NoteRatingTabs({
           </div>
 
           <div className='sv-note-rating__action'>
-            <Button text='Cancel' shape='pill' actions={{ onClick: onCancel }} noDarkMode />
+            <Button
+              text='Cancel'
+              shape='pill'
+              actions={{
+                onClick: () => {
+                  onCancel();
+                  setError('');
+                },
+              }}
+              noDarkMode
+            />
             <Button
               text={BUTTON_STATES_MAP[formSubmissionState]['text']}
               shape='pill'
               theme='blue'
               type='submit'
               icon={{ variant: BUTTON_STATES_MAP[formSubmissionState]['icon'] }}
-              disabled={Boolean(!selectedRatingReasons.length || !allowRating)}
+              disabled={
+                Boolean(!selectedRatingReasons.length || !allowRating) || isOptimistic
+              }
               noDarkMode
             />
           </div>
