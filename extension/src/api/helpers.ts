@@ -1,4 +1,4 @@
-export async function fetchWithTimeout(fetchFn: () => Promise<Response>, timeout = 5000) {
+export async function fetchWithTimeout(fetchFn: () => Promise<Response>, timeout = 10000) {
   let timer;
   try {
     return await Promise.race([
