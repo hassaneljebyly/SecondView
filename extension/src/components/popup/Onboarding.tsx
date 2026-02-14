@@ -36,6 +36,7 @@ export default function Onboarding() {
       setData(null);
     }
     if (isError) {
+      // TODO(me): 📝 handle this error
       logger.error('show global error', isError);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

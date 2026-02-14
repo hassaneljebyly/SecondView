@@ -12,6 +12,7 @@ import type { RatingFlagsState, RatingTabsType } from '@/types/noteRating';
 import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
 import { RATINGS_CHECKBOXES_TABS } from '@/utils/config/notRatingConfig';
 import { autoFocusActiveTab } from '@/utils/dom/autoFocus';
+import { globalEventSingleton } from '@/utils/lib/events';
 import { logger } from '@/utils/lib/logger';
 import type { AccurateRatingValue, InaccurateRatingValue } from '@shared/types/noteRating';
 import { isoStringToLocalTimeString } from '@shared/utils/format/timeStamp';
@@ -109,7 +110,12 @@ export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] 
           },
         };
         if (!userId || !signingKey) {
-          logger.error('Unauthorized action, please add a global message');
+          globalEventSingleton.emit('snackBar:show', window, {
+            detail: {
+              status: 'error',
+              text: 'Need a valid profile to continue, please click the extension icon to generate a profile or import one',
+            },
+          });
           return;
         }
 

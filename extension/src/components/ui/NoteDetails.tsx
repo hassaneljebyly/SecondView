@@ -26,14 +26,18 @@ export default function NoteDetails(note: NoteResponse) {
       </div>
 
       <div className='sv-note-details__main'>
-        {!alreadyRated && !isOwn && (
-          <p className='sv-note-details__note-rated-note'>
-            Note:{' '}
-            <span className='sv-note-details__data'>
-              Results are revealed after submission to maintain rating integrity
-            </span>
-          </p>
-        )}
+        {/* {!alreadyRated && !isOwn && ( */}
+        <p className='sv-note-details__note-rated-note'>
+          Note:{' '}
+          <span className='sv-note-details__data'>
+            Rating details are hidden until you vote (to avoid bias).{' '}
+            <span className='sv-note-details__data' title='Experimental data'>
+              Placeholder data
+            </span>{' '}
+            shown during beta will be hidden for non-voters in later versions.
+          </span>
+        </p>
+        {/* )} */}
         <div className='sv-note-details__verdict'>
           <span className='sv-note-status-icon' aria-hidden='true' data-note-status={status}>
             <Icon variant='badge' size='sm' />
