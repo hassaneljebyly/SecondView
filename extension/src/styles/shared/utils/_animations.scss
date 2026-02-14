@@ -50,3 +50,30 @@
     transform: translateY(25%);
   }
 }
+
+@keyframes countDown {
+  0% {
+    width: 100%;
+  }
+  100% {
+    width: 0%;
+  }
+}
+
+.sv-pop-in-elastic {
+  animation: popInElastic 420ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes popInElastic {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.96);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.02);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}

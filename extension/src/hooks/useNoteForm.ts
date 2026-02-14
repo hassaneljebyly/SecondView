@@ -20,7 +20,7 @@ import { validationConstants } from '@shared/utils/config/noteConstrainsConfig';
 import { ACCEPTED_LINKS_FORMAT, TIME_STAMP_REGEX } from '@shared/utils/config/regexConfig';
 import { baseNoteFormFields } from '@shared/utils/config/schemasConfig';
 import { extractSourcesFromNote } from '@shared/utils/format/sourceParsing';
-import { limitWindowToLocalTime } from '@shared/utils/format/timeStamp';
+import { isoStringToLocalTimeString } from '@shared/utils/format/timeStamp';
 import { timeStringToSeconds } from '@shared/utils/validation/helpers';
 import { validateForm } from '@shared/utils/validation/validationChainClient';
 
@@ -170,7 +170,7 @@ export function useNoteForm(): UseNoteFormReturn {
         setErrors(meta['validationResult']);
       } else if (code === 'RATE_LIMIT_EXCEEDED' && meta && meta['tryAgainAfter']) {
         setErrors({
-          form: `${message}. Try again at:\n${limitWindowToLocalTime(meta['tryAgainAfter'] as string)}`,
+          form: `${message}. Try again at:\n${isoStringToLocalTimeString(meta['tryAgainAfter'] as string)}`,
         });
       } else if (code === 'RESOURCE_CONFLICT' && meta && meta['overlappingNotes']) {
         if ((meta['overlappingNotes'] as NoteResponse[]).length) {

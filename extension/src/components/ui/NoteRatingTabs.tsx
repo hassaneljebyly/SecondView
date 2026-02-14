@@ -1,11 +1,4 @@
-import {
-  useEffect,
-  useState,
-  type ChangeEvent,
-  type FormEvent,
-  type KeyboardEvent,
-  type RefObject,
-} from 'react';
+import { useEffect, useState, type ChangeEvent, type FormEvent, type KeyboardEvent } from 'react';
 
 import { submitRating } from '@/api/apiHandlers/ratings';
 import type { NoteResponse } from '@/api/types/notes';
@@ -13,6 +6,7 @@ import type { RatingSubmissionPayload } from '@/api/types/ratings';
 import { optimisticIdPrefix } from '@/hooks/useNoteForm';
 import useProfile from '@/hooks/useProfile';
 import useRequest from '@/hooks/useRequest';
+import { useStackedNavigation } from '@/hooks/useStackedNavigation';
 import type { FormState } from '@/types/components';
 import type { RatingFlagsState, RatingTabsType } from '@/types/noteRating';
 import { BUTTON_STATES_MAP } from '@/utils/config/componentsConfig';
@@ -20,13 +14,12 @@ import { RATINGS_CHECKBOXES_TABS } from '@/utils/config/notRatingConfig';
 import { autoFocusActiveTab } from '@/utils/dom/autoFocus';
 import { logger } from '@/utils/lib/logger';
 import type { AccurateRatingValue, InaccurateRatingValue } from '@shared/types/noteRating';
-import { limitWindowToLocalTime } from '@shared/utils/format/timeStamp';
+import { isoStringToLocalTimeString } from '@shared/utils/format/timeStamp';
 import { validateSelectedReasons } from '@shared/utils/validation/noteRatingValidation';
 
 import Button from './Button';
 import ErrorMessage from './ErrorMessage';
 import Icon from './Icon';
-import type { PanelsNames } from './NoteBlock';
 
 // first tab is opened by default
 // making as a state will reset it to 0 with every render
@@ -34,17 +27,8 @@ import type { PanelsNames } from './NoteBlock';
 let activeTabIndex = 0;
 let allowRating = true;
 // reference https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
-export default function NoteRatingTabs({
-  noteId,
-  panelRef,
-  openPanel,
-  onCancel,
-}: {
-  noteId: NoteResponse['id'];
-  panelRef: RefObject<HTMLDivElement | null>;
-  openPanel: PanelsNames;
-  onCancel: () => void;
-}) {
+export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] }) {
+  const { dispatchNavigateBack } = useStackedNavigation();
   const { run, data, isError, isLoading } = useRequest(submitRating);
   const { pick } = useProfile();
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
@@ -154,7 +138,7 @@ export default function NoteRatingTabs({
         inaccurate: {},
       });
       setFormSubmissionState('idle');
-      onCancel();
+      dispatchNavigateBack();
       return;
     }
 
@@ -172,7 +156,7 @@ export default function NoteRatingTabs({
         if (meta && meta['windowOpensAt']) {
           const windowOpensAt = meta['windowOpensAt'] as string;
 
-          retryAt = limitWindowToLocalTime(windowOpensAt);
+          retryAt = isoStringToLocalTimeString(windowOpensAt);
           errorMessage = `${message}, try again at: ${retryAt}`;
         }
         setRatingFlags({
@@ -189,12 +173,7 @@ export default function NoteRatingTabs({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, data, isError]);
   return (
-    <div
-      className='sv-note-rating'
-      ref={panelRef}
-      aria-hidden={openPanel !== 'ratingPanel'}
-      inert={openPanel !== 'ratingPanel'}
-    >
+    <div className='sv-note-rating'>
       <form className='sv-note-rating__form' onSubmit={handleRatingSubmit}>
         <fieldset className='sv-note-rating__fieldset'>
           <legend id='sv-tablist' className='sv-note-rating__legend sv-divider sv-divider--bottom'>
@@ -267,7 +246,7 @@ export default function NoteRatingTabs({
               shape='pill'
               actions={{
                 onClick: () => {
-                  onCancel();
+                  dispatchNavigateBack();
                   setError('');
                 },
               }}
@@ -279,9 +258,7 @@ export default function NoteRatingTabs({
               theme='blue'
               type='submit'
               icon={{ variant: BUTTON_STATES_MAP[formSubmissionState]['icon'] }}
-              disabled={
-                Boolean(!selectedRatingReasons.length || !allowRating) || isOptimistic
-              }
+              disabled={Boolean(!selectedRatingReasons.length || !allowRating) || isOptimistic}
               noDarkMode
             />
           </div>

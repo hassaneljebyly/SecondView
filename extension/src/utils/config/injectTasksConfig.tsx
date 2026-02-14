@@ -3,7 +3,6 @@ import { NoteDisplayQueueTask } from '@/components/content/NoteDisplayQueue/inje
 import { NoteFormTask } from '@/components/content/NoteForm/injectTask';
 import { NoteSegmentsBarTask } from '@/components/content/NoteSegmentsBar/injectTask';
 import { SnackBarTask } from '@/components/content/SnackBar/injectTask';
-import { NoteNewTask } from '@/components/ui/Note';
 // import MainPopup from '@/components/popup/ExtensionPopup';
 import type { InjectTask } from '@/types';
 
@@ -13,7 +12,6 @@ export const INJECT_TASK: InjectTask[] = [
   NoteSegmentsBarTask,
   NoteDisplayQueueTask,
   SnackBarTask,
-  NoteNewTask,
   // uncomment for when testing popup
   // {
   // domTargetSelector: '#popup-mock',

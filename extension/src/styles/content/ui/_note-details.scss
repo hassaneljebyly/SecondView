@@ -1,0 +1,146 @@
+.sv-note-details {
+  --_sv-note-py: var(--sv-space-sm);
+  --_sv-note-px: var(--sv-space-md);
+  border: 1px solid var(--sv-black-alpha-10);
+  border-radius: var(--sv-border-radius-8);
+  background-color: var(--sv-white);
+  pointer-events: auto !important;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    padding: var(--sv-space-s) var(--_sv-note-px);
+    border-bottom: 1px solid var(--sv-gray-300);
+
+    button {
+      background-color: transparent;
+    }
+  }
+
+  &__back-btn {
+    border: 0;
+    cursor: pointer;
+    transition: 150ms ease;
+    translate: -0.5em;
+
+    &:hover {
+      translate: -0.75em;
+    }
+  }
+
+  &__header-text {
+    font-size: var(--sv-font-sm);
+    font-weight: var(--sv-font-weight-medium);
+    line-height: 1.4;
+    text-transform: capitalize;
+    padding-left: var(--sv-space-xs);
+  }
+  &__note-rated-note {
+    padding-top: var(--sv-space-s);
+  }
+  &__main {
+    padding-inline: var(--_sv-note-px);
+    max-height: 400px;
+    overflow-y: scroll;
+
+    * {
+      font-weight: var(--sv-font-weight-medium);
+      font-size: var(--sv-font-xs);
+      line-height: 130%;
+    }
+  }
+
+  &__data {
+    color: var(--sv-gray-600);
+    font-weight: var(--sv-font-weight-normal);
+  }
+
+  &__verdict {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: var(--sv-space-s);
+    border-bottom: 1px solid var(--sv-gray-300);
+    padding-block: var(--sv-space-sm);
+  }
+
+  &__verdict-status {
+    padding-left: var(--sv-space-xs);
+  }
+
+  &__verdict-confidence {
+    flex-basis: 100%;
+  }
+
+  &__verdict-inaccurate-votes {
+    margin-left: var(--sv-space-lg);
+  }
+
+  &__user-vote {
+    padding-block: var(--sv-space-sm);
+  }
+
+  &__community-consensus {
+    padding-top: var(--sv-space-sm);
+  }
+
+  &__dimension-distribution {
+    list-style: none;
+    width: 85%;
+    margin-bottom: var(--sv-space-md);
+
+    li {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: var(--sv-space-sm);
+
+      span:first-child {
+        margin-right: auto;
+      }
+    }
+  }
+
+  &__distribution-bar {
+    --_sv-height: 3px;
+    display: block;
+    height: var(--_sv-height);
+    border-radius: var(--_sv-height);
+    background-color: var(--sv-gray-300);
+    width: 50%;
+    margin-right: var(--sv-space-s);
+    position: relative;
+
+    span {
+      position: absolute;
+      height: 100%;
+      width: var(--_sv-distribution);
+      background-color: var(--sv-black-1);
+      border-radius: var(--_sv-height);
+    }
+  }
+
+  &__top-reasons {
+    list-style-type: decimal;
+    list-style-position: inside;
+    padding-bottom: var(--sv-space-sm);
+
+    li {
+      margin-top: var(--sv-space-sm);
+    }
+  }
+
+  &__author-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--sv-space-sm);
+    padding-top: var(--sv-space-sm);
+    padding-bottom: var(--sv-space-lg);
+    border-top: 1px solid var(--sv-gray-300);
+  }
+
+  [title='Experimental data'] {
+    font-style: italic;
+    text-decoration: underline;
+  }
+}

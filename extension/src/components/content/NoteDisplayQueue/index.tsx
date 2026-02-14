@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 
 import type { NoteResponse } from '@/api/types/notes';
 import NoteBlock from '@/components/ui/NoteBlock';
@@ -8,12 +8,49 @@ export type QueueType = [NoteResponse | null, NoteResponse | null];
 
 export const noteDisplayQueueId = 'sv-note-queue';
 export default function NoteDisplayQueue() {
+  return (
+    <NoteQueueContextProvider>
+      <NoteDisplayQueueContent />
+    </NoteQueueContextProvider>
+  );
+}
+
+function NoteDisplayQueueContent() {
+  const { noteQueue } = useNoteQueue();
+  return (
+    <ul id={noteDisplayQueueId} className='sv-note-queue'>
+      {noteQueue.map((note, i) => {
+        // I needed a stable key
+        const slotKey = i === 0 ? 'queueSlot' : 'activeSlot';
+        if (note) {
+          // the key worked but a new note was treated like the old one by react,
+          // so slotKey for empty `<li/>` and `id` for when `note !== null`
+          const { id } = note;
+          return (
+            <li key={id} className='sv-pop-in-elastic'>
+              <NoteBlock note={note} />
+            </li>
+          );
+        }
+        return <li key={slotKey} />;
+      })}
+    </ul>
+  );
+}
+
+type NoteQueueContextValue = {
+  noteQueue: QueueType;
+  handleNoteClose: (noteId: NoteResponse['id']) => void;
+  handleNotePromote: (openedNote: NoteResponse) => void;
+};
+
+const NoteQueueContext = createContext<NoteQueueContextValue | null>(null);
+
+function NoteQueueContextProvider({ children }: { children: React.ReactNode }) {
   const [noteQueue, setNoteQueue] = useState<QueueType>([null, null]);
-  function handleNoteCloseEvent(e: Event) {
-    const { detail: noteToClose } = e as CustomEvent<NoteResponse>;
-    const { id } = noteToClose;
+  function handleNoteClose(noteId: NoteResponse['id']) {
     const newNoteQueue = noteQueue.map(note => {
-      if (note && note['id'] === id) {
+      if (note && note['id'] === noteId) {
         return null;
       }
       return note;
@@ -21,10 +58,9 @@ export default function NoteDisplayQueue() {
 
     setNoteQueue(newNoteQueue);
   }
-  function handleNotePromoteEvent(e: Event) {
+  function handleNotePromote(openedNote: NoteResponse) {
     // `openedNote` is note that was opened and possibly the note
     // that should get promoted to activeSlot
-    const { detail: openedNote } = e as CustomEvent<NoteResponse>;
     const [, activeSlot] = noteQueue;
     // if there's an active note
     // and note opened is a note in queueSlot
@@ -63,35 +99,29 @@ export default function NoteDisplayQueue() {
   }
 
   useEffect(() => {
-    const notePromoteQueueEvent = globalEventSingleton.on(
-      'note:promoteQueue',
-      handleNotePromoteEvent
-    );
-    const noteCloseEvent = globalEventSingleton.on('note:close', handleNoteCloseEvent);
     const noteDisplayEvent = globalEventSingleton.on('note:show', handleNoteShowEvent);
     return () => {
       noteDisplayEvent.disconnectEvent();
-      noteCloseEvent.disconnectEvent();
-      notePromoteQueueEvent.disconnectEvent();
     };
   });
   return (
-    <ul id={noteDisplayQueueId} className='sv-note-queue'>
-      {noteQueue.map((note, i) => {
-        // I needed a stable key
-        const slotKey = i === 0 ? 'queueSlot' : 'activeSlot';
-        if (note) {
-          // the key worked but a new note was treated like the old one by react,
-          // so slotKey for empty `<li/>` and `id` for when `note !== null`
-          const { id } = note;
-          return (
-            <li key={id}>
-              <NoteBlock note={note} />
-            </li>
-          );
-        }
-        return <li key={slotKey} />;
-      })}
-    </ul>
+    <NoteQueueContext.Provider
+      value={{
+        noteQueue,
+        handleNoteClose,
+        handleNotePromote,
+      }}
+    >
+      {children}
+    </NoteQueueContext.Provider>
   );
+}
+
+export function useNoteQueue() {
+  const noteQueueContext = useContext(NoteQueueContext);
+
+  if (!noteQueueContext) {
+    throw new Error('Something went wrong with contextAPI');
+  }
+  return noteQueueContext;
 }

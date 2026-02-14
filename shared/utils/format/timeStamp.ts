@@ -36,18 +36,63 @@ export function secondsToTimeString(seconds: number): string {
 /**
  * converts ISO string to local time string format
  *
- * @param {string} retryAt ISO string in UTC (e.g 2026-02-07T15:30:00Z)
- * @returns {string} local time string (e.g Feb 7, 2026, 4:30 PM) return empty string if error happened
+ * @param {string} isoUTCString ISO string in UTC (e.g 2026-02-07T15:30:00Z)
+ * @returns {string} local time string (e.g Feb 7, 2026, 4:30 PM) return isoUTCString if error happened
  */
-export function limitWindowToLocalTime(retryAt: string): string {
+export function isoStringToLocalTimeString(isoUTCString: string): string {
   try {
-    const date = new Date(retryAt);
+    const date = new Date(isoUTCString);
     return date.toLocaleString(undefined, {
       dateStyle: 'medium',
       timeStyle: 'short',
     });
   } catch (error) {
     logger.error(error);
-    return '';
+    return isoUTCString;
   }
+}
+
+type TimeUnit = Intl.RelativeTimeFormatUnit;
+// @ts-expect-error just ignore missing properties
+const UNITS: Readonly<Record<TimeUnit, number>> = {
+  year: 60 * 60 * 24 * 365,
+  quarter: (60 * 60 * 24 * 365) / 4,
+  month: 60 * 60 * 24 * 30,
+  week: 60 * 60 * 24 * 7,
+  day: 60 * 60 * 24,
+  hour: 60 * 60,
+  minute: 60,
+  second: 1,
+};
+
+export function timeAgo(input: Date | string | number, locale = 'en'): string {
+  const date = input instanceof Date ? input : new Date(input);
+
+  if (Number.isNaN(date.getTime())) {
+    return 'Invalid date';
+  }
+
+  const now = Date.now();
+  const diffInSeconds = (date.getTime() - now) / 1000;
+
+  const rtf =
+    typeof Intl !== 'undefined' && Intl.RelativeTimeFormat
+      ? new Intl.RelativeTimeFormat(locale, { numeric: 'auto' })
+      : null;
+
+  for (const unit of Object.keys(UNITS) as TimeUnit[]) {
+    const secondsInUnit = UNITS[unit];
+    const value = diffInSeconds / secondsInUnit;
+
+    if (Math.abs(value) >= 1 || unit === 'second') {
+      const rounded = Math.round(value);
+      return rtf
+        ? rtf.format(rounded, unit)
+        : `${Math.abs(rounded)} ${unit}${Math.abs(rounded) !== 1 ? 's' : ''} ${
+            rounded < 0 ? 'ago' : 'from now'
+          }`;
+    }
+  }
+
+  return 'just now';
 }
