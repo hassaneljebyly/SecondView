@@ -182,10 +182,6 @@ export default function ProfileImportCard() {
               </p>
             )}
           </div>
-          {/* 
-             // REFACTOR(me/#6): 🧱 move reminder/alert to its own component
-             // https://github.com/hassaneljebyly/SecondView/issues/6
-             */}
           {username && (
             <div className='sv-reminders'>
               <Icon variant='error' />
@@ -220,8 +216,6 @@ export default function ProfileImportCard() {
                 variant: isLoading ? 'loading' : 'login',
               }}
               disabled={isLoading || disableImport || !usernameInput || !accessKeyInput}
-              // TODO(me/#2): 📝 Build actual import feature
-              // Issue: https://github.com/hassaneljebyly/SecondView/issues/2
               actions={{
                 onClick: handleImportProfileSubmit,
               }}
