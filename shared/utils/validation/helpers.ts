@@ -1,4 +1,5 @@
 import type { NoteResponse } from '@/api/types/notes';
+import type { SyncProfilePayload } from '@/api/types/user';
 import type { FormInputData } from '@shared/types/schemas';
 
 /**
@@ -113,4 +114,49 @@ export function findOverlappedSegment(
   return existingNotes.find(({ startTime, endTime }) =>
     isOverlapping(segmentStart, segmentEnd, startTime, endTime)
   );
+}
+
+/**
+ * Validates the credentials in a SyncProfilePayload object.
+ *
+ * Checks that the username meets length and character requirements,
+ * and that the accessKey is exactly 32 characters long and contains
+ * only lowercase hexadecimal characters.
+ *
+ * @param {SyncProfilePayload} payload - The payload containing credentials to validate.
+ * @param {string} payload.username - The username to validate. Must be 5–23 characters and contain only letters, numbers, or underscores.
+ * @param {string} payload.accessKey - The access key to validate. Must be exactly 32 lowercase hexadecimal characters.
+ * @returns {Partial<Record<keyof SyncProfilePayload, string>>} An object containing error messages for invalid fields. If all fields are valid, returns an empty object.
+ *
+ * @example
+ * const errors = validateSyncCredentials({ username: "user_123", accessKey: "abcdef1234567890abcdef1234567890" });
+ * if (Object.keys(errors).length === 0) {
+ *   console.log("Valid credentials!");
+ * } else {
+ *   console.log("Validation errors:", errors);
+ * }
+ */
+export function validateSyncCredentials(
+  payload: SyncProfilePayload
+): Partial<Record<keyof SyncProfilePayload, string>> {
+  const { username, accessKey } = payload;
+  const usernameRegex = /^[A-Za-z0-9_]{5,23}$/;
+  const accessKeyRegex = /^[0-9a-f]{32}$/;
+
+  const errors: Partial<Record<keyof SyncProfilePayload, string>> = {};
+
+  if (username.length < 5 || username.length > 23) {
+    errors['username'] = 'Username must be between 5 and 23 characters long.';
+  } else if (!usernameRegex.test(username)) {
+    errors['username'] = 'Username may only contain letters, numbers, and underscores.';
+  }
+
+  if (accessKey.length !== 32) {
+    errors['accessKey'] = 'Access key must be exactly 32 characters long.';
+  } else if (!accessKeyRegex.test(accessKey)) {
+    errors['accessKey'] =
+      'Access key must contain only lowercase hexadecimal characters (0-9, a-f).';
+  }
+
+  return errors;
 }

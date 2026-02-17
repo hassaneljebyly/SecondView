@@ -1,17 +1,121 @@
+import { useEffect, useState } from 'react';
+
+import { importProfileHandler } from '@/api/apiHandlers/user';
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
+import useRequest from '@/hooks/useRequest';
+import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
+import { globalEventSingleton } from '@/utils/lib/events';
+import { logger } from '@/utils/lib/logger';
+import { validateSyncCredentials } from '@shared/utils/validation/helpers';
 
 import Button from '../ui/Button';
+import ErrorMessage from '../ui/ErrorMessage';
 import Icon from '../ui/Icon';
+import { RemainingTimeDisplay } from '../ui/RemainingTimeDisplay';
 
 export default function ProfileImportCard() {
+  const [usernameInput, setUsernameInput] = useState('');
+  const [accessKeyInput, setAccessKeyInput] = useState('');
+  const [errors, setErrors] = useState<ReturnType<typeof validateSyncCredentials>>({});
+  const [attemptsLeft, setAttemptsLeft] = useState(Infinity);
+  const [retryAfter, setRetryAfter] = useState('');
   const { setNavigation, widgetStateClass, isInert } = useNavigation('ProfileImportCard');
-
+  const {
+    data,
+    run: runImportProfileHandler,
+    isError,
+    isLoading,
+  } = useRequest(importProfileHandler);
   const {
     profile: {
-      user: { username },
+      user: { username, accessKey },
     },
+    update,
   } = useProfile();
+
+  const disableImport = !!retryAfter.length;
+
+  function handleImportProfileSubmit() {
+    try {
+      if (username === usernameInput && accessKey === accessKeyInput) {
+        setNavigation({
+          leftWidget: [],
+          centerWidget: 'ProfileOverviewCard',
+          rightWidget: ['ProfileImportCard'],
+        });
+        return;
+      }
+      const validateSyncCredentialsResult = validateSyncCredentials({
+        username: usernameInput,
+        accessKey: accessKeyInput,
+      });
+
+      if (Object.keys(validateSyncCredentialsResult).length) {
+        setErrors(validateSyncCredentialsResult);
+      } else {
+        setAttemptsLeft(Infinity);
+        setRetryAfter('');
+        setErrors({});
+        runImportProfileHandler({
+          username: usernameInput,
+          accessKey: accessKeyInput,
+        });
+      }
+    } catch (error) {
+      logger.error(error);
+      globalEventSingleton.emit('snackBar:show', window, {
+        detail: { text: 'Something went wrong, try again', status: 'error' } as ShowSnackBarEvent,
+      });
+    }
+  }
+
+  useEffect(() => {
+    if (data) {
+      update('user', () => ({ ...data.data.user, accessKey: accessKeyInput }));
+      setAttemptsLeft(Infinity);
+      setRetryAfter('');
+      setErrors({});
+      setNavigation({
+        leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
+        centerWidget: 'ImportSuccessCard',
+        rightWidget: [],
+      });
+    }
+    if (isError) {
+      const { code, meta, message } = isError;
+      if (code === 'BAD_REQUEST_VALIDATION_FAILED') {
+        if (meta && meta['validationResults']) {
+          const validationErrors = meta['validationResults'] as ReturnType<
+            typeof validateSyncCredentials
+          >;
+          setErrors({
+            username: validationErrors['username'] || '',
+            accessKey: validationErrors['accessKey'] || '',
+          });
+
+          if (meta['attemptsLeft']) {
+            setAttemptsLeft(meta['attemptsLeft'] as number);
+          }
+        }
+      } else if (code === 'INVALID_SYNC_CREDENTIALS') {
+        setErrors({ accessKey: message, username: message });
+        if (meta && meta['attemptsLeft'] !== undefined) {
+          setAttemptsLeft(meta['attemptsLeft'] as number);
+        }
+      } else if (code === 'AUTH_RATE_LIMIT_EXCEEDED') {
+        if (meta && meta['retryAt']) {
+          setRetryAfter(meta['retryAt'] as string);
+        }
+      } else {
+        logger.error(errors);
+        globalEventSingleton.emit('snackBar:show', window, {
+          detail: { text: message, status: 'error' } as ShowSnackBarEvent,
+        });
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, isError]);
 
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
@@ -23,7 +127,9 @@ export default function ProfileImportCard() {
           <p className='sv-popup-widget__section-title'>Use Existing Profile</p>
         </div>
         <div className='sv-popup-widget__section'>
-          <p className='sv-popup-widget__hint'>Enter your credentials from another device:</p>
+          <p className='sv-popup-widget__hint'>
+            Enter credentials from your other device (tap Access Key):
+          </p>
           <label
             htmlFor='sv-username-editable'
             className='sv-popup-widget__section-title sv-profile-import__labels'
@@ -34,8 +140,14 @@ export default function ProfileImportCard() {
             <input
               id='sv-username-editable'
               className='sv-input'
-              placeholder='second-view-1a2b3c4d'
+              value={usernameInput}
+              onChange={e => setUsernameInput(e.target.value)}
+              placeholder='DarthVaper_deadb0'
+              aria-invalid={!!errors['username']}
+              disabled={disableImport}
+              autoComplete='off'
             />
+            <ErrorMessage id='sv-username-editable' errorMessage={errors['username'] ?? ''} />
           </div>
           <label
             htmlFor='sv-access-key-editable'
@@ -48,58 +160,70 @@ export default function ProfileImportCard() {
               id='sv-access-key-editable'
               className='sv-input'
               placeholder='xxxx-xxxx-xxxx-xxxx-xxxx'
+              value={accessKeyInput}
+              type='password'
+              onChange={e => setAccessKeyInput(e.target.value)}
+              aria-invalid={!!errors['accessKey']}
+              disabled={disableImport}
+              autoComplete='off'
             />
+            <ErrorMessage id='sv-access-key-editable' errorMessage={errors['accessKey'] ?? ''} />
+            {retryAfter.length ? (
+              <RemainingTimeDisplay
+                retryAfter={retryAfter}
+                onTimesUp={() => {
+                  setRetryAfter('');
+                  setAttemptsLeft(Infinity);
+                }}
+              />
+            ) : (
+              <p className='sv-auth-status' aria-hidden={!isFinite(attemptsLeft)}>
+                Attempts left: {attemptsLeft}
+              </p>
+            )}
           </div>
           {/* 
              // REFACTOR(me/#6): 🧱 move reminder/alert to its own component
              // https://github.com/hassaneljebyly/SecondView/issues/6
              */}
-          {
-            // username && (
-            //   <div className='sv-reminders'>
-            //     <Icon variant='error' />
-            //     <p>
-            //       You have an existing profile: {username} (5 notes, 12 ratings). Importing will
-            //       replace it permanently
-            //     </p>
-            //   </div>
-            // )
-          }
+          {username && (
+            <div className='sv-reminders'>
+              <Icon variant='error' />
+              <p>
+                You have a profile: {username}. Importing will permanently replace it. Unsaved
+                credentials cannot be recovered.
+              </p>
+            </div>
+          )}
         </div>
         <div className='sv-popup-widget__section'>
           <b className='sv-divider sv-divider--top' />
-          <p className='sv-popup-widget__section-title'>Security Tips:</p>
-          <ul className='sv-popup-widget__info-list'>
-            <li className='sv-popup-widget__hint'>
-              You can find these by clicking &quot;Access Key&quot; on your other device.
-            </li>
-          </ul>
           <div className='sv-popup-widget__action'>
             <Button
               text='Cancel'
               shape='rounded'
               actions={{
-                onClick: () =>
+                onClick: () => {
+                  setErrors({});
                   setNavigation({
                     leftWidget: [],
                     centerWidget: username !== null ? 'ProfileOverviewCard' : 'Onboarding',
                     rightWidget: ['ProfileImportCard'],
-                  }),
+                  });
+                },
               }}
             />
             <Button
               text='Import'
               shape='rounded'
+              icon={{
+                variant: isLoading ? 'loading' : 'login',
+              }}
+              disabled={isLoading || disableImport || !usernameInput || !accessKeyInput}
+              // TODO(me/#2): 📝 Build actual import feature
+              // Issue: https://github.com/hassaneljebyly/SecondView/issues/2
               actions={{
-                onClick: () => {
-                  // TODO(me/#2): 📝 Build actual import feature
-                  // Issue: https://github.com/hassaneljebyly/SecondView/issues/2
-                  setNavigation({
-                    leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
-                    centerWidget: 'ImportFailCard',
-                    rightWidget: [],
-                  });
-                },
+                onClick: handleImportProfileSubmit,
               }}
             />
           </div>

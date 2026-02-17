@@ -10,5 +10,11 @@ export type User = {
   };
 };
 
+export type SyncProfilePayload = {
+  username: string;
+  accessKey: string;
+};
+
 // Standard API response wrapping a User
 export type CreateUserResponse = ApiResponse<User>;
+export type SyncUserResponse = ApiResponse<Omit<User, 'accessKey'>>;
