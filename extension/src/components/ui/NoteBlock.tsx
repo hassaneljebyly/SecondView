@@ -14,7 +14,7 @@ export default function NoteBlock({ note }: { note: NoteResponse }) {
         {...{
           note: <Note {...note} />,
           'note-details': <NoteDetails {...note} />,
-          'note-rating': <NoteRatingTabs noteId='' />,
+          'note-rating': <NoteRatingTabs noteId={note.id} />,
         }}
       />
     </StackedNavigationProvider>
