@@ -3,11 +3,12 @@ import { useState } from 'react';
 import type { User } from '@/api/types/user';
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
+import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
+import { globalEventSingleton } from '@/utils/lib/events';
 import { logger } from '@/utils/lib/logger';
 import { generateCopyAllText, generateCredentialsFile } from '@/utils/scripts/copy-credential';
 
 import Button from '../ui/Button';
-import ErrorMessage from '../ui/ErrorMessage';
 import Icon from '../ui/Icon';
 
 type SaveAction = keyof Pick<User['user'], 'accessKey' | 'username'> | 'all' | 'file';
@@ -106,6 +107,12 @@ export default function AccessCredentialsCard() {
     .filter(Boolean)[0];
   const errorMessage =
     typeof currentErrorField === 'string' ? errorsMap[currentErrorField as SaveAction] : '';
+
+  if (errorMessage.length) {
+    globalEventSingleton.emit('snackBar:show', window, {
+      detail: { text: errorMessage, status: 'error' } as ShowSnackBarEvent,
+    });
+  }
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -118,15 +125,6 @@ export default function AccessCredentialsCard() {
         </div>
         <div className='sv-popup-widget__section'>
           <p className='sv-popup-widget__hint'>Save both to sync to other devices:</p>
-          <div
-            className={`sv-popup-widget__error-wrapper${errorMessage.length ? ' sv-popup-widget__error-wrapper--has-error' : ''}`}
-          >
-            {/*
-             // REFACTOR(me/#6): 🧱 improve error displaying fot popup
-             // Issue: https://github.com/hassaneljebyly/SecondView/issues/6
-             */}
-            <ErrorMessage id='sv-error-all' global errorMessage={errorMessage} />
-          </div>
           <ReadOnlyFieldCopy
             label='Username'
             id='sv-username-readonly'
