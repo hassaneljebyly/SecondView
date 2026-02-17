@@ -96,3 +96,34 @@ export function timeAgo(input: Date | string | number, locale = 'en'): string {
 
   return 'just now';
 }
+
+export function getRemainingTimeFormatted(futureIso: string): string {
+  const future = new Date(futureIso).getTime();
+
+  if (isNaN(future)) {
+    return '';
+  }
+
+  const now = Date.now();
+  const diff = Math.max(0, future - now); // 👈 prevents negative flicker
+
+  const totalSeconds = Math.floor(diff / 1000);
+
+  const days = Math.floor(totalSeconds / 86400);
+  const hours = Math.floor((totalSeconds % 86400) / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+
+  if (totalSeconds === 0) {
+    return '0s';
+  }
+
+  const parts: string[] = [];
+
+  if (days) parts.push(`${days}d`);
+  if (hours) parts.push(`${hours}h`);
+  if (minutes) parts.push(`${minutes}m`);
+  if (seconds) parts.push(`${seconds}s`);
+
+  return parts.join(' ');
+}
