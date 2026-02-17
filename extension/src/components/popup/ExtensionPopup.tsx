@@ -8,6 +8,7 @@ import ImportSuccessCard from './ImportSuccessCard';
 import Onboarding from './Onboarding';
 import ProfileImportCard from './ProfileImportCard';
 import ProfileOverviewCard from './ProfileOverviewCard';
+import SnackBar from '../content/SnackBar';
 
 export default function MainPopup() {
   const [widgetHight, setWidgetHight] = useState('');
@@ -21,6 +22,7 @@ export default function MainPopup() {
         <ImportSuccessCard />
         <ImportFailCard />
       </NavigationContextProvider>
+      <SnackBar />
     </div>
   );
 }

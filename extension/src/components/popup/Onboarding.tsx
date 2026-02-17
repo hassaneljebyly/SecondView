@@ -4,6 +4,8 @@ import { generateUserHandler } from '@/api/apiHandlers/user';
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
 import useRequest from '@/hooks/useRequest';
+import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
+import { globalEventSingleton } from '@/utils/lib/events';
 import { logger } from '@/utils/lib/logger';
 import { profileStore } from '@/utils/lib/storage';
 
@@ -36,8 +38,10 @@ export default function Onboarding() {
       setData(null);
     }
     if (isError) {
-      // TODO(me): 📝 handle this error
-      logger.error('show global error', isError);
+      logger.error(isError);
+      globalEventSingleton.emit('snackBar:show', window, {
+        detail: { text: isError.message, status: 'error' } as ShowSnackBarEvent,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isError, profile]); // only data, isError and profile are needed
