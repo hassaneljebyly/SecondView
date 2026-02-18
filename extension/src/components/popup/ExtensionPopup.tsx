@@ -20,6 +20,7 @@ export default function MainPopup() {
         <ProfileImportCard />
         <AccessCredentialsCard />
         <ImportSuccessCard />
+        {/* // REFACTOR(me): 🧱 no need for import fail just use the snackbar */}
         <ImportFailCard />
       </NavigationContextProvider>
       <SnackBar />

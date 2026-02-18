@@ -29,7 +29,7 @@ export default function Onboarding() {
       });
     }
     if (data) {
-      profileStore.set(data['data'], profile);
+      profileStore.update('user', old => ({ ...old, ...data.data.user }));
       setNavigation({
         leftWidget: [],
         centerWidget: 'ProfileOverviewCard',
@@ -88,9 +88,9 @@ export default function Onboarding() {
             actions={{
               onClick: () =>
                 setNavigation({
-                  leftWidget: ['Onboarding'],
+                  leftWidget: ['Onboarding', 'ProfileOverviewCard'],
                   centerWidget: 'ProfileImportCard',
-                  rightWidget: ['ImportFailCard', 'ImportSuccessCard'],
+                  rightWidget: ['ImportSuccessCard'],
                 }),
             }}
           />

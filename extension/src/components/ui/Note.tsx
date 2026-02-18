@@ -10,6 +10,7 @@ import Button from './Button';
 import Icon from './Icon';
 import { useNoteQueue } from '../content/NoteDisplayQueue';
 import Linkify from '../helpers/Linkify';
+import RemainingTimeDisplay from './RemainingTimeDisplay';
 
 export const noteComponentId = 'sv-note';
 export default function Note(note: NoteResponse) {
@@ -19,6 +20,7 @@ export default function Note(note: NoteResponse) {
   const optionsMenuState = openOptionsMenu ? 'open' : 'closed';
   const optionsMenuFirstItemRef = useRef<HTMLLIElement>(null);
   const { handleNoteClose, handleNotePromote } = useNoteQueue();
+  const [rateLimited, setRateLimited] = useState(false);
 
   const {
     id: noteId,
@@ -109,17 +111,26 @@ export default function Note(note: NoteResponse) {
       </div>
       <div className='sv-note__footer'>
         {allowRating && (
-          <Button
-            theme='blue'
-            text='Rate It'
-            shape='pill'
-            noDarkMode
-            actions={{
-              onClick: () => {
-                dispatchNavigateForward('note-rating');
-              },
-            }}
-          />
+          <div className='sv-note__footer-rating-btn-wrapper'>
+            <Button
+              theme='blue'
+              text='Rate It'
+              shape='pill'
+              noDarkMode
+              disabled={rateLimited}
+              actions={{
+                onClick: () => {
+                  dispatchNavigateForward('note-rating');
+                },
+              }}
+            />
+            <RemainingTimeDisplay
+              rateLimitKey='rateLimits.ratings.retryAt'
+              label='Next vote in:'
+              onTimesUp={() => setRateLimited(false)}
+              runIfTimeRemainingOnce={() => setRateLimited(true)}
+            />
+          </div>
         )}
         <div className='sv-note__options-menu-wrapper'>
           <ul

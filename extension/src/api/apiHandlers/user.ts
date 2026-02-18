@@ -1,17 +1,30 @@
 import type { RequestHandler } from '@/hooks/useRequest';
+import type { Profile } from '@/types/storage';
 import { getEnvKeys } from '@/utils/lib/helpers';
 import type { DeepNullable } from '@shared/types/helpers';
 
 import type { SyncProfilePayload, User } from '../types/user';
 
-export type InitialUser = DeepNullable<User>;
-export const initialUser: InitialUser = {
+export type InitialProfile = DeepNullable<Profile>;
+export const initialProfile: InitialProfile = {
   user: {
     id: null,
     username: null,
     accessKey: null,
     signingKey: null,
     userNameChanged: null,
+  },
+  rateLimits: {
+    notes: {
+      retryAt: null,
+    },
+    ratings: {
+      retryAt: null,
+    },
+    syncProfile: {
+      retryAt: null,
+      attemptsLeft: null,
+    },
   },
 };
 

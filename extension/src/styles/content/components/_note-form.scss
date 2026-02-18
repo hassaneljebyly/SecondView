@@ -135,6 +135,7 @@
     padding-inline: var(--_sv-form-px);
     padding-block: var(--_sv-form-py);
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
+    align-items: center;
   }
 }

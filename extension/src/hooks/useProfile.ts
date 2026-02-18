@@ -1,21 +1,22 @@
 import { useEffect, useState } from 'react';
 
-import { initialUser, type InitialUser } from '@/api/apiHandlers/user';
-import type { User } from '@/api/types/user';
-import type { StoreUpdater } from '@/types/storage';
+import { initialProfile, type InitialProfile } from '@/api/apiHandlers/user';
+import type { Profile, StoreUpdater } from '@/types/storage';
 import { profileStore } from '@/utils/lib/storage';
 import type { NestedKeyOf, NestedValue } from '@shared/types/helpers';
 import { getNestedValue } from '@shared/utils/helpers/objectHelpers';
 
 export default function useProfile() {
-  const [profile, setProfile] = useState<InitialUser>(initialUser);
-  function pick<T extends NestedKeyOf<InitialUser>>(fieldSelector: T): NestedValue<InitialUser, T> {
+  const [profile, setProfile] = useState<InitialProfile>(initialProfile);
+  function pick<T extends NestedKeyOf<InitialProfile>>(
+    fieldSelector: T
+  ): NestedValue<InitialProfile, T> {
     // getNestedValue returns undefined if the key doesn't exist, highly unlikely, so just ignore for now
     return getNestedValue(profile, fieldSelector)!;
   }
-  function update<T extends NestedKeyOf<InitialUser>>(
+  function update<T extends NestedKeyOf<InitialProfile>>(
     fieldSelector: T,
-    handler: StoreUpdater<User, T>
+    handler: StoreUpdater<Profile, T>
   ) {
     return profileStore.update(fieldSelector, handler);
   }

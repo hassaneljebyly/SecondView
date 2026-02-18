@@ -9,13 +9,21 @@ export type Settings = {
   theme: string;
 };
 
+export type RateLimits = {
+  notes: { retryAt: string | null };
+  ratings: { retryAt: string | null };
+  syncProfile: { retryAt: string | null; attemptsLeft: number | null };
+};
+
+export type Profile = User & { rateLimits: RateLimits };
+
 export type StoreState<T> =
   | { status: 'uninitialized' }
   | { status: 'ready'; storeValue: T }
   | { status: 'error' };
 
 export type StoreModels = {
-  profile: User;
+  profile: Profile;
   settings: Settings;
 };
 

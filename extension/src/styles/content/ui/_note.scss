@@ -71,6 +71,12 @@
     }
   }
 
+  &__footer-rating-btn-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+  }
+
   &__misinfo-category {
     font-size: var(--sv-font-sm);
     font-weight: var(--sv-font-weight-medium);

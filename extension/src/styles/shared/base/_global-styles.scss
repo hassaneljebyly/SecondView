@@ -12,4 +12,7 @@
 .sv-remaining-time {
   font-size: var(--sv-font-xs);
   color: hsl(29, 81%, 43%);
+  &[aria-hidden='true'] {
+    visibility: hidden;
+  }
 }

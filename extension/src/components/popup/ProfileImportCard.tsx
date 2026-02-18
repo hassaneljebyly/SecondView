@@ -12,14 +12,14 @@ import { validateSyncCredentials } from '@shared/utils/validation/helpers';
 import Button from '../ui/Button';
 import ErrorMessage from '../ui/ErrorMessage';
 import Icon from '../ui/Icon';
-import { RemainingTimeDisplay } from '../ui/RemainingTimeDisplay';
+import RemainingTimeDisplay from '../ui/RemainingTimeDisplay';
 
 export default function ProfileImportCard() {
   const [usernameInput, setUsernameInput] = useState('');
   const [accessKeyInput, setAccessKeyInput] = useState('');
   const [errors, setErrors] = useState<ReturnType<typeof validateSyncCredentials>>({});
   const [attemptsLeft, setAttemptsLeft] = useState(Infinity);
-  const [retryAfter, setRetryAfter] = useState('');
+  const [rateLimited, setRateLimited] = useState(false);
   const { setNavigation, widgetStateClass, isInert } = useNavigation('ProfileImportCard');
   const {
     data,
@@ -32,9 +32,8 @@ export default function ProfileImportCard() {
       user: { username, accessKey },
     },
     update,
+    pick,
   } = useProfile();
-
-  const disableImport = !!retryAfter.length;
 
   function handleImportProfileSubmit() {
     try {
@@ -55,7 +54,6 @@ export default function ProfileImportCard() {
         setErrors(validateSyncCredentialsResult);
       } else {
         setAttemptsLeft(Infinity);
-        setRetryAfter('');
         setErrors({});
         runImportProfileHandler({
           username: usernameInput,
@@ -71,11 +69,12 @@ export default function ProfileImportCard() {
   }
 
   useEffect(() => {
-    if (data) {
+    if (data && !isError) {
       update('user', () => ({ ...data.data.user, accessKey: accessKeyInput }));
       setAttemptsLeft(Infinity);
-      setRetryAfter('');
       setErrors({});
+      setAccessKeyInput('');
+      setUsernameInput('');
       setNavigation({
         leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
         centerWidget: 'ImportSuccessCard',
@@ -94,18 +93,22 @@ export default function ProfileImportCard() {
             accessKey: validationErrors['accessKey'] || '',
           });
 
-          if (meta['attemptsLeft']) {
+          if (meta['attemptsLeft'] !== undefined) {
             setAttemptsLeft(meta['attemptsLeft'] as number);
+            update('rateLimits.syncProfile.attemptsLeft', () => meta['attemptsLeft'] as number);
           }
         }
       } else if (code === 'INVALID_SYNC_CREDENTIALS') {
         setErrors({ accessKey: message, username: message });
+
         if (meta && meta['attemptsLeft'] !== undefined) {
           setAttemptsLeft(meta['attemptsLeft'] as number);
+          update('rateLimits.syncProfile.attemptsLeft', () => meta['attemptsLeft'] as number);
         }
       } else if (code === 'AUTH_RATE_LIMIT_EXCEEDED') {
         if (meta && meta['retryAt']) {
-          setRetryAfter(meta['retryAt'] as string);
+          setAttemptsLeft(Infinity);
+          update('rateLimits.syncProfile.retryAt', () => meta['retryAt'] as string);
         }
       } else {
         logger.error(errors);
@@ -114,8 +117,17 @@ export default function ProfileImportCard() {
         });
       }
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isError]);
+  useEffect(() => {
+    const { attemptsLeft: storedAttemptsLeft } = pick('rateLimits.syncProfile');
+
+    if (storedAttemptsLeft !== null) {
+      setAttemptsLeft(storedAttemptsLeft);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
@@ -144,7 +156,7 @@ export default function ProfileImportCard() {
               onChange={e => setUsernameInput(e.target.value)}
               placeholder='DarthVaper_deadb0'
               aria-invalid={!!errors['username']}
-              disabled={disableImport}
+              disabled={rateLimited}
               autoComplete='off'
             />
             <ErrorMessage id='sv-username-editable' errorMessage={errors['username'] ?? ''} />
@@ -164,17 +176,16 @@ export default function ProfileImportCard() {
               type='password'
               onChange={e => setAccessKeyInput(e.target.value)}
               aria-invalid={!!errors['accessKey']}
-              disabled={disableImport}
+              disabled={rateLimited}
               autoComplete='off'
             />
             <ErrorMessage id='sv-access-key-editable' errorMessage={errors['accessKey'] ?? ''} />
-            {retryAfter.length ? (
+            {!isFinite(attemptsLeft) ? (
               <RemainingTimeDisplay
-                retryAfter={retryAfter}
-                onTimesUp={() => {
-                  setRetryAfter('');
-                  setAttemptsLeft(Infinity);
-                }}
+                rateLimitKey='rateLimits.syncProfile.retryAt'
+                label='Retry after:'
+                onTimesUp={() => setRateLimited(false)}
+                runIfTimeRemainingOnce={() => setRateLimited(true)}
               />
             ) : (
               <p className='sv-auth-status' aria-hidden={!isFinite(attemptsLeft)}>
@@ -215,7 +226,7 @@ export default function ProfileImportCard() {
               icon={{
                 variant: isLoading ? 'loading' : 'login',
               }}
-              disabled={isLoading || disableImport || !usernameInput || !accessKeyInput}
+              disabled={isLoading || rateLimited || !usernameInput || !accessKeyInput}
               actions={{
                 onClick: handleImportProfileSubmit,
               }}

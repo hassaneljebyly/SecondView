@@ -47,7 +47,7 @@ export function useNoteForm(): UseNoteFormReturn {
   const [openForm, setOpenForm] = useState(false);
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [errors, setErrors] = useState<ValidationErrors>({});
-  const { profile } = useProfile();
+  const { profile, update } = useProfile();
   const currentYoutubeVideoId: string | null =
     (IS_DEV ? tempVideoId : getYouTubeId(window.location.href)) || null;
   const { notes, dispatchNewNotes, dispatchRemoveNote, dispatchReplaceNote } =
@@ -172,6 +172,7 @@ export function useNoteForm(): UseNoteFormReturn {
         setErrors({
           form: `${message}. Try again at:\n${isoStringToLocalTimeString(meta['tryAgainAfter'] as string)}`,
         });
+        update('rateLimits.notes.retryAt', () => meta['tryAgainAfter'] as string);
       } else if (code === 'RESOURCE_CONFLICT' && meta && meta['overlappingNotes']) {
         if ((meta['overlappingNotes'] as NoteResponse[]).length) {
           dispatchNewNotes(meta['overlappingNotes'] as NoteResponse[]);

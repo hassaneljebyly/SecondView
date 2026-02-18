@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 
 import Button from '@/components/ui/Button';
 import ErrorMessage from '@/components/ui/ErrorMessage';
+import RemainingTimeDisplay from '@/components/ui/RemainingTimeDisplay';
 import { useNoteForm } from '@/hooks/useNoteForm';
 import {
   MAX_NOTE_LENGTH,
@@ -26,7 +27,9 @@ export default function NoteForm() {
     buttonConfig,
   } = useNoteForm();
   const [formHasValue, setFormHasValue] = useState(false);
+  const [rateLimited, setRateLimited] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
   return (
     <form
       ref={formRef}
@@ -86,8 +89,14 @@ export default function NoteForm() {
           )}
         </div>
         <div className='sv-form__action sv-form-fieldset-grid__item--full sv-divider sv-divider--top'>
+          <RemainingTimeDisplay
+            rateLimitKey='rateLimits.notes.retryAt'
+            label='Next submission in:'
+            onTimesUp={() => setRateLimited(false)}
+            runIfTimeRemainingOnce={() => setRateLimited(true)}
+          />
           <Button
-            disabled={formSubmissionState === 'submitting' || !formHasValue}
+            disabled={rateLimited || formSubmissionState === 'submitting' || !formHasValue}
             type='submit'
             text={buttonConfig[formSubmissionState]['text']}
             theme='blue'

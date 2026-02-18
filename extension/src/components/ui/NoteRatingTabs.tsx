@@ -31,7 +31,7 @@ let allowRating = true;
 export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] }) {
   const { dispatchNavigateBack } = useStackedNavigation();
   const { run, data, isError, isLoading } = useRequest(submitRating);
-  const { pick } = useProfile();
+  const { pick, update } = useProfile();
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [error, setError] = useState('');
   const [activeTab, setActiveTab] = useState<RatingTabsType>('accurate');
@@ -161,9 +161,9 @@ export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] 
         let retryAt;
         if (meta && meta['windowOpensAt']) {
           const windowOpensAt = meta['windowOpensAt'] as string;
-
           retryAt = isoStringToLocalTimeString(windowOpensAt);
           errorMessage = `${message}, try again at: ${retryAt}`;
+          update('rateLimits.ratings.retryAt', () => meta['windowOpensAt'] as string);
         }
         setRatingFlags({
           accurate: {},

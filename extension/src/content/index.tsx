@@ -1,4 +1,4 @@
-import { initialUser } from '@/api/apiHandlers/user';
+import { initialProfile } from '@/api/apiHandlers/user';
 import type { Retries } from '@/types';
 import { MOUNTED_ROOTS } from '@/utils/config/componentInjectConfig';
 import { INJECT_TASK } from '@/utils/config/injectTasksConfig';
@@ -47,7 +47,7 @@ function init() {
   }
 }
 if (IS_DEV) {
-  LocalStorageStoreModel.initializeStoreIfNoneExist('profile', () => initialUser);
+  LocalStorageStoreModel.initializeStoreIfNoneExist('profile', () => initialProfile);
   document.addEventListener('DOMContentLoaded', () => {
     setTimeout(init);
   });
