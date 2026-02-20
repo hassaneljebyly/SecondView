@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { NavigationContextProvider } from '@/context/NavigationContext';
 
 import AccessCredentialsCard from './AccessCredentialsCard';
-import ImportFailCard from './ImportFailCard';
 import ImportSuccessCard from './ImportSuccessCard';
 import Onboarding from './Onboarding';
 import ProfileImportCard from './ProfileImportCard';
@@ -20,8 +19,6 @@ export default function MainPopup() {
         <ProfileImportCard />
         <AccessCredentialsCard />
         <ImportSuccessCard />
-        {/* // REFACTOR(me): 🧱 no need for import fail just use the snackbar */}
-        <ImportFailCard />
       </NavigationContextProvider>
       <SnackBar />
     </div>

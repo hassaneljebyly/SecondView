@@ -8,9 +8,9 @@ import { secondsToTimeString, timeAgo } from '@shared/utils/format/timeStamp';
 
 import Button from './Button';
 import Icon from './Icon';
+import RemainingTimeDisplay from './RemainingTimeDisplay';
 import { useNoteQueue } from '../content/NoteDisplayQueue';
 import Linkify from '../helpers/Linkify';
-import RemainingTimeDisplay from './RemainingTimeDisplay';
 
 export const noteComponentId = 'sv-note';
 export default function Note(note: NoteResponse) {

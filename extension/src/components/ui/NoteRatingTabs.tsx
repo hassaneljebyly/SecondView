@@ -26,9 +26,8 @@ import Icon from './Icon';
 // making as a state will reset it to 0 with every render
 // too much headache on that one
 let activeTabIndex = 0;
-let allowRating = true;
 // reference https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
-export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] }) {
+export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteResponse }) {
   const { dispatchNavigateBack } = useStackedNavigation();
   const { run, data, isError, isLoading } = useRequest(submitRating);
   const { pick, update } = useProfile();
@@ -94,7 +93,6 @@ export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] 
   function handleRatingSubmit(e: FormEvent<HTMLFormElement>) {
     try {
       e.preventDefault();
-      allowRating = true;
       const expectedCheckBoxValues = RATINGS_CHECKBOXES_TABS[activeTab].map(({ value }) => value);
       const isValid = validateSelectedReasons(selectedRatingReasons, expectedCheckBoxValues);
       if (isValid) {
@@ -137,7 +135,6 @@ export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] 
     }
 
     if (data && !isError) {
-      allowRating = false;
       setFormSubmissionState('success');
       setRatingFlags({
         accurate: {},
@@ -156,7 +153,6 @@ export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] 
           accurate: {},
           inaccurate: {},
         });
-        allowRating = false;
       } else if (code === 'RATE_LIMIT_EXCEEDED') {
         let retryAt;
         if (meta && meta['windowOpensAt']) {
@@ -169,7 +165,6 @@ export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] 
           accurate: {},
           inaccurate: {},
         });
-        allowRating = false;
       } else if (code === 'INVALID_VOTE_REASON') {
         errorMessage = 'Invalid Input';
       }
@@ -264,7 +259,7 @@ export default function NoteRatingTabs({ noteId }: { noteId: NoteResponse['id'] 
               theme='blue'
               type='submit'
               icon={{ variant: BUTTON_STATES_MAP[formSubmissionState]['icon'] }}
-              disabled={Boolean(!selectedRatingReasons.length || !allowRating) || isOptimistic}
+              disabled={!selectedRatingReasons.length || isOptimistic}
               noDarkMode
             />
           </div>

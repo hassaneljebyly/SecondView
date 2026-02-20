@@ -9,6 +9,7 @@ import { mapValuesToArray } from '@/utils/lib/helpers';
 import { logger } from '@/utils/lib/logger';
 import { profileStore } from '@/utils/lib/storage';
 
+import useProfile from './useProfile';
 import useRequest from './useRequest';
 
 type ReplaceNoteEventParams = {
@@ -16,6 +17,8 @@ type ReplaceNoteEventParams = {
   realNote: NoteResponse;
 };
 
+// solves an issue where on profile import it was re-fetching notes twice
+let alreadyFetchedNotes = false;
 /**
  * Notes are shared across multiple React roots.
  * The global cache is the single source of truth.
@@ -42,6 +45,11 @@ export default function useNotes(videoId: string | null) {
 
   // local state is a projection of the cache
   const [notes, setNotes] = useState<NoteResponse[]>([]);
+  const {
+    profile: {
+      user: { id: userId },
+    },
+  } = useProfile();
 
   // cache mutation commands
   // add a note (optimistic or real) to the shared cache
@@ -81,7 +89,6 @@ export default function useNotes(videoId: string | null) {
     });
 
     globalCacheSingleton.set(notesCacheConfig, notesMap);
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
   // fetch on video change
@@ -97,40 +104,51 @@ export default function useNotes(videoId: string | null) {
       return;
     }
 
-    let userId: string | null = null;
-
     profileStore
       .get('user.id')
       .then(result => {
         if (result.status === 'ready') {
-          userId = result.storeValue;
+          const userId = result.storeValue;
           runGetNotes(videoId, userId);
         }
       })
       .catch(error => {
         logger.error('Something went wrong while getting userId from storage', error);
-        runGetNotes(videoId, userId);
+        runGetNotes(videoId, null);
       });
 
-    // subscribe to cache changes.
-    // every root updates its local React state from the cache.
+    // // subscribe to cache changes.
+    // // every root updates its local React state from the cache.
     const unsubscribe = globalCacheSingleton.onChange<CachedNotesMap>(
       notesCacheConfig.key,
       (_old, newNotes) => {
+        console.log('userid', userId);
+        setData(null);
         setNotes(mapValuesToArray(newNotes));
       }
     );
 
+    const unsubscribeUserChange = profileStore.onChange('user.id', (_, newUserId) => {
+      if (!alreadyFetchedNotes) {
+        alreadyFetchedNotes = true;
+        globalCacheSingleton.clearCacheFor('*');
+        runGetNotes(videoId, newUserId).finally(() => {
+          alreadyFetchedNotes = false;
+        });
+      }
+    });
+
     return () => {
       // Prevent stale data from leaking between video IDs
       setData(null);
+      unsubscribeUserChange();
       unsubscribe();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [videoId]);
+  }, [videoId, userId]);
 
   if (isError) {
-    logger.error("Couldn't fetch notes");
+    logger.error("Couldn't fetch notes", isError);
     globalEventSingleton.emit('snackBar:show', window, {
       detail: {
         text: "Couldn't get notes for this video",
