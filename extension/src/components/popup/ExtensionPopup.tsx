@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { NavigationContextProvider } from '@/context/NavigationContext';
 
@@ -11,8 +11,19 @@ import SnackBar from '../content/SnackBar';
 
 export default function MainPopup() {
   const [widgetHight, setWidgetHight] = useState('');
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (!mounted) setMounted(true);
+    }, 100);
+
+    return () => clearTimeout(timeout);
+  }, [mounted]);
   return (
-    <div className='sv-popup' style={{ height: widgetHight }}>
+    <div
+      className={`sv-popup ${!mounted ? 'sv-popup--initial' : ''}`}
+      style={{ height: widgetHight }}
+    >
       <NavigationContextProvider setWidgetHight={setWidgetHight}>
         <Onboarding />
         <ProfileOverviewCard />

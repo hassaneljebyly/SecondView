@@ -3,6 +3,13 @@
   overflow: hidden;
   transition: height 150ms ease;
 
+  &--initial {
+    transition: height 0ms !important;
+  }
+  &--initial &-widget__inner-container {
+    transition: translate 0ms !important;
+  }
+
   #sv-snackbar {
     width: calc(100% - 2.5 * var(--sv-space-s));
     position: absolute;
@@ -112,13 +119,28 @@
   .sv-input {
     margin-bottom: 0.25em;
   }
+
   .sv-input:not([aria-invalid='true']) + .sv-form__error-message-wrapper {
     --_sv-error-visibility: hidden;
-    background-color: red;
   }
 
   .sv-form__error-message-wrapper {
+    display: flex;
+    align-items: start;
+    margin-top: var(--sv-space-xxs);
+    margin-bottom: var(--sv-space-xs);
+    gap: var(--sv-space-xxs);
+    visibility: var(--_sv-error-visibility);
+    white-space: pre-line;
+    svg {
+      fill: var(--sv-error-color);
+    }
     em {
+      font-size: var(--sv-font-xs);
+      font-weight: var(--sv-font-weight-medium);
+      font-style: normal;
+      color: var(--sv-error-color);
+      flex-grow: 1;
       line-height: 120%;
       min-height: 2.45em;
     }

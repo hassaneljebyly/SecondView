@@ -122,7 +122,6 @@ export default function useNotes(videoId: string | null) {
     const unsubscribe = globalCacheSingleton.onChange<CachedNotesMap>(
       notesCacheConfig.key,
       (_old, newNotes) => {
-        console.log('userid', userId);
         setData(null);
         setNotes(mapValuesToArray(newNotes));
       }

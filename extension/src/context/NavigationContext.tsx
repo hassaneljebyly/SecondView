@@ -2,6 +2,8 @@ import React, { createContext, useEffect, useState, type JSX } from 'react';
 
 import useProfile from '@/hooks/useProfile';
 import type { NavigationContextValue, NavigationState } from '@/types/components';
+import { IS_DEV } from '@/utils/config/loggerConfig';
+import { globalEventSingleton } from '@/utils/lib/events';
 
 export const NavigationContext = createContext<NavigationContextValue | null>(null);
 
@@ -40,19 +42,25 @@ export function NavigationContextProvider({
   const contextValue = { navigation, setNavigation };
 
   useEffect(() => {
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        const activeWidget = document.querySelector(
-          '.sv-popup-widget__inner-container:has(.sv-popup-widget--center)'
-        );
+    function updateHeight() {
+      const activeWidget = document.querySelector(
+        '.sv-popup-widget__inner-container:has(.sv-popup-widget--center)'
+      );
+      const popupContainer = document.querySelector('.sv-popup');
+      if (activeWidget && popupContainer) {
+        const height = getComputedStyle(activeWidget)['height'];
+        if (!IS_DEV) document.body.style.height = height;
+        setWidgetHight(height);
+      }
+    }
 
-        const popupContainer = document.querySelector('.sv-popup');
-        if (activeWidget && popupContainer) {
-          const height = getComputedStyle(activeWidget)['height'];
-          setWidgetHight(height);
-        }
-      }, 0);
-    });
-  });
+    const loadEvent = globalEventSingleton.on('load', updateHeight);
+
+    updateHeight();
+    return () => {
+      loadEvent.disconnectEvent();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation]);
   return <NavigationContext.Provider value={contextValue}>{children}</NavigationContext.Provider>;
 }
