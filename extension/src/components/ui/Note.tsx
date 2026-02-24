@@ -16,12 +16,13 @@ import Linkify from '../helpers/Linkify';
 export const noteComponentId = 'sv-note';
 export default function Note(note: NoteResponse) {
   const { dispatchNavigateForward } = useStackedNavigation();
+  const { handleNoteClose, handleNotePromote, noteQueue } = useNoteQueue();
+
   const [openOptionsMenu, setOpenOptionsMenu] = useState(false);
   const [openNote, setOpenNote] = useState(false);
-  const optionsMenuState = openOptionsMenu ? 'open' : 'closed';
-  const optionsMenuFirstItemRef = useRef<HTMLLIElement>(null);
-  const { handleNoteClose, handleNotePromote } = useNoteQueue();
   const [rateLimited, setRateLimited] = useState(false);
+
+  const optionsMenuFirstItemRef = useRef<HTMLLIElement>(null);
   const optionsMenuRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -36,6 +37,7 @@ export default function Note(note: NoteResponse) {
     sources,
     createdAt,
   } = note;
+  const optionsMenuState = openOptionsMenu ? 'open' : 'closed';
   const categoryColor = NOTE_CATEGORIES[misinfoType]['color'];
   const categoryLabel = NOTE_CATEGORIES[misinfoType]['displayName'];
   const headerStyle = {
@@ -71,9 +73,33 @@ export default function Note(note: NoteResponse) {
     });
 
     const escapeKeyDownEvent = globalEventSingleton.on('keydown', e => {
-      if (e.type === 'keydown' && (e as KeyboardEvent).key === 'Escape' && openOptionsMenu) {
+      if (e.type !== 'keydown') return;
+      const { key } = e as KeyboardEvent;
+
+      // close options menu
+      if (key === 'Escape' && openOptionsMenu) {
         e.stopPropagation();
         setOpenOptionsMenu(false);
+      }
+      // close note
+      if (key === 'Escape' && !openOptionsMenu) {
+        // but only active one
+        const [noteInQueue, activeNote] = noteQueue;
+        if (noteInQueue) {
+          handleNoteClose(noteInQueue.id);
+          return;
+        }
+
+        if (activeNote) {
+          handleNoteClose(activeNote.id);
+          return;
+        }
+      }
+      // open note
+      if (key === 'Enter' && !openNote) {
+        e.stopPropagation();
+        setOpenNote(true);
+        handleNotePromote(note);
       }
     });
 
@@ -81,7 +107,8 @@ export default function Note(note: NoteResponse) {
       clickEvent.disconnectEvent();
       escapeKeyDownEvent.disconnectEvent();
     };
-  }, [openOptionsMenu]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [openOptionsMenu, openNote, noteQueue]);
 
   return (
     <div id='sv-note' className={`sv-note ${openNote ? 'sv-note--expand' : ''}`}>
