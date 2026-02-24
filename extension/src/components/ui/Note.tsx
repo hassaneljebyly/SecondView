@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState, type CSSProperties } from 'react';
 import type { NoteResponse } from '@/api/types/notes';
 import { useStackedNavigation } from '@/hooks/useStackedNavigation';
 import { NOTE_POPUP_DURATION_SECONDS } from '@/utils/config/extensionParams';
+import { globalEventSingleton } from '@/utils/lib/events';
 import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
 import { secondsToTimeString, timeAgo } from '@shared/utils/format/timeStamp';
 
@@ -11,7 +12,6 @@ import Icon from './Icon';
 import RemainingTimeDisplay from './RemainingTimeDisplay';
 import { useNoteQueue } from '../content/NoteDisplayQueue';
 import Linkify from '../helpers/Linkify';
-import { globalEventSingleton } from '@/utils/lib/events';
 
 export const noteComponentId = 'sv-note';
 export default function Note(note: NoteResponse) {
@@ -22,6 +22,7 @@ export default function Note(note: NoteResponse) {
   const optionsMenuFirstItemRef = useRef<HTMLLIElement>(null);
   const { handleNoteClose, handleNotePromote } = useNoteQueue();
   const [rateLimited, setRateLimited] = useState(false);
+  const optionsMenuRef = useRef<HTMLDivElement>(null);
 
   const {
     id: noteId,
@@ -58,6 +59,29 @@ export default function Note(note: NoteResponse) {
     // promote the queued note into the active slot and dismiss the old active note
     handleNotePromote(note);
   }
+
+  useEffect(() => {
+    const clickEvent = globalEventSingleton.on('click', e => {
+      const { current: optionsMenu } = optionsMenuRef;
+      const clickTarget = e.target as Node | null;
+      if (optionsMenu && !optionsMenu.contains(clickTarget)) {
+        e.stopPropagation();
+        setOpenOptionsMenu(false);
+      }
+    });
+
+    const escapeKeyDownEvent = globalEventSingleton.on('keydown', e => {
+      if (e.type === 'keydown' && (e as KeyboardEvent).key === 'Escape' && openOptionsMenu) {
+        e.stopPropagation();
+        setOpenOptionsMenu(false);
+      }
+    });
+
+    return () => {
+      clickEvent.disconnectEvent();
+      escapeKeyDownEvent.disconnectEvent();
+    };
+  }, [openOptionsMenu]);
 
   return (
     <div id='sv-note' className={`sv-note ${openNote ? 'sv-note--expand' : ''}`}>
@@ -133,7 +157,7 @@ export default function Note(note: NoteResponse) {
             />
           </div>
         )}
-        <div className='sv-note__options-menu-wrapper'>
+        <div className='sv-note__options-menu-wrapper' ref={optionsMenuRef}>
           <ul
             id='sv-note__options-menu'
             className={`sv-note__options-menu sv-note__options-menu--${optionsMenuState}`}

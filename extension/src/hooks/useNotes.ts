@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { getNotes } from '@/api/apiHandlers/notes';
 import type { NoteResponse } from '@/api/types/notes';
+import type { User } from '@/api/types/user';
 import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
 import { globalCacheSingleton, type CacheConfig, type CachedNotesMap } from '@/utils/lib/cache';
 import { globalEventSingleton } from '@/utils/lib/events';
@@ -11,7 +12,6 @@ import { profileStore } from '@/utils/lib/storage';
 
 import useProfile from './useProfile';
 import useRequest from './useRequest';
-import type { User } from '@/api/types/user';
 
 type ReplaceNoteEventParams = {
   optimisticId: string;
