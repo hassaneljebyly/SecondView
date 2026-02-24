@@ -29,7 +29,7 @@ let activeTabIndex = 0;
 // reference https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
 export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteResponse }) {
   const { dispatchNavigateBack } = useStackedNavigation();
-  const { run, data, isError, isLoading } = useRequest(submitRating);
+  const { run, successResponse, isError, isLoading } = useRequest(submitRating);
   const { pick, update } = useProfile();
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
   const [error, setError] = useState('');
@@ -134,7 +134,7 @@ export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteRes
       return;
     }
 
-    if (data && !isError) {
+    if (successResponse && !isError) {
       setFormSubmissionState('success');
       setRatingFlags({
         accurate: {},
@@ -172,7 +172,7 @@ export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteRes
       setFormSubmissionState('error');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, data, isError]);
+  }, [isLoading, successResponse, isError]);
   return (
     <div className='sv-note-rating'>
       <form className='sv-note-rating__form' onSubmit={handleRatingSubmit}>

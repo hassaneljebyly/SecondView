@@ -13,6 +13,7 @@ export const initialProfile: InitialProfile = {
     accessKey: null,
     signingKey: null,
     userNameChanged: null,
+    userReputation: null,
   },
   rateLimits: {
     notes: {

@@ -1,5 +1,9 @@
+import { initialProfile } from '@/api/apiHandlers/user';
 import { useNavigation } from '@/hooks/useNavigation';
 import useProfile from '@/hooks/useProfile';
+import type { ShowSnackBarEvent } from '@/utils/config/customEventsConfig';
+import { globalEventSingleton } from '@/utils/lib/events';
+import { getUserTier } from '@/utils/lib/helpers';
 
 import { strToHsl } from '../helpers/usernameToHsl';
 import Button from '../ui/Button';
@@ -7,9 +11,21 @@ import Button from '../ui/Button';
 export default function ProfileOverviewCard() {
   const { setNavigation, widgetStateClass, isInert } = useNavigation('ProfileOverviewCard');
 
-  const { profile } = useProfile();
-  const username = profile.user.username || 'N/A';
-  const avatarBgColor = strToHsl(username);
+  const {
+    profile: {
+      user: { username, userReputation },
+    },
+    update,
+  } = useProfile();
+
+  function handleLogout() {
+    setNavigation({
+      leftWidget: [],
+      centerWidget: 'Onboarding',
+      rightWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
+    });
+  }
+  const avatarBgColor = username ? strToHsl(username) : '#000';
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div
@@ -27,7 +43,9 @@ export default function ProfileOverviewCard() {
               aria-hidden
               style={{ backgroundColor: avatarBgColor }}
             >
-              <span className='sv-profile-overview__username-initials'>{username.charAt(0)}</span>
+              <span className='sv-profile-overview__username-initials'>
+                {username?.charAt(0) || ''}
+              </span>
               {/*
                * // TODO(me/#3): 📝 Add custom image support
                * // Issue: https://github.com/hassaneljebyly/SecondView/issues/3
@@ -35,34 +53,53 @@ export default function ProfileOverviewCard() {
               <img className='sv-profile-overview__avatar-img' src={undefined} alt='' />
             </div>
             <Button
-              text=''
+              text='Log out'
+              iconOnly
               icon={{
-                variant: 'setting',
+                variant: 'logout',
+              }}
+              actions={{
+                onClick: () => {
+                  globalEventSingleton.emit('snackBar:show', window, {
+                    detail: {
+                      status: 'warning',
+                      text: "Have you backed up your credentials? You won't be able to recover your account without it.",
+                      actionLabel: 'Continue',
+                      action: () => {
+                        // @ts-expect-error initial user has fields but null by default (e.g no user)
+                        update('user', () => initialProfile.user);
+                        handleLogout();
+                      },
+                    } as ShowSnackBarEvent,
+                  });
+                },
               }}
             />
           </div>
         </div>
         <div className='sv-popup-widget__section sv-profile-overview__user'>
           <p className='sv-popup-widget__section-title sv-profile-overview__username'>{username}</p>
-          <p className='sv-profile-overview__badge'>Trusted Contributor</p>
+          {/* // TODO(me): 📝 see https://share.google/aimode/S96lNMwNr8fy0juDS */}
+          <p className='sv-profile-overview__badge'>{getUserTier(userReputation || 0)}</p>
         </div>
         <div className='sv-popup-widget__section sv-profile-overview__stats'>
           <b className='sv-divider sv-divider--top' />
           <p className='sv-popup-widget__section-title'>Contribution Overview</p>
           <ul className='sv-profile-overview__stats-list'>
             <li className='sv-profile-overview__stats-item'>
-              Notes: <span>12</span>
+              Notes: <span title='Experimental data'>12*</span>
             </li>
             <li className='sv-profile-overview__stats-item'>
-              Helpful: <span>156</span>
+              Helpful: <span title='Experimental data'>156*</span>
             </li>
             <li className='sv-profile-overview__stats-item'>
-              Ratings: <span>34</span>
+              Ratings: <span title='Experimental data'>34*</span>
             </li>
             <li className='sv-profile-overview__stats-item'>
-              Accurate: <span>89%</span>
+              Accurate: <span title='Experimental data'>89%*</span>
             </li>
           </ul>
+          <p className='sv-coming-soon-note'>*Placeholder data, user stats coming soon.</p>
         </div>
         <div className='sv-popup-widget__section sv-profile-overview__sync'>
           <b className='sv-divider sv-divider--top' />

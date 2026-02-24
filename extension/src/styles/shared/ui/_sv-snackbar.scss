@@ -11,12 +11,6 @@
   //   --sv-snackbar-action-text: var(..);
   // }
 
-  // &--warning {
-  //   --sv-snackbar-bg: var(...);
-  //   --sv-snackbar-text: var(...);
-  //   --sv-snackbar-action-text: var(..);
-  // }
-
   // &--info {
   //   --sv-snackbar-bg: var(...);
   //   --sv-snackbar-text: var(...);
@@ -37,12 +31,23 @@
   border: 1px solid var(--sv-black-alpha-05);
   border-radius: var(--sv-border-radius-8);
 
+  &--warning {
+    --sv-snackbar-bg: hsl(37, 92%, 95%);
+    --sv-snackbar-text: hsl(29, 81%, 43%);
+    --sv-snackbar-action-text: hsl(29, 81%, 43%);
+    border: 1px solid hsla(36, 94%, 55%, 0.418);
+  }
+
   &--error {
     --sv-snackbar-bg: var(--sv-red-100);
     --sv-snackbar-text: var(--sv-error-color);
     --sv-snackbar-action-text: var(--sv-error-color);
   }
 
+  &:has(&__text:empty) {
+    display: none;
+    pointer-events: none;
+  }
   &:has(:not(.sv-snackbar__close)) {
     padding-right: var(--sv-space-xs);
   }

@@ -39,7 +39,9 @@
     left: 0;
     width: 100%;
     background-color: var(--sv-white);
-    transition: translate 250ms ease;
+    transition:
+      translate 250ms ease,
+      opacity 150ms ease;
   }
   &__inner-container:has(&--hidden) {
     translate: 100%;
@@ -49,6 +51,10 @@
   }
   &__inner-container:not([inert]) {
     pointer-events: all;
+    opacity: 1;
+  }
+  &__inner-container[inert] {
+    opacity: 0;
   }
   &__inner-container:has(&--center) {
     translate: 0%;
@@ -75,6 +81,10 @@
     color: var(--sv-gray-800);
     text-decoration: none;
   }
+  &__links:hover {
+    text-decoration: underline;
+  }
+
   &__hint span {
     font-weight: var(--sv-font-weight-medium);
     color: var(--sv-black-1);

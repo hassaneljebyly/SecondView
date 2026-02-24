@@ -16,3 +16,15 @@
     visibility: hidden;
   }
 }
+
+[title='Experimental data'] {
+  font-style: italic;
+  text-decoration: underline;
+}
+
+.sv-coming-soon-note {
+  font-style: italic;
+  font-size: var(--sv-font-xs);
+  color: var(--sv-gray-500);
+  margin-top: var(--sv-space-s);
+}

@@ -52,7 +52,7 @@ export function useNoteForm(): UseNoteFormReturn {
     (IS_DEV ? tempVideoId : getYouTubeId(window.location.href)) || null;
   const { notes, dispatchNewNotes, dispatchRemoveNote, dispatchReplaceNote } =
     useNotes(currentYoutubeVideoId);
-  const { run, data: newCreatedNoteData, isError, isLoading } = useRequest(submitNote);
+  const { run, successResponse, isError, isLoading } = useRequest(submitNote);
   const optimisticNoteIdRef = useRef<null | string>(null);
   if (!optimisticNoteIdRef.current) {
     optimisticNoteIdRef.current = `${optimisticIdPrefix}${Date.now()}_${Math.random().toString(16).slice(2)}`;
@@ -185,11 +185,11 @@ export function useNoteForm(): UseNoteFormReturn {
           form: message,
         });
       }
-    } else if (newCreatedNoteData) {
+    } else if (successResponse) {
       setFormSubmissionState('success');
       dispatchReplaceNote({
         optimisticId: optimisticNoteId,
-        realNote: newCreatedNoteData['data']['note'],
+        realNote: successResponse['data']['note'],
       });
       optimisticNoteIdRef.current = null;
       closeFormTimeOut = setTimeout(() => {
@@ -201,7 +201,7 @@ export function useNoteForm(): UseNoteFormReturn {
       if (closeFormTimeOut !== null) clearTimeout(closeFormTimeOut);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading, newCreatedNoteData, isError]);
+  }, [isLoading, successResponse, isError]);
 
   useEffect(() => {
     const resetFormEvent = globalEventSingleton.on('form:reset', () => {

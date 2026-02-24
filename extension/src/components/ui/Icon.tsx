@@ -16,6 +16,7 @@ export type IconProps = {
     | 'paste'
     | 'edit'
     | 'login'
+    | 'logout'
     | 'shield'
     | 'newUser'
     | 'options'
@@ -40,6 +41,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'setting':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 24 24'
@@ -57,6 +59,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'add':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -72,6 +75,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'check':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -86,6 +90,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'cancel':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -101,6 +106,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'error':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -115,6 +121,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'loading':
       return (
         <svg
+          focusable='false'
           className={`${iconClass} sv-spin-it`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -129,6 +136,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'clock':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -143,6 +151,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'upload':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -157,6 +166,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'copy':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -171,6 +181,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'paste':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -185,6 +196,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'edit':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -199,6 +211,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'shield':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -214,6 +227,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'login':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -228,6 +242,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'fileDownload':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -242,6 +257,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'newUser':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 -960 960 960'
@@ -256,6 +272,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'badge':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           width='24px'
           height='24px'
@@ -281,6 +298,7 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'options':
       return (
         <svg
+          focusable='false'
           className={`${iconClass}`}
           width='24px'
           height='24px'
@@ -315,51 +333,49 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
     case 'report':
       return (
         <svg
+          focusable='false'
+          className={`${iconClass}`}
           width='20'
           height='20'
           viewBox='0 0 20 20'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
         >
-          <path
-            d='M10 13.75C10.2083 13.75 10.3854 13.6771 10.5312 13.5312C10.6771 13.3854 10.75 13.2083 10.75 13C10.75 12.7917 10.6771 12.6146 10.5312 12.4688C10.3854 12.3229 10.2083 12.25 10 12.25C9.79167 12.25 9.61458 12.3229 9.46875 12.4688C9.32292 12.6146 9.25 12.7917 9.25 13C9.25 13.2083 9.32292 13.3854 9.46875 13.5312C9.61458 13.6771 9.79167 13.75 10 13.75ZM9.25 11H10.75V6H9.25V11ZM7.10417 17L3 12.875V7.10417L7.10417 3H12.8958L17 7.10417V12.8958L12.875 17H7.10417ZM7.72917 15.5H12.2708L15.5 12.2708V7.72917L12.25 4.5H7.72917L4.5 7.72917V12.2708L7.72917 15.5Z'
-            fill='#000'
-          />
+          <path d='M10 13.75C10.2083 13.75 10.3854 13.6771 10.5312 13.5312C10.6771 13.3854 10.75 13.2083 10.75 13C10.75 12.7917 10.6771 12.6146 10.5312 12.4688C10.3854 12.3229 10.2083 12.25 10 12.25C9.79167 12.25 9.61458 12.3229 9.46875 12.4688C9.32292 12.6146 9.25 12.7917 9.25 13C9.25 13.2083 9.32292 13.3854 9.46875 13.5312C9.61458 13.6771 9.79167 13.75 10 13.75ZM9.25 11H10.75V6H9.25V11ZM7.10417 17L3 12.875V7.10417L7.10417 3H12.8958L17 7.10417V12.8958L12.875 17H7.10417ZM7.72917 15.5H12.2708L15.5 12.2708V7.72917L12.25 4.5H7.72917L4.5 7.72917V12.2708L7.72917 15.5Z' />
         </svg>
       );
     case 'link':
       return (
         <svg
+          className={`${iconClass}`}
+          focusable='false'
           width='20'
           height='20'
           viewBox='0 0 20 20'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
         >
-          <path
-            d='M6.72909 17.0208C5.70131 17.0208 4.82631 16.6562 4.10409 15.9271C3.38186 15.1979 3.02075 14.3194 3.02075 13.2917C3.02075 12.8056 3.1145 12.3333 3.302 11.875C3.4895 11.4167 3.75686 11.0139 4.10409 10.6667L6.85409 7.91667L7.91659 8.97917L5.16659 11.7292C4.95825 11.9375 4.79506 12.1771 4.677 12.4479C4.55895 12.7188 4.49992 13 4.49992 13.2917C4.49992 13.9167 4.7152 14.441 5.14575 14.8646C5.57631 15.2882 6.10409 15.5 6.72909 15.5C7.02075 15.5 7.29853 15.4444 7.56242 15.3333C7.82631 15.2222 8.06242 15.0625 8.27075 14.8542L11.0416 12.1042L12.1041 13.1667L9.33325 15.9167C8.98603 16.2778 8.58672 16.5521 8.13534 16.7396C7.68395 16.9271 7.2152 17.0208 6.72909 17.0208ZM8.56242 12.5L7.49992 11.4375L11.4374 7.5L12.4999 8.5625L8.56242 12.5ZM13.1458 12.0833L12.0833 11.0208L14.8541 8.27083C15.0624 8.07639 15.2187 7.84375 15.3228 7.57292C15.427 7.30208 15.4791 7.02778 15.4791 6.75C15.4791 6.125 15.2673 5.59722 14.8437 5.16667C14.4201 4.73611 13.8958 4.52083 13.2708 4.52083C12.9791 4.52083 12.7013 4.57292 12.4374 4.67708C12.1735 4.78125 11.9374 4.9375 11.7291 5.14583L8.97909 7.91667L7.91659 6.85417L10.6666 4.08333C11.0138 3.72222 11.4166 3.45139 11.8749 3.27083C12.3333 3.09028 12.8055 3 13.2916 3C14.3194 3 15.1909 3.36111 15.9062 4.08333C16.6214 4.80556 16.9791 5.6875 16.9791 6.72917C16.9791 7.21528 16.8888 7.68403 16.7083 8.13542C16.5277 8.58681 16.2638 8.98611 15.9166 9.33333L13.1458 12.0833Z'
-            fill='black'
-          />
+          <path d='M6.72909 17.0208C5.70131 17.0208 4.82631 16.6562 4.10409 15.9271C3.38186 15.1979 3.02075 14.3194 3.02075 13.2917C3.02075 12.8056 3.1145 12.3333 3.302 11.875C3.4895 11.4167 3.75686 11.0139 4.10409 10.6667L6.85409 7.91667L7.91659 8.97917L5.16659 11.7292C4.95825 11.9375 4.79506 12.1771 4.677 12.4479C4.55895 12.7188 4.49992 13 4.49992 13.2917C4.49992 13.9167 4.7152 14.441 5.14575 14.8646C5.57631 15.2882 6.10409 15.5 6.72909 15.5C7.02075 15.5 7.29853 15.4444 7.56242 15.3333C7.82631 15.2222 8.06242 15.0625 8.27075 14.8542L11.0416 12.1042L12.1041 13.1667L9.33325 15.9167C8.98603 16.2778 8.58672 16.5521 8.13534 16.7396C7.68395 16.9271 7.2152 17.0208 6.72909 17.0208ZM8.56242 12.5L7.49992 11.4375L11.4374 7.5L12.4999 8.5625L8.56242 12.5ZM13.1458 12.0833L12.0833 11.0208L14.8541 8.27083C15.0624 8.07639 15.2187 7.84375 15.3228 7.57292C15.427 7.30208 15.4791 7.02778 15.4791 6.75C15.4791 6.125 15.2673 5.59722 14.8437 5.16667C14.4201 4.73611 13.8958 4.52083 13.2708 4.52083C12.9791 4.52083 12.7013 4.57292 12.4374 4.67708C12.1735 4.78125 11.9374 4.9375 11.7291 5.14583L8.97909 7.91667L7.91659 6.85417L10.6666 4.08333C11.0138 3.72222 11.4166 3.45139 11.8749 3.27083C12.3333 3.09028 12.8055 3 13.2916 3C14.3194 3 15.1909 3.36111 15.9062 4.08333C16.6214 4.80556 16.9791 5.6875 16.9791 6.72917C16.9791 7.21528 16.8888 7.68403 16.7083 8.13542C16.5277 8.58681 16.2638 8.98611 15.9166 9.33333L13.1458 12.0833Z' />
         </svg>
       );
     case 'delete':
       return (
         <svg
+          className={`${iconClass}`}
+          focusable='false'
           width='20'
           height='20'
           viewBox='0 0 20 20'
           fill='none'
           xmlns='http://www.w3.org/2000/svg'
         >
-          <path
-            d='M6.5 17C6.0875 17 5.73437 16.8531 5.44062 16.5594C5.14687 16.2656 5 15.9125 5 15.5V5.5H4V4H8V3H12V4H16V5.5H15V15.491C15 15.9137 14.8531 16.2708 14.5594 16.5625C14.2656 16.8542 13.9125 17 13.5 17H6.5ZM13.5 5.5H6.5V15.5H13.5V5.5ZM8 14H9.5V7H8V14ZM10.5 14H12V7H10.5V14Z'
-            fill='black'
-          />
+          <path d='M6.5 17C6.0875 17 5.73437 16.8531 5.44062 16.5594C5.14687 16.2656 5 15.9125 5 15.5V5.5H4V4H8V3H12V4H16V5.5H15V15.491C15 15.9137 14.8531 16.2708 14.5594 16.5625C14.2656 16.8542 13.9125 17 13.5 17H6.5ZM13.5 5.5H6.5V15.5H13.5V5.5ZM8 14H9.5V7H8V14ZM10.5 14H12V7H10.5V14Z' />
         </svg>
       );
     case 'back':
       return (
         <svg
+          focusable='false'
           width='24'
           height='24'
           viewBox='0 0 24 24'
@@ -367,6 +383,13 @@ export default function Icon({ variant, theme, size, animation, noDarkMode }: Ic
           xmlns='http://www.w3.org/2000/svg'
         >
           <path d='M14 18L8 12L14 6L15.4 7.4L10.8 12L15.4 16.6L14 18Z' fill='#1D1B20' />
+        </svg>
+      );
+    case 'logout':
+      return (
+        <svg height='24' viewBox='0 0 24 24' width='24' focusable='false'>
+          <path d='M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z' />
+          <path d='M0 0h24v24H0z' fill='none' />
         </svg>
       );
   }

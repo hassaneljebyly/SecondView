@@ -170,7 +170,7 @@ export default function AccessCredentialsCard() {
             actions={{
               onClick: () =>
                 setNavigation({
-                  leftWidget: [],
+                  leftWidget: ['Onboarding'],
                   centerWidget: 'ProfileOverviewCard',
                   rightWidget: ['AccessCredentialsCard'],
                 }),

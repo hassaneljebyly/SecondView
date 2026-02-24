@@ -20,7 +20,7 @@ export type RequestHandler<T, TArgs extends unknown[]> = {
 };
 
 type useRequestReturn<T, TArgs extends unknown[]> = {
-  data: SuccessApiResponse<T> | null;
+  successResponse: SuccessApiResponse<T> | null;
   run: (...args: TArgs) => Promise<void>;
   isError: {
     id: number;
@@ -30,7 +30,7 @@ type useRequestReturn<T, TArgs extends unknown[]> = {
     meta?: ApiResponseMeta;
   } | null;
   isLoading: boolean;
-  setData: React.Dispatch<React.SetStateAction<SuccessApiResponse<T> | null>>;
+  setSuccessResponse: React.Dispatch<React.SetStateAction<SuccessApiResponse<T> | null>>;
 };
 
 /**
@@ -47,7 +47,7 @@ type useRequestReturn<T, TArgs extends unknown[]> = {
  * - isLoading: true while request is in progress
  * - isError: error object if request fails
  * - run: function to run the fetch handler
- * - setData: manual setter for data
+ * - setSuccessResponse: manual setter for data
  * @param {() => RequestHandler<T, TArgs>} requestHandler request handler
  * @param {CacheConfig} [cacheConfig] optional cache config
  * Note:
@@ -73,7 +73,7 @@ export default function useRequest<T, TArgs extends unknown[]>(
   requestHandler: () => RequestHandler<T, TArgs>,
   cacheConfig?: CacheConfig
 ): useRequestReturn<T, TArgs> {
-  const [data, setData] = useState<SuccessApiResponse<T> | null>(null);
+  const [successResponse, setSuccessResponse] = useState<SuccessApiResponse<T> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState<null | ErrorApiResponse['error']>(null);
   const requestHandlerRef = useRef<ReturnType<typeof requestHandler> | null>(null);
@@ -106,7 +106,7 @@ export default function useRequest<T, TArgs extends unknown[]>(
       if (!handlerData.success) {
         setIsError(handlerData.error);
       } else {
-        setData(handlerData);
+        setSuccessResponse(handlerData);
       }
     } catch (error) {
       let errorMessage = navigator.onLine
@@ -136,10 +136,10 @@ export default function useRequest<T, TArgs extends unknown[]>(
   }, []);
 
   return {
-    data,
+    successResponse,
     run,
     isError,
     isLoading,
-    setData,
+    setSuccessResponse,
   };
 }

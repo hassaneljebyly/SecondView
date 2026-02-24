@@ -7,6 +7,7 @@ export type User = {
     accessKey: string; // API access key
     signingKey: string; // Key for signing requests
     userNameChanged: boolean; // Indicates if username was changed
+    userReputation: number;
   };
 };
 

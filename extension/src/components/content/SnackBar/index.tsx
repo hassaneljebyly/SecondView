@@ -40,8 +40,11 @@ export default function SnackBar() {
   }
 
   function runSnackBarAction() {
-    if (typeof snackbarActionRef.current === 'function') snackbarActionRef.current();
-    else logger.error("Couldn't run snackbar action");
+    if (typeof snackbarActionRef.current === 'function') {
+      snackbarActionRef.current();
+      hideSnackBar();
+      setSnackBarText('');
+    } else logger.error("Couldn't run snackbar action");
   }
   useEffect(() => {
     const showSnackBarEvent = globalEventSingleton.on('snackBar:show', e => {

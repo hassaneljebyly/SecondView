@@ -14,28 +14,29 @@ import ErrorMessage from '../ui/ErrorMessage';
 
 export default function Onboarding() {
   const { setNavigation, widgetStateClass, isInert } = useNavigation('Onboarding');
-  const { data, run, isError, isLoading, setData } = useRequest(generateUserHandler);
+  const { successResponse, run, isError, isLoading, setSuccessResponse } =
+    useRequest(generateUserHandler);
   const { profile } = useProfile();
   useEffect(() => {
     if (profile.user.id === null) {
       profileStore.get().then(result => {
         if (result.status === 'ready' && result.storeValue.user.id !== null) {
           setNavigation({
-            leftWidget: [],
+            leftWidget: ['Onboarding'],
             centerWidget: 'ProfileOverviewCard',
             rightWidget: ['AccessCredentialsCard', 'ProfileImportCard'],
           });
         }
       });
     }
-    if (data) {
-      profileStore.update('user', old => ({ ...old, ...data.data.user }));
+    if (successResponse) {
+      profileStore.update('user', oldUser => ({ ...oldUser, ...successResponse.data.user }));
       setNavigation({
-        leftWidget: [],
+        leftWidget: ['Onboarding'],
         centerWidget: 'ProfileOverviewCard',
         rightWidget: ['AccessCredentialsCard', 'ProfileImportCard'],
       });
-      setData(null);
+      setSuccessResponse(null);
     }
     if (isError) {
       logger.error(isError);
@@ -44,7 +45,7 @@ export default function Onboarding() {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, isError, profile]); // only data, isError and profile are needed
+  }, [successResponse, isError, profile]); // only data, isError and profile are needed
   return (
     <div className='sv-popup-widget__inner-container' inert={isInert}>
       <div

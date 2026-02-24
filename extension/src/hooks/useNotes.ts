@@ -11,6 +11,7 @@ import { profileStore } from '@/utils/lib/storage';
 
 import useProfile from './useProfile';
 import useRequest from './useRequest';
+import type { User } from '@/api/types/user';
 
 type ReplaceNoteEventParams = {
   optimisticId: string;
@@ -36,11 +37,11 @@ export default function useNotes(videoId: string | null) {
   };
 
   const {
-    data,
+    successResponse,
     run: runGetNotes,
     isError,
     isLoading,
-    setData,
+    setSuccessResponse,
   } = useRequest(getNotes, notesFetchCacheConfig);
 
   // local state is a projection of the cache
@@ -81,16 +82,16 @@ export default function useNotes(videoId: string | null) {
 
   // Cache => React sync
   useEffect(() => {
-    if (!data) return;
+    if (!successResponse) return;
     const notesMap = globalCacheSingleton.get<CachedNotesMap>(notesCacheConfig.key) || new Map();
 
-    data.data.forEach(note => {
+    successResponse.data.forEach(note => {
       notesMap.set(note.id, note);
     });
 
     globalCacheSingleton.set(notesCacheConfig, notesMap);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [successResponse]);
   // fetch on video change
   useEffect(() => {
     if (!videoId) {
@@ -103,12 +104,12 @@ export default function useNotes(videoId: string | null) {
       });
       return;
     }
-
+    let userId: User['user']['id'] | null = null;
     profileStore
       .get('user.id')
       .then(result => {
         if (result.status === 'ready') {
-          const userId = result.storeValue;
+          userId = result.storeValue;
           runGetNotes(videoId, userId);
         }
       })
@@ -122,7 +123,7 @@ export default function useNotes(videoId: string | null) {
     const unsubscribe = globalCacheSingleton.onChange<CachedNotesMap>(
       notesCacheConfig.key,
       (_old, newNotes) => {
-        setData(null);
+        setSuccessResponse(null);
         setNotes(mapValuesToArray(newNotes));
       }
     );
@@ -139,7 +140,7 @@ export default function useNotes(videoId: string | null) {
 
     return () => {
       // Prevent stale data from leaking between video IDs
-      setData(null);
+      setSuccessResponse(null);
       unsubscribeUserChange();
       unsubscribe();
     };
@@ -152,6 +153,12 @@ export default function useNotes(videoId: string | null) {
       detail: {
         text: "Couldn't get notes for this video",
         status: 'error',
+        actionLabel: 'Retry',
+        action: () => {
+          if (videoId) {
+            runGetNotes(videoId, userId);
+          }
+        },
       } as ShowSnackBarEvent,
     });
   }

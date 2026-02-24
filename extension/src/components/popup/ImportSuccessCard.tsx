@@ -29,25 +29,26 @@ export default function ImportSuccessCard() {
           </p>
           <ul className='sv-popup-widget__info-list'>
             <li className='sv-popup-widget__hint'>
-              <span>12</span> notes published
+              <span title='Experimental data'>12*</span> notes published
             </li>
             <li className='sv-popup-widget__hint'>
-              <span>34</span> ratings given
+              <span title='Experimental data'>34*</span> ratings given
             </li>
             <li className='sv-popup-widget__hint'>
-              <span>89%</span> accuracy
+              <span title='Experimental data'>89%*</span> accuracy
             </li>
             <li className='sv-popup-widget__hint'>
-              <span>547</span> reputation points
+              <span title='Experimental data'>547*</span> reputation points
             </li>
           </ul>
+          <p className='sv-coming-soon-note'>*Placeholder data, user stats coming soon.</p>
           <Button
             text='Continue'
             shape='rounded'
             actions={{
               onClick: () =>
                 setNavigation({
-                  leftWidget: [],
+                  leftWidget: username !== null ? ['Onboarding'] : [],
                   centerWidget: username !== null ? 'ProfileOverviewCard' : 'Onboarding',
                   rightWidget: ['ImportSuccessCard'],
                 }),

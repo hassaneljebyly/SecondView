@@ -22,7 +22,7 @@ export default function ProfileImportCard() {
   const [rateLimited, setRateLimited] = useState(false);
   const { setNavigation, widgetStateClass, isInert } = useNavigation('ProfileImportCard');
   const {
-    data,
+    successResponse,
     run: runImportProfileHandler,
     isError,
     isLoading,
@@ -39,7 +39,7 @@ export default function ProfileImportCard() {
     try {
       if (username === usernameInput && accessKey === accessKeyInput) {
         setNavigation({
-          leftWidget: [],
+          leftWidget: ['Onboarding'],
           centerWidget: 'ProfileOverviewCard',
           rightWidget: ['ProfileImportCard'],
         });
@@ -69,14 +69,14 @@ export default function ProfileImportCard() {
   }
 
   useEffect(() => {
-    if (data && !isError) {
-      update('user', () => ({ ...data.data.user, accessKey: accessKeyInput }));
+    if (successResponse && !isError) {
+      update('user', () => ({ ...successResponse.data.user, accessKey: accessKeyInput }));
       setAttemptsLeft(Infinity);
       setErrors({});
       setAccessKeyInput('');
       setUsernameInput('');
       setNavigation({
-        leftWidget: ['ProfileImportCard', 'ProfileOverviewCard'],
+        leftWidget: ['ProfileImportCard', 'ProfileOverviewCard', 'Onboarding'],
         centerWidget: 'ImportSuccessCard',
         rightWidget: [],
       });
@@ -119,7 +119,7 @@ export default function ProfileImportCard() {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, isError]);
+  }, [successResponse, isError]);
   useEffect(() => {
     const { attemptsLeft: storedAttemptsLeft } = pick('rateLimits.syncProfile');
 
@@ -213,7 +213,7 @@ export default function ProfileImportCard() {
                 onClick: () => {
                   setErrors({});
                   setNavigation({
-                    leftWidget: [],
+                    leftWidget: username !== null ? ['Onboarding'] : [],
                     centerWidget: username !== null ? 'ProfileOverviewCard' : 'Onboarding',
                     rightWidget: ['ProfileImportCard'],
                   });

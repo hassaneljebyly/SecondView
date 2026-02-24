@@ -134,6 +134,10 @@ export class GlobalCacheSingleton {
     });
   }
 
+  clearCacheByKey(key: CacheConfig['key']) {
+    this.cacheMap.delete(key);
+  }
+
   /**
    * Clears cache entries and their subscribers by target scope.
    *

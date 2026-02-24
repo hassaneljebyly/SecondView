@@ -1,4 +1,4 @@
-import React, { useRef, useState, type CSSProperties } from 'react';
+import React, { useEffect, useRef, useState, type CSSProperties } from 'react';
 
 import type { NoteResponse } from '@/api/types/notes';
 import { useStackedNavigation } from '@/hooks/useStackedNavigation';
@@ -11,6 +11,7 @@ import Icon from './Icon';
 import RemainingTimeDisplay from './RemainingTimeDisplay';
 import { useNoteQueue } from '../content/NoteDisplayQueue';
 import Linkify from '../helpers/Linkify';
+import { globalEventSingleton } from '@/utils/lib/events';
 
 export const noteComponentId = 'sv-note';
 export default function Note(note: NoteResponse) {
@@ -139,17 +140,29 @@ export default function Note(note: NoteResponse) {
             inert={!openOptionsMenu}
             aria-hidden={!openOptionsMenu}
           >
-            <li className='sv-note__options-menu-item' ref={optionsMenuFirstItemRef}>
-              <Button text='Report' icon={{ variant: 'report' }} shape='rounded' />
+            <li
+              className='sv-note__options-menu-item'
+              ref={optionsMenuFirstItemRef}
+              title='Experimental, coming soon'
+            >
+              <Button disabled text='Edit' icon={{ variant: 'edit', size: 'xs' }} shape='rounded' />
             </li>
-            <li className='sv-note__options-menu-item'>
-              <Button text='Link note' icon={{ variant: 'link' }} shape='rounded' />
+            <li className='sv-note__options-menu-item' title='Experimental, coming soon'>
+              <Button disabled text='Link note' icon={{ variant: 'link' }} shape='rounded' />
             </li>
-            <li className='sv-note__options-menu-item'>
-              <Button text='Edit' icon={{ variant: 'edit', size: 'xs' }} shape='rounded' />
+            <li
+              className='sv-note__options-menu-item'
+              data-danger
+              title='Experimental, coming soon'
+            >
+              <Button disabled text='Report' icon={{ variant: 'report' }} shape='rounded' />
             </li>
-            <li className='sv-note__options-menu-item'>
-              <Button text='Delete' icon={{ variant: 'delete' }} shape='rounded' />
+            <li
+              className='sv-note__options-menu-item'
+              data-danger
+              title='Experimental, coming soon'
+            >
+              <Button disabled text='Delete' icon={{ variant: 'delete' }} shape='rounded' />
             </li>
           </ul>
           <Button

@@ -81,3 +81,9 @@ export function getEnvKeys(envKeys: EnvKeys) {
 export function mapValuesToArray<K, V>(map: Map<K, V>): V[] {
   return Array.from(map.values());
 }
+
+export function getUserTier(reputation: number): string {
+  if (reputation < 0.4) return 'New Contributor';
+  if (reputation < 0.8) return 'Established Member';
+  return 'Trusted Contributor';
+}

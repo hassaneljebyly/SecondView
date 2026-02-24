@@ -184,4 +184,10 @@
     width: 100%;
     justify-content: start;
   }
+  &__options-menu-item[data-danger] button {
+    color: var(--sv-error-color) !important;
+    svg {
+      fill: var(--sv-error-color) !important;
+    }
+  }
 }
