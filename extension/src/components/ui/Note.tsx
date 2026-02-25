@@ -5,7 +5,11 @@ import { useStackedNavigation } from '@/hooks/useStackedNavigation';
 import { NOTE_POPUP_DURATION_SECONDS } from '@/utils/config/extensionParams';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
-import { secondsToTimeString, timeAgo } from '@shared/utils/format/timeStamp';
+import {
+  formatSecondsToDuration,
+  secondsToTimeString,
+  timeAgo,
+} from '@shared/utils/format/timeStamp';
 
 import Button from './Button';
 import Icon from './Icon';
@@ -50,9 +54,9 @@ export default function Note(note: NoteResponse) {
   const startTimeString = secondsToTimeString(startTime);
   const endTimeString = secondsToTimeString(endTime);
   const claimDuration = endTime - startTime;
-  const claimDurationString = secondsToTimeString(claimDuration);
+  const claimDurationString = formatSecondsToDuration(claimDuration) + ' long';
   const sourcesString = `${sources.length} source${sources.length > 1 ? 's' : ''} sited`;
-  const metaData = `${startTimeString}-${endTimeString} (${claimDurationString}s) · ${sourcesString}`;
+  const metaData = `${startTimeString}-${endTimeString} · ${claimDurationString} · ${sourcesString}`;
 
   function handleOpenNote(e: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) {
     e.stopPropagation();

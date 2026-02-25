@@ -65,6 +65,18 @@ const UNITS: Readonly<Record<TimeUnit, number>> = {
   second: 1,
 };
 
+/**
+ * Formats a date as a relative time string (e.g., "2 minutes ago", "in 3 days").
+ *
+ * @param input - The date to format. Can be a Date object, ISO string, or timestamp.
+ * @param locale - BCP 47 locale string used for formatting (default: "en").
+ * @returns A localized relative time string. Returns "Invalid date" if the input cannot be parsed.
+ *
+ * @example
+ * timeAgo(new Date(Date.now() - 60000)) // "1 minute ago"
+ * timeAgo(Date.now() + 3600000) // "in 1 hour"
+ * timeAgo("2025-01-01T00:00:00Z", "fr") // "dans 3 jours" (depending on current date)
+ */
 export function timeAgo(input: Date | string | number, locale = 'en'): string {
   const date = input instanceof Date ? input : new Date(input);
 
@@ -97,6 +109,19 @@ export function timeAgo(input: Date | string | number, locale = 'en'): string {
   return 'just now';
 }
 
+/**
+ * Calculates the remaining time until a future ISO date string
+ * and returns a compact duration string (e.g., "2d 3h 10m 5s").
+ *
+ * Negative values are clamped to 0 to prevent UI flicker.
+ *
+ * @param futureIso - A future date in ISO string format.
+ * @returns A formatted duration string (e.g., "1h 30m"), or an empty string if invalid.
+ *
+ * @example
+ * getRemainingTimeFormatted("2026-12-31T23:59:59Z")
+ * // "10d 4h 12m 3s"
+ */
 export function getRemainingTimeFormatted(futureIso: string): string {
   const future = new Date(futureIso).getTime();
 
@@ -105,7 +130,7 @@ export function getRemainingTimeFormatted(futureIso: string): string {
   }
 
   const now = Date.now();
-  const diff = Math.max(0, future - now); // 👈 prevents negative flicker
+  const diff = Math.max(0, future - now);
 
   const totalSeconds = Math.floor(diff / 1000);
 
@@ -126,4 +151,38 @@ export function getRemainingTimeFormatted(futureIso: string): string {
   if (seconds) parts.push(`${seconds}s`);
 
   return parts.join(' ');
+}
+
+/**
+ * Converts a number of seconds into a human-readable duration string
+ * formatted as "Xh Ym Zs".
+ *
+ * Internally relies on `secondsToTimeString` returning a "HH:mm:ss" string.
+ *
+ * @param seconds - Total duration in seconds.
+ * @returns A formatted duration string (e.g., "1h 5m 3s").
+ *          Returns the original seconds value if formatting fails.
+ *
+ * @example
+ * formatSecondsToDuration(3661) // "1h 1m 1s"
+ * formatSecondsToDuration(60)   // "1m"
+ */
+export function formatSecondsToDuration(seconds: number) {
+  try {
+    const desiredLength = 3;
+    const timeStringArray = secondsToTimeString(seconds).split(':');
+    // pad left array to get desired hh, mm, ss structure
+    const padLeftTimeStringArray = [
+      ...Array(desiredLength - timeStringArray.length).fill(0),
+      ...timeStringArray,
+    ];
+    const [h, m, s] = padLeftTimeStringArray.map(Number);
+    const hoursLong = h ? `${h}h ` : '';
+    const minutesLong = m ? `${m}m ` : '';
+    const secondsLong = s ? `${s}s` : '';
+    return `${hoursLong}${minutesLong}${secondsLong}`;
+  } catch (error) {
+    logger.error(error);
+    return seconds;
+  }
 }

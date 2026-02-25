@@ -45,6 +45,15 @@ export default function NoteForm() {
       aria-invalid={Boolean(Object.keys(errors).length)}
       noValidate
       inert={!openForm}
+      onKeyDown={e => {
+        if (e.code === 'Enter' && e.ctrlKey) {
+          const { current: form } = formRef;
+          if (form) {
+            const submitButton = form.querySelector<HTMLButtonElement>('button[type=submit]');
+            if (submitButton && !submitButton.disabled) submitButton.click();
+          }
+        }
+      }}
       onSubmit={handelSubmit}
     >
       <fieldset
