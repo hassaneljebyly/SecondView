@@ -24,6 +24,7 @@ export default function Note(note: NoteResponse) {
 
   const optionsMenuFirstItemRef = useRef<HTMLLIElement>(null);
   const optionsMenuRef = useRef<HTMLDivElement>(null);
+  const activeNoteRef = useRef<HTMLDivElement>(null);
 
   const {
     id: noteId,
@@ -62,6 +63,14 @@ export default function Note(note: NoteResponse) {
     handleNotePromote(note);
   }
 
+  function dismissEnterKey(
+    e: React.KeyboardEvent<HTMLButtonElement> | React.KeyboardEvent<HTMLParagraphElement>
+  ) {
+    // If there's a note in queue and Enter is clicked on any button
+    // it will open it, this stops that behavior
+    if (e.key === 'Enter' && noteQueue[0]) e.stopPropagation();
+  }
+
   useEffect(() => {
     const clickEvent = globalEventSingleton.on('click', e => {
       const { current: optionsMenu } = optionsMenuRef;
@@ -97,9 +106,11 @@ export default function Note(note: NoteResponse) {
       }
       // open note
       if (key === 'Enter' && !openNote) {
+        const { current: activeNote } = activeNoteRef;
         e.stopPropagation();
         setOpenNote(true);
         handleNotePromote(note);
+        activeNote?.focus();
       }
     });
 
@@ -111,7 +122,12 @@ export default function Note(note: NoteResponse) {
   }, [openOptionsMenu, openNote, noteQueue]);
 
   return (
-    <div id='sv-note' className={`sv-note ${openNote ? 'sv-note--expand' : ''}`}>
+    <div
+      id='sv-note'
+      className={`sv-note ${openNote ? 'sv-note--expand' : ''}`}
+      tabIndex={openNote ? 0 : -1}
+      ref={activeNoteRef}
+    >
       <div
         className='sv-note__header'
         style={headerStyle}
@@ -134,6 +150,7 @@ export default function Note(note: NoteResponse) {
             noDarkMode
             actions={{
               onClick: () => handleNoteClose(noteId),
+              onKeyDown: dismissEnterKey,
             }}
           />
         </div>
@@ -147,7 +164,7 @@ export default function Note(note: NoteResponse) {
         >
           <span className='sv-sr-only'>Open Note</span>
         </button>
-        <p className='sv-note__text'>
+        <p className='sv-note__text' onKeyDown={dismissEnterKey} inert={!openNote}>
           <Linkify text={noteText} />
         </p>
         <div className='sv-note__meta'>
@@ -156,6 +173,7 @@ export default function Note(note: NoteResponse) {
           <button
             className='sv-note__notes-details'
             onClick={() => dispatchNavigateForward('note-details')}
+            onKeyDown={dismissEnterKey}
           >
             View note details
           </button>
@@ -169,11 +187,13 @@ export default function Note(note: NoteResponse) {
               text='Rate It'
               shape='pill'
               noDarkMode
+              enableAutoFocus
               disabled={rateLimited}
               actions={{
                 onClick: () => {
                   dispatchNavigateForward('note-rating');
                 },
+                onKeyDown: dismissEnterKey,
               }}
             />
             <RemainingTimeDisplay
@@ -223,7 +243,10 @@ export default function Note(note: NoteResponse) {
             iconOnly
             noDarkMode
             aria={{ 'aria-controls': 'sv-note__options-menu', 'aria-expanded': openOptionsMenu }}
-            actions={{ onClick: () => setOpenOptionsMenu(!openOptionsMenu) }}
+            actions={{
+              onClick: () => setOpenOptionsMenu(!openOptionsMenu),
+              onKeyDown: dismissEnterKey,
+            }}
           />
         </div>
       </div>

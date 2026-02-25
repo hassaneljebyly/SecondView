@@ -7,6 +7,7 @@ export default function Button({
   icon,
   role,
   iconOnly = false,
+  enableAutoFocus = false,
   tabIndex,
   theme = 'light',
   size = 'sm',
@@ -36,6 +37,7 @@ export default function Button({
       {...aria}
       {...actions}
       data-no-dark-mode={noDarkMode ? '' : undefined}
+      data-autofocus={enableAutoFocus ? '' : undefined}
     >
       <span className='sv-button__icon' aria-hidden='true'>
         {icon && <Icon {...icon} />}
@@ -48,6 +50,7 @@ export default function Button({
 type ButtonProps = {
   id?: string;
   icon?: IconProps;
+  enableAutoFocus?: boolean;
   iconOnly?: boolean;
   tabIndex?: number | undefined;
   role?: React.HTMLAttributes<HTMLButtonElement>['role'];

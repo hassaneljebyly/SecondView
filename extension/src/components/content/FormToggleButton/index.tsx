@@ -20,7 +20,13 @@ export default function FormToggleButton() {
 
   useEffect(() => {
     const closeFormEvent = globalEventSingleton.on('form:close', handleCloseToggle);
+    const newNoteEvent = globalEventSingleton.on('keyup', e => {
+      if ((e as KeyboardEvent).code === 'KeyN') {
+        handleFormToggle();
+      }
+    });
     return () => {
+      newNoteEvent.disconnectEvent();
       closeFormEvent.disconnectEvent();
     };
   });

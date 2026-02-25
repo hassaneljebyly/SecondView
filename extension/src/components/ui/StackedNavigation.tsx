@@ -2,31 +2,56 @@ import { useEffect, useRef, useState } from 'react';
 
 import type { PanelNavigationRegistry } from '@/context/StackedNavigationContext';
 import { useStackedNavigation } from '@/hooks/useStackedNavigation';
-import { logger } from '@/utils/lib/logger';
+import { globalEventSingleton } from '@/utils/lib/events';
 
 export function StackedNavigation(panelsRegistry: PanelNavigationRegistry) {
-  const { navigationStack, navigationStackSize, setNavigationStack, navigationDirection } =
-    useStackedNavigation();
+  const {
+    navigationStack,
+    navigationStackSize,
+    setNavigationStack,
+    navigationDirection,
+    dispatchNavigateBack,
+  } = useStackedNavigation();
   const [incomingPanelHeight, setIncomingPanelHeight] = useState('');
   const listWrapperRef = useRef<HTMLUListElement | null>(null);
 
   useEffect(() => {
-    try {
-      const { current: listWrapper } = listWrapperRef;
-      if (!listWrapper) return;
-      const nextPanel =
-        navigationDirection === 'forward'
-          ? listWrapper.lastChild
-          : listWrapper.lastChild!.previousSibling;
-      // @ts-expect-error complains about nextPanel being ChildNode instead of Element
-      const nextPanelHeight = getComputedStyle(nextPanel).height;
-      if (navigationStack.length > 1) setIncomingPanelHeight(nextPanelHeight);
-    } catch (error) {
-      logger.error(error);
-    }
+    const { current: listWrapper } = listWrapperRef;
+    if (!listWrapper) return;
+    const elementToFocus = listWrapper.querySelector<HTMLButtonElement>(
+      'li[tabindex="0"] [data-autofocus]'
+    );
+    elementToFocus?.focus({ preventScroll: true });
+    const nextPanel =
+      navigationDirection === 'forward'
+        ? listWrapper.lastChild
+        : listWrapper.lastChild!.previousSibling;
+    // @ts-expect-error complains about nextPanel being ChildNode instead of Element
+    const nextPanelHeight = getComputedStyle(nextPanel).height;
+    if (navigationStack.length > 1) setIncomingPanelHeight(nextPanelHeight);
+
+    const backspaceEvent = globalEventSingleton.on('keydown', e => {
+      e.stopPropagation();
+      if ((e as KeyboardEvent).key === 'Backspace') {
+        const targetElement = e.target as Element | null;
+
+        const isInput =
+          targetElement &&
+          (targetElement.tagName.toLowerCase() === 'input' ||
+            targetElement.tagName.toLowerCase() === 'textarea');
+
+        if (navigationStackSize > 1 && !isInput) {
+          dispatchNavigateBack();
+        }
+      }
+    });
+
+    return () => {
+      backspaceEvent.disconnectEvent();
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigationStackSize]);
-  // TECHDEBT(me): ⚙️ later improve accessibility
   return (
     <div
       id='sv-stacked-navigation'
@@ -65,6 +90,8 @@ export function StackedNavigation(panelsRegistry: PanelNavigationRegistry) {
               : '';
           return (
             <li
+              inert={!(c === 'coming' || c === '')}
+              tabIndex={c === 'coming' || c === '' ? 0 : -1}
               key={stack}
               className={`sv-stacked-navigation__panel ${'sv-stacked-navigation__panel--' + c}`}
             >

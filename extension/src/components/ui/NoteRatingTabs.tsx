@@ -199,6 +199,7 @@ export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteRes
                   'aria-selected': activeTab === tab,
                   'aria-controls': 'sv-tab-panel',
                 }}
+                enableAutoFocus
                 noDarkMode
                 actions={{
                   onClick: () => setActiveTab(tab),

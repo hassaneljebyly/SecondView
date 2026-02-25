@@ -18,7 +18,7 @@ export default function NoteDetails(note: NoteResponse) {
   return (
     <div className='sv-note-details'>
       <div className='sv-note-details__header'>
-        <button className='sv-note-details__back-btn' onClick={dispatchNavigateBack}>
+        <button className='sv-note-details__back-btn' onClick={dispatchNavigateBack} data-autofocus>
           <Icon variant='back' />
           <span className='sv-sr-only'>Back to note</span>
         </button>
