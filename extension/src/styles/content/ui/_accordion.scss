@@ -1,0 +1,46 @@
+.sv-accordion {
+  --_sv-grid-row: 0fr;
+  --_sv-accordion-bg: var(--sv-gray-100);
+  --_sv-inner-px: var(--sv-space-sm);
+  --_sv-inner-py: var(--sv-space-sm);
+  background-color: var(--_sv-accordion-bg);
+  border-radius: var(--sv-border-radius-12);
+  overflow: hidden;
+
+  &:hover {
+    --_sv-accordion-bg: var(--sv-blue-100);
+  }
+  * {
+    pointer-events: auto !important;
+  }
+  &:has(&__header[aria-expanded='true']) {
+    --_sv-grid-row: 1fr;
+  }
+
+  &__header {
+    display: block;
+    background: transparent;
+    border: 0;
+    width: 100%;
+    font-size: var(--sv-font-sm);
+    font-weight: var(--sv-font-weight-medium);
+    text-align: left;
+    padding-block: var(--sv-space-sm);
+    padding-left: var(--_sv-inner-py);
+    cursor: pointer;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-rows: var(--_sv-grid-row);
+    transition: grid-template-rows 250ms ease;
+    ul {
+      padding-inline: var(--_sv-inner-px);
+      padding-block: var(--_sv-inner-py);
+    }
+  }
+
+  &__inner {
+    overflow: hidden;
+  }
+}

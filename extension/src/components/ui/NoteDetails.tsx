@@ -2,10 +2,23 @@ import type { NoteResponse } from '@/api/types/notes';
 import { useStackedNavigation } from '@/hooks/useStackedNavigation';
 import { isoStringToLocalTimeString } from '@shared/utils/format/timeStamp';
 
+import Button from './Button';
 import Icon from './Icon';
 
 export default function NoteDetails(note: NoteResponse) {
   const { dispatchNavigateBack } = useStackedNavigation();
+  return <NoteDetailsBlock onBackNavigation={() => dispatchNavigateBack()} note={note} />;
+}
+
+export function NoteDetailsBlock({
+  note,
+  onBackNavigation,
+  onModelClose,
+}: {
+  note: NoteResponse;
+  onModelClose?: () => void;
+  onBackNavigation?: () => void;
+}) {
   const { status, createdBy, createdAt, alreadyRated, isOwn } = note;
   const createdAtToLocal = createdAt ? isoStringToLocalTimeString(createdAt) : 'N/A';
   // Help the community evaluate this note
@@ -18,11 +31,28 @@ export default function NoteDetails(note: NoteResponse) {
   return (
     <div className='sv-note-details'>
       <div className='sv-note-details__header'>
-        <button className='sv-note-details__back-btn' onClick={dispatchNavigateBack} data-autofocus>
-          <Icon variant='back' />
-          <span className='sv-sr-only'>Back to note</span>
-        </button>
+        {onBackNavigation && (
+          <button
+            className='sv-note-details__back-btn'
+            onClick={() => {
+              onBackNavigation();
+            }}
+            data-autofocus
+          >
+            <Icon variant='back' />
+            <span className='sv-sr-only'>Back to note</span>
+          </button>
+        )}
         <span className='sv-note-details__header-text'>Note details</span>
+        {onModelClose && (
+          <Button
+            iconOnly
+            icon={{ variant: 'cancel' }}
+            size='xs'
+            text='Close Note Details'
+            actions={{ onClick: () => onModelClose() }}
+          />
+        )}
       </div>
 
       <div className='sv-note-details__main'>
@@ -30,7 +60,7 @@ export default function NoteDetails(note: NoteResponse) {
         <p className='sv-note-details__note-rated-note'>
           Note:{' '}
           <span className='sv-note-details__data'>
-            Rating details are hidden until you vote (to avoid bias).{' '}
+            Rating details are hidden until you vote (to avoid bias). <br />
             <span className='sv-note-details__data' title='Experimental data'>
               Placeholder data
             </span>{' '}

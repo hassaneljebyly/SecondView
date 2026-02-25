@@ -23,6 +23,7 @@
     --_sv-note-details-display: inline;
     --_sv-note-footer-display: flex;
     --_sv-note-open-note-display: none;
+
     &__main {
       pointer-events: none;
     }
@@ -56,7 +57,7 @@
   // reset animation on hover also pauses the animation
   // while user is interacting with the note
   &:hover &__header::before,
-  &:has([aria-expanded='true']) &__header::before {
+  &:is(:has([aria-expanded='true']), &--expand) &__header::before {
     animation: none;
     background-color: transparent;
   }
@@ -131,6 +132,15 @@
       line-height: 120%;
       width: fit-content;
     }
+  }
+
+  &__start-at-btn {
+    border: 0;
+    color: var(--sv-blue-43);
+    padding: 0.1em;
+    border-radius: var(--sv-border-radius-4);
+    background-color: var(--sv-blue-100);
+    cursor: pointer;
   }
 
   &__time-stamp {

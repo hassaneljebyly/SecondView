@@ -9,6 +9,7 @@
   &__header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: var(--sv-space-s) var(--_sv-note-px);
     border-bottom: 1px solid var(--sv-gray-300);
 
@@ -32,8 +33,8 @@
     font-size: var(--sv-font-sm);
     font-weight: var(--sv-font-weight-medium);
     line-height: 1.4;
+    margin-right: auto;
     text-transform: capitalize;
-    padding-left: var(--sv-space-xs);
   }
   &__note-rated-note {
     padding-top: var(--sv-space-s);

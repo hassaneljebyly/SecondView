@@ -28,3 +28,14 @@
   color: var(--sv-gray-500);
   margin-top: var(--sv-space-s);
 }
+
+.sv-dialog {
+  margin: auto;
+  width: var(--sv-note-width);
+  border: 0;
+  background-color: transparent;
+  &::backdrop {
+    background-color: black;
+    opacity: 0.3;
+  }
+}

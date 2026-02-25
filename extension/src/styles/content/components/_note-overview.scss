@@ -1,0 +1,16 @@
+.sv-notes-overview {
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: start;
+    gap: var(--sv-space-md);
+    overflow-x: auto;
+  }
+
+  &__note-item {
+    flex-shrink: 0;
+    width: var(--sv-note-width);
+  }
+}

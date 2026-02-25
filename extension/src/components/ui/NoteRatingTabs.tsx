@@ -22,13 +22,25 @@ import Button from './Button';
 import ErrorMessage from './ErrorMessage';
 import Icon from './Icon';
 
+export default function NoteRatingTabs({ note }: { note: NoteResponse }) {
+  const { dispatchNavigateBack } = useStackedNavigation();
+  return <NoteTabsBlock note={note} onBackNavigation={() => dispatchNavigateBack()} />;
+}
+
 // first tab is opened by default
 // making as a state will reset it to 0 with every render
 // too much headache on that one
 let activeTabIndex = 0;
 // reference https://www.w3.org/WAI/ARIA/apg/patterns/tabs/examples/tabs-automatic/
-export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteResponse }) {
-  const { dispatchNavigateBack } = useStackedNavigation();
+export function NoteTabsBlock({
+  note: { id: noteId },
+  onBackNavigation,
+  onModelClose,
+}: {
+  note: NoteResponse;
+  onBackNavigation?: () => void;
+  onModelClose?: () => void;
+}) {
   const { run, successResponse, isError, isLoading } = useRequest(submitRating);
   const { pick, update } = useProfile();
   const [formSubmissionState, setFormSubmissionState] = useState<FormState>('idle');
@@ -141,7 +153,7 @@ export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteRes
         inaccurate: {},
       });
       setFormSubmissionState('idle');
-      dispatchNavigateBack();
+      onBackNavigation?.();
       return;
     }
 
@@ -248,7 +260,8 @@ export default function NoteRatingTabs({ note: { id: noteId } }: { note: NoteRes
               shape='pill'
               actions={{
                 onClick: () => {
-                  dispatchNavigateBack();
+                  onBackNavigation?.();
+                  onModelClose?.();
                   setError('');
                 },
               }}
