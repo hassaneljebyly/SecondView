@@ -1,12 +1,12 @@
 .sv-note-status-icon {
   &[data-note-status='pending'] {
     svg {
-      fill: var(--sv-note-status-pending);
+      fill: var(--sv-note-status-pending) !important;
     }
   }
   &[data-note-status='active'] {
     svg {
-      fill: var(--sv-note-status-active);
+      fill: var(--sv-note-status-active) !important;
     }
   }
 }

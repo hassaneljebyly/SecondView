@@ -50,6 +50,7 @@ export function NoteDetailsBlock({
             icon={{ variant: 'cancel' }}
             size='xs'
             text='Close Note Details'
+            noDarkMode
             actions={{ onClick: () => onModelClose() }}
           />
         )}

@@ -76,7 +76,7 @@ export default function NotesOverview() {
             className='sv-accordion__header'
             aria-expanded={accordionExpand}
             aria-controls='sv-accordion__inner'
-            onClick={() => setAccordionExpand(!accordionExpand)}
+            onClick={() => (notes.length ? setAccordionExpand(!accordionExpand) : '')}
           >
             <span className='sv-accordion__header-text'>{headerText}</span>
           </button>

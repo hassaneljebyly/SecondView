@@ -1,3 +1,14 @@
+html[dark] {
+  .sv-accordion {
+    --_sv-accordion-bg: var(--sv-black-15);
+    &:hover {
+      --_sv-accordion-bg: var(--sv-gray-800);
+    }
+    &__header {
+      color: var(--sv-white);
+    }
+  }
+}
 .sv-accordion {
   --_sv-grid-row: 0fr;
   --_sv-accordion-bg: var(--sv-gray-100);
@@ -8,7 +19,7 @@
   overflow: hidden;
 
   &:hover {
-    --_sv-accordion-bg: var(--sv-blue-100);
+    --_sv-accordion-bg: var(--sv-gray-200);
   }
   * {
     pointer-events: auto !important;
