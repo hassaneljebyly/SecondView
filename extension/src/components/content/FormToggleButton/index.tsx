@@ -22,6 +22,9 @@ export default function FormToggleButton() {
     const closeFormEvent = globalEventSingleton.on('form:close', handleCloseToggle);
     const newNoteEvent = globalEventSingleton.on('keyup', e => {
       if ((e as KeyboardEvent).code === 'KeyN') {
+        const targetElement = e.target as Element | null;
+        const tagName = targetElement?.tagName.toLowerCase();
+        if (tagName === 'input' || tagName === 'textarea') return;
         handleFormToggle();
       }
     });
