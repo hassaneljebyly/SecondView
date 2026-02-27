@@ -2,158 +2,145 @@
   <img src="./extension/public/icons/logo_256px.png" alt="Logo"></img>
 </p>
 
-# 🎥 SecondView – Community Driven Fact Checking for YouTube
+# SecondView
 
-**SecondView** is a Chrome extension that brings **community-driven fact-checking** to YouTube videos. Inspired by Twitter’s Community Notes, it enables viewers to **flag misinformation** and provide **contextual corrections** at the exact moment misleading content appears in a video.
+**Community-driven context for YouTube videos with timestamp precision.**
 
-
-
-## 🌐 Vision
-
-SecondView aims to empower **digital media literacy** by giving everyday viewers tools to collaboratively correct or contextualize content. We believe open dialogue and collective input are key to a more informed internet.
-
-## ✨ Features
-
-- ⏱️ **Timestamped Notes**: Viewers can add notes tied to specific moments in a video.
-- 🧠 **Misinformation Categories**: Notes can be categorized (check [Misinformation Categories](##Misinformation-Categories)).
-- 🗣️ **Crowdsourced Explanations**: Contributors explain why the content is misleading or what important context is missing.
-- 💬 **Live Note Popups**: Viewers see notes right after the questionable claim is made, Important the note pops up at the end of the video, that way the content gets a chance to make its case.
-- 👍👎 **Community Ratings**: Notes can be rated as “Helpful” or “Not Helpful” based on set criteria, ensuring quality over time (check [Note Ratings](##Note-Ratings)).
+SecondView is a browser extension that lets viewers add context, perspective, and critical analysis directly to specific moments in YouTube videos. Instead of issuing top-down fact checks, SecondView empowers the community to contribute insights, encouraging media literacy and thoughtful discussion exactly where it matters most.
 
 
+## Key Features
+### Timestamp-Precise Notes
 
-## 🛠️ How It Works
-
-1. **Watch a Video**  
-   When watching YouTube, if you hear a claim that seems misleading or lacking context...
-
-2. **Click "Add Note"**  
-   Use the SecondView button to open a form that includes:
-   - Start Time (in seconds)
-   - End Time (when the claim ends)
-   - Category of misinformation
-   - Explanation or context
-
-3. **Submit Note**  
-   Your note is now linked to that exact video moment.
-
-4. **Other Viewers See It**  
-   When another user watches the same video, the note appears shortly after the claim is made.
-
-5. **Rate Notes**  
-   Viewers can mark notes as “Helpful” or “Not Helpful” based on:
-   - Clarity and objectivity
-   - Verifiable sources or logic
-   - Relevance and accuracy
-
-
-## Misinformation Categories  
-
-### <span style="background-color: #F1C40F; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Temporal Misrepresentation 
-<p style="max-width: 60ch;width: 100%;">
-Video content where timing is misrepresented, such as old footage presented as current events or clips from different time periods combined misleadingly.  
-</p>
----
-
-### <span style="background-color: #E74C3C; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Unsubstantiated Advice 
-<p style="max-width: 60ch;width: 100%;">
-Medical, legal, financial, or safety advice given in videos without proper credentials or evidence, particularly dangerous in health and wellness content.  
-</p>
----
-
-### <span style="background-color: #D35400; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Manipulated Content 
-<p style="max-width: 60ch;width: 100%;">
-Genuine video or audio that has been edited or distorted, such as selective editing to change meaning, deepfakes, voice cloning, or misleading thumbnails and titles.  
-</p>
----
-
-### <span style="background-color: #8E44AD; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Fabricated Content 
-<p style="max-width: 60ch;width: 100%;">
-Completely false video content, including staged events presented as real, fake interviews, or entirely synthetic footage created to deceive viewers.  
-</p>
----
-
-### <span style="background-color: #F39C12; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Misleading Content 
-<p style="max-width: 60ch;width: 100%;">
-Video content that presents opinions, speculation, or unverified claims as established facts, common in commentary and podcast-style content.  
-</p>
----
-
-### <span style="background-color: #95A5A6; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Satire and Parody 
-<p style="max-width: 60ch;width: 100%;">
-Humorous video content that could be mistaken for real news or information, including sketch comedy or satirical news shows without clear disclaimers.  
-</p>
----
-
-### <span style="background-color: #E67E22; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> False Connections 
-<p style="max-width: 60ch;width: 100%;">
-When unrelated footage, images, or audio clips are used to support or illustrate claims they don't actually relate to.  
-</p>
----
-
-### <span style="background-color: #3498DB; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Sponsored Content 
-<p style="max-width: 60ch;width: 100%;">
-Paid promotions, product placements, or sponsored segments disguised as genuine reviews or editorial content without proper disclosure.  
-</p>
----
-
-### <span style="background-color: #2980B9; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Imposter Content 
-<p style="max-width: 60ch;width: 100%;">
-Videos impersonating genuine sources, such as fake news channels, deepfake videos of real people, or channels using established media branding without authorization.  
-</p>
----
-
-### <span style="background-color: #16A085; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> False Context 
-<p style="max-width: 60ch;width: 100%;">
-Factually accurate footage or audio combined with false contextual information, such as old footage presented as recent events or real clips with misleading narration.  
-</p>
----
-
-### <span style="background-color: #9B59B6; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Propaganda 
-<p style="max-width: 60ch;width: 100%;">
-Video content systematically designed to influence viewer attitudes, values, or political beliefs through biased presentation or selective information.  
-</p>
----
-
-### <span style="background-color: #BDC3C7; display: inline-block; width: 18px; aspect-ratio: 1; border-radius: 2px;"></span> Error 
-<p style="max-width: 60ch;width: 100%;">
-Mistakes made by established news channels, educational content creators, or other credible sources in their video reporting or explanations.  
-</p>
----
-
-## Note Ratings  
-
-These define the **rating options** for evaluating the quality and accuracy of a note.  
-They are grouped into **Accurate Ratings** and **Inaccurate Ratings**
+Add context to specific moments in videos, not just entire videos. Notes appear at the end of the claim, this is done because a claim must be fully articulated, contextualized, and presented before it can be accurately, fairly, and comprehensively verified. Allowing a claim to "make its case" enables an assessment of its specific context which is essential for evaluating accuracy giving content a fair chance before providing perspective.
 
 ---
+### Multi-Dimensional Quality Scoring
 
-## ✅ Accurate Ratings (`ACCURATE_RATINGS_ARRAY`)
+Notes are evaluated across four dimensions:
 
-Used when a note is high-quality, reliable, and helpful.  
+* **Evidence:** Credible, appropriate sources
+* **Explanation:** Clear reasoning and logic
+* **Coverage:** Addresses the full claim with nuance
+* **Tone & Quality:** Objective, constructive communication
 
-- **Reliable Sources** (`reliable-sources`) – high-quality, credible sources  
-- **Well Documented** (`well-documented`) – claims backed by evidence  
-- **Contextually Relevant** (`contextually-relevant`) – directly addresses the claim  
-- **Clear Explanation** (`clear-explanation`) – easy to understand  
-- **Neutral Tone** (`neutral-tone`) – objective, professional language  
-- **Current Information** (`current-information`) – up-to-date sources/facts  
-- **Comprehensive Coverage** (`comprehensive-coverage`) – addresses the full claim  
-- **Actionable Helpful** (`actionable-helpful`) – gives viewers useful info  
+A note with great sources but poor explanation scores lower than one that balances all dimensions. This prevents gaming the system and rewards thoughtful contributions.
 
 ---
+### Privacy-First Architecture
 
-## ❌ Inaccurate Ratings (`INACCURATE_RATINGS_ARRAY`)
+- No email required
+- Pseudonymous usernames
+- Anonymous viewing by default
 
-Used when a note is misleading, low-quality, or unhelpful.  
+### Transparent Evaluation
 
-- **Unreliable Sources** (`unreliable-sources`) – poor quality or biased sources  
-- **Unsupported Claims** (`unsupported-claims`) – no evidence provided  
-- **Off Topic** (`off-topic`) – doesn’t match the flagged content  
-- **Confusing Unclear** (`confusing-unclear`) – hard to follow or vague  
-- **Biased Language** (`biased-language`) – inflammatory or one-sided  
-- **Outdated Information** (`outdated-information`) – old or superseded info  
-- **Incomplete Shallow** (`incomplete-shallow`) – doesn’t fully address the issue  
-- **Spam Unhelpful** (`spam-unhelpful`) – low effort or irrelevant  
+- After voting, see:
+- Vote breakdown by dimension
+- Accuracy score and confidence level
+- Community consensus (Active/Pending status)
+- Your contribution to the evaluation
 
----
+> community consensus details are hidden until a vote on a note is made, this ensures that the final result reflects the authentic will of the voters rather than a manufactured trend.
+
+### Full Keyboard Navigation
+- Navigate, rate, and submit notes without touching your mouse. Accessibility-first design.
+
+### Research Infrastructure
+
+- Soft deletes (data preserved for academic use)
+- Comprehensive metadata tracking
+- Designed for misinformation research and analysis
+
+
+### How It Works
+> See our [Guide.md](https://github.com/hassaneljebyly/SecondView/blob/master/GUIDE.md) for more detailed guide
+
+**For Viewers:**
+
+1. Watch YouTube: Install SecondView extension
+2. See context: Notes appear at relevant timestamps
+3. Evaluate quality: Rate notes on evidence, explanation, coverage, and tone
+4. Make informed decisions: Use community context to think critically
+
+**For Contributors:**
+
+1. Create profile: Generate pseudonymous identity (no email needed)
+2. Add notes: Flag claims with timestamps, categories, and sources
+3. Build reputation: Quality contributions increase your influence
+4. Track impact: See how the community evaluates your work
+
+### Misinformation Categories
+
+Notes are categorized to help viewers understand the type of context being provided:
+
+- **Temporal Misrepresentation:** Video content where timing is misrepresented, such as old footage presented as current events or clips from different time periods combined misleadingly.
+- **Unsubstantiated Advice:** Medical, legal, financial, or safety advice given in videos without proper credentials or evidence, particularly dangerous in health and wellness content.
+- **Manipulated Content:** Genuine video or audio that has been edited or distorted, such as selective editing to change meaning, deepfakes, voice cloning, or misleading thumbnails and titles.
+- **Fabricated Content:** Completely false video content, including staged events presented as real, fake interviews, or entirely synthetic footage created to deceive viewers.
+- **Misleading Content:** Video content that presents opinions, speculation, or unverified claims as established facts, common in commentary and podcast-style content.
+- **Satire and Parody:** Humorous video content that could be mistaken for real news or information, including sketch comedy or satirical news shows without clear disclaimers.
+- **False Connections:** When unrelated footage, images, or audio clips are used to support or illustrate claims they don't actually relate to.
+- **Sponsored Content:** Paid promotions, product placements, or sponsored segments disguised as genuine reviews or editorial content without proper disclosure.
+- **Imposter Content:** Videos impersonating genuine sources, such as fake news channels, deepfake videos of real people, or channels using established media branding without authorization.
+- **False Context:** Factually accurate footage or audio combined with false contextual information, such as old footage presented as recent events or real clips with misleading narration.
+- **Propaganda:** Video content systematically designed to influence viewer attitudes, values, or political beliefs through biased presentation or selective information.
+- **Error:** Mistakes made by established news channels, educational content creators, or other credible sources in their video reporting or explanations.
+
+### Rating System
+
+> **Why such detailed ratings?** <br>
+> **Scrutiny applies at every layer**: Content is examined. Notes are examined. Reviewers are examined. <br/>
+Quality fact checking requires thoughtful evaluation. While rating notes takes more effort than a simple up-vote, this friction ensures notes are assessed on merit not popularity and prevents coordinated manipulation
+
+**When Notes Are Helpful:**
+
+- **Reliable Sources:** High-quality, credible references
+- **Well Documented:** Claims backed by evidence
+- **Contextually Relevant:** Directly addresses the claim
+- **Clear Explanation:** Easy to understand reasoning
+- **Neutral Tone:** Objective, professional language
+- **Current Information:** Up-to-date sources and facts
+- **Comprehensive Coverage:** Addresses the full claim
+- **Actionable/Helpful:** Provides useful information
+
+**When Notes Fall Short:**
+
+- **Unreliable Sources:** Poor quality or biased references
+- **Unsupported Claims:** No evidence provided
+- **Off Topic:** Doesn't match flagged content
+- **Confusing/Unclear:** Hard to follow or vague
+- **Biased Language:** Inflammatory or one-sided
+- **Outdated Information:** Superseded or old data
+- **Incomplete/Shallow:** Doesn't fully address the issue
+- **Spam/Unhelpful:** Low effort or irrelevant
+
+### In Progress
+
+- User reputation refinement
+- Note details
+- Note editing
+- Note delete
+- Firefox support
+
+### Future
+
+- Cross-video claim linking (track misinfo propagation)
+- Channel credibility scores (pattern detection)
+- Multi-platform expansion (TikTok, Twitter/X)
+- Research API for academics
+- Advanced analytics dashboard
+- Mobile app
+
+### License
+
+[GNU General Public License](https://github.com/hassaneljebyly/SecondView/blob/master/LICENSE)
+
+### Acknowledgments
+Inspired by Twitter's Community Notes, built with the belief that informed communities can self-moderate effectively when given the right tools.
+
+### Report Issues
+Found a bug or have a suggestion?
+
+[Open an issue on GitHub](https://github.com/hassaneljebyly/SecondView/issues/new)
+Or [contact](hassanjebyly@gmail.com)
