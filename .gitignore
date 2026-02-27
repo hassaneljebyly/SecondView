@@ -31,3 +31,5 @@ future_ideas.ts
 
 *.env
 *.env.*
+
+*.zip

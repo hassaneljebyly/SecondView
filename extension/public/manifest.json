@@ -5,15 +5,15 @@
   "version_name": "1.0.0 - Launch",
   "description": "SecondView is a Chrome extension that brings community-driven fact-checking to YouTube videos.",
   "icons": {
-    "16": "./icons/logo_16px.png",
-    "48": "./icons/logo_48px.png",
-    "128": "./icons/logo_128px.png"
+    "16": "icons/logo_16px.png",
+    "48": "icons/logo_48px.png",
+    "128": "icons/logo_128px.png"
   },
   "action": {
     "default_icon": {
-      "16": "./icons/logo_16px.png",
-      "48": "./icons/logo_48px.png",
-      "128": "./icons/logo_128px.png"
+      "16": "icons/logo_16px.png",
+      "48": "icons/logo_48px.png",
+      "128": "icons/logo_128px.png"
     },
     "default_title": "SecondView",
     "default_popup": "popup/second-view-popup.html"
