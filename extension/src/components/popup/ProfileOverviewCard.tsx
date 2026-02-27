@@ -136,27 +136,43 @@ export default function ProfileOverviewCard() {
         <div className='sv-popup-widget__section sv-profile-overview__footer'>
           <b className='sv-divider sv-divider--top' />
           <ul className='sv-profile-overview__footer-list'>
-            {/*
-            // REFACTOR(me/#7): 🧱 Add Guide, Privacy, Terms, and Report Bug links
-            // Issue: https://github.com/hassaneljebyly/SecondView/issues/7
-            */}
             <li>
-              <a className='sv-popup-widget__links' href='#'>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/blob/master/GUIDE.md'
+                target='_blank'
+                rel='noreferrer'
+              >
                 Guide
               </a>
             </li>
             <li>
-              <a className='sv-popup-widget__links' href='#'>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/blob/master/PRIVACY.md'
+                target='_blank'
+                rel='noreferrer'
+              >
                 Privacy
               </a>
             </li>
             <li>
-              <a className='sv-popup-widget__links' href='#'>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/blob/master/TERMS.md'
+                target='_blank'
+                rel='noreferrer'
+              >
                 Terms
               </a>
             </li>
             <li>
-              <a className='sv-popup-widget__links' href='#'>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/issues/new'
+                target='_blank'
+                rel='noreferrer'
+              >
                 Report Bug
               </a>
             </li>
