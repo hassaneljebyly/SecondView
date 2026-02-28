@@ -127,6 +127,7 @@ Only video id is stored, **Only when action of submitting note is made**
 Data may be used for academic research on misinformation patterns. Research use is anonymized usernames are disassociated from content, and individual users are never identified in published studies.
 
 SecondView does not sell, rent, or trade your data. We do not share data with advertisers, data brokers, or marketing companies.
+
 ---
 
 # 3. Data Storage
