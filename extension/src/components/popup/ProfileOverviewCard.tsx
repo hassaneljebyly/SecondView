@@ -34,6 +34,8 @@ export default function ProfileOverviewCard() {
         <div className='sv-popup-widget__section sv-profile-overview__header'>
           <div className='sv-profile-overview__cover-container'>
             <img
+              width={298}
+              height={122.453}
               className='sv-profile-overview__cover-image'
               src='https://i.imgur.com/05YkqBj.png'
               alt='Cover'

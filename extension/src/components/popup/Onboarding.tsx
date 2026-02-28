@@ -56,7 +56,7 @@ export default function Onboarding() {
           aria-hidden
         >
           <p className='sv-popup-widget__section-title'>SecondView</p>
-          <img src='https://i.imgur.com/4Z26njF.png' alt='' />
+          <img height={128} width={128} src='https://i.imgur.com/4Z26njF.png' alt='' />
         </div>
         <div className='sv-popup-widget__section '>
           <p className='sv-popup-widget__hint'>
