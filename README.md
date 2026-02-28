@@ -143,4 +143,4 @@ Inspired by Twitter's Community Notes, built with the belief that informed commu
 Found a bug or have a suggestion?
 
 [Open an issue on GitHub](https://github.com/hassaneljebyly/SecondView/issues/new)
-Or [contact](hassanjebyly@gmail.com)
+Or [contact(gmail)](mailto:hassanjebyly@gmail.com)
