@@ -70,6 +70,7 @@
   - State facts neutrally
 
 **Note submission form**
+
 ![Note submission form](./screenshots/note_form.png) 
 
 ## 2. Submitting Rating
@@ -83,6 +84,7 @@
 4. **Tone**: Is it objective and constructive?
 
 **Note rating form**
+
 ![Note rating form](./screenshots/note_rating.png)
 
 ## 3. The Note 
@@ -90,6 +92,7 @@
 - hovering over the progress bar will show the noted segments, no colored segments means no notes for said video
 
 **Noted segments**
+
 ![Collapsed Note](./screenshots/note_segments.png)
 
 - As the video is playing, at the end of the noted segments, a collapsed version of the note will popup
