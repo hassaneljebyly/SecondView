@@ -9,9 +9,11 @@
     - Or Import existing profile if you have one already 
 
 **Onboarding**
+
 ![onboarding](./screenshots/onboarding.png) 
 
 **Profile Overview**
+
 ![Profile Overview](./screenshots/profile_overview.png) 
 
 > **Your access key is the ONLY way to recover your account.**
@@ -26,9 +28,11 @@
 > - Write it down
 
 **Access Credentials**
+
 ![Access Credentials](./screenshots/access_credentials.png) 
 
 **Import Profile**
+
 ![Import Profile](./screenshots/import_profile.png) 
 
 
@@ -37,6 +41,7 @@
 - Click `Add Note` to open note submission form or click `N` on your keyboard
 
 **Add Note button**
+
 ![Add note button](./screenshots/add_note_button.png) 
 
 #### Submission Requirements
