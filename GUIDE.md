@@ -1,7 +1,7 @@
 # User Guide
 
 ## 1. Getting Started
-1. Installation [Chrome]()
+1. Installation [Chrome](https://chromewebstore.google.com/detail/secondview/laddeaednkelgoagnakhjofgmkfelpfo)
 2. Creating a profile (screenshots)
     - Profiles are optional
     - But you need one to be able to submit note or review one.
