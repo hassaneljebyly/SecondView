@@ -4,7 +4,7 @@
 
 ## 1.  Acceptance of Terms 
 
-By installing, accessing, or using the SecondView browser extension, you agree to [Privacy Policy](https://github.com/hassaneljebyly/SecondView/blob/master/GUIDE.md) and to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use SecondView.
+By installing, accessing, or using the SecondView browser extension, you agree to [Privacy Policy](https://github.com/hassaneljebyly/SecondView/blob/master/PRIVACY.md) and to be bound by these Terms of Service ("Terms"). If you do not agree to these Terms, do not use SecondView.
 
 ## 2. Description of Service
 ### 2.1 What SecondView Is
