@@ -96,6 +96,50 @@ export default function Onboarding() {
             }}
           />
         </div>
+        <div className='sv-popup-widget__section sv-profile-overview__footer'>
+          <ul className='sv-profile-overview__footer-list'>
+            <li>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/blob/master/GUIDE.md'
+                target='_blank'
+                rel='noreferrer'
+              >
+                Guide
+              </a>
+            </li>
+            <li>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/blob/master/PRIVACY.md'
+                target='_blank'
+                rel='noreferrer'
+              >
+                Privacy
+              </a>
+            </li>
+            <li>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/blob/master/TERMS.md'
+                target='_blank'
+                rel='noreferrer'
+              >
+                Terms
+              </a>
+            </li>
+            <li>
+              <a
+                className='sv-popup-widget__links'
+                href='https://github.com/hassaneljebyly/SecondView/issues/new'
+                target='_blank'
+                rel='noreferrer'
+              >
+                Report Bug
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
