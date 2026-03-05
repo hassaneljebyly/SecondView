@@ -4,6 +4,7 @@
   --_sv-form-bg-color: var(--sv-white);
   --_sv-form-text-color: var(--sv-black-6);
   --_sv-live-char-color: var(--sv-gray-700);
+  --_sv-description-display: none;
   width: var(--sv-form-popup-max-width);
   background-color: var(--_sv-form-bg-color);
   color: var(--_sv-form-text-color);
@@ -72,6 +73,7 @@
     display: flex;
     align-items: center;
     gap: var(--sv-space-xs);
+    position: relative;
     & button span {
       text-transform: lowercase;
     }
@@ -80,6 +82,97 @@
   &__time-input {
     max-width: 15ch;
   }
+
+  &__select,
+  &__select::picker(select) {
+    appearance: base-select;
+    cursor: pointer;
+  }
+
+  &__select::picker-icon {
+    content: '';
+  }
+
+  &:has(option:is(:hover, :focus-visible)) {
+    --_sv-description-display: block;
+  }
+  option {
+    color: var(--sv-black-1);
+  }
+  option:focus-visible {
+    background-color: var(--sv-gray-200);
+    outline: 0;
+  }
+
+  option::checkmark {
+    visibility: hidden;
+  }
+
+  &__select::picker(select) {
+    border: inherit;
+    border-radius: inherit;
+    max-height: 200px;
+    margin-top: var(--sv-space-xxs);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    line-height: 250%;
+
+    color: var(--sv-black-1);
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: var(--sv-black-alpha-40);
+      border-radius: 10px;
+
+      &:hover {
+        background: var(--sv-black-alpha-05);
+      }
+    }
+
+    // firefox
+    scrollbar-width: thin;
+    scrollbar-color: var(--sv-black-alpha-40) transparent;
+  }
+
+  optgroup {
+    color: var(--sv-gray-500);
+    padding-left: var(--sv-space-md);
+    font-weight: var(--sv-font-weight-medium);
+  }
+
+  &__select-dot {
+    display: inline-block;
+    width: 6px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    margin-right: var(--sv-space-xs);
+  }
+
+  &__select-option-description {
+    position: absolute;
+    bottom: 0;
+    color: inherit;
+    font-size: var(--sv-font-xs);
+    font-weight: var(--sv-font-weight-medium);
+    line-height: 150%;
+    display: var(--_sv-description-display);
+    background-color: var(--sv-white);
+    border: 1px solid var(--sv-gray-300);
+    border-radius: var(--sv-space-xxs);
+    padding-block: var(--sv-space-xs);
+    padding-inline: var(--sv-space-xs);
+    box-shadow: var(--sv-shadow-md);
+    text-transform: lowercase;
+    &::first-letter {
+      text-transform: uppercase;
+    }
+  }
+
   &__textarea {
     resize: vertical;
     min-height: 150px;

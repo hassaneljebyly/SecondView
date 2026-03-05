@@ -3,8 +3,13 @@
   position: 'relative';
 
   &__segment {
+    --sv_height: 5px;
     position: absolute;
     bottom: 0;
-    height: 10px;
+    height: var(--sv_height);
+    border-radius: var(--sv_height);
+    translate: 0% 250%;
+    background: white;
+    opacity: 1;
   }
 }
