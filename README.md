@@ -74,18 +74,31 @@ A note with great sources but poor explanation scores lower than one that balanc
 
 Notes are categorized to help viewers understand the type of context being provided:
 
-- **Temporal Misrepresentation:** Video content where timing is misrepresented, such as old footage presented as current events or clips from different time periods combined misleadingly.
-- **Unsubstantiated Advice:** Medical, legal, financial, or safety advice given in videos without proper credentials or evidence, particularly dangerous in health and wellness content.
-- **Manipulated Content:** Genuine video or audio that has been edited or distorted, such as selective editing to change meaning, deepfakes, voice cloning, or misleading thumbnails and titles.
-- **Fabricated Content:** Completely false video content, including staged events presented as real, fake interviews, or entirely synthetic footage created to deceive viewers.
-- **Misleading Content:** Video content that presents opinions, speculation, or unverified claims as established facts, common in commentary and podcast-style content.
-- **Satire and Parody:** Humorous video content that could be mistaken for real news or information, including sketch comedy or satirical news shows without clear disclaimers.
-- **False Connections:** When unrelated footage, images, or audio clips are used to support or illustrate claims they don't actually relate to.
-- **Sponsored Content:** Paid promotions, product placements, or sponsored segments disguised as genuine reviews or editorial content without proper disclosure.
-- **Imposter Content:** Videos impersonating genuine sources, such as fake news channels, deepfake videos of real people, or channels using established media branding without authorization.
-- **False Context:** Factually accurate footage or audio combined with false contextual information, such as old footage presented as recent events or real clips with misleading narration.
-- **Propaganda:** Video content systematically designed to influence viewer attitudes, values, or political beliefs through biased presentation or selective information.
-- **Error:** Mistakes made by established news channels, educational content creators, or other credible sources in their video reporting or explanations.
+#### **Media Integrity**
+
+  1. ***Manipulated Content:*** Real video or audio that has been edited or distorted to change its meaning  selective cuts, deepfakes, voice cloning, or misleading thumbnails.
+  
+  2. ***Fabricated Content:*** Entirely invented content  staged events presented as real, fake interviews, or synthetic footage created to deceive.
+  3. ***Imposter Content:*** Content impersonating legitimate sources  fake news channels, unauthorized use of established media branding, or deepfakes of real people.
+  4. ***Temporal Misrepresentation:*** Old footage or past events deliberately presented as current, or clips from different time periods combined to mislead.
+  5. ***False Connections:*** Unrelated footage, images, or audio used to illustrate claims they have no actual connection to.
+
+#### **Information Quality**
+
+  1. ***Misleading Content:*** Opinions, speculation, or unverified claims framed as established facts  common in commentary, reaction, and podcast-style content.
+  2. ***False Context:*** Accurate footage or audio paired with false surrounding information  real clips with wrong narration, or correct events described inaccurately.
+  3. ***Missing Context:*** Technically accurate content that omits relevant information, creating a false impression through incompleteness rather than falsehood.
+  4. ***Outdated Information:*** Content that was accurate when published but has since been contradicted, updated, or clarified by new evidence or events.
+  5. ***Error:*** Honest mistakes by otherwise credible creators  factual errors, incorrect statistics, or misidentified footage without apparent deceptive intent.
+
+#### **Influence And Disclosure**
+
+  1. ***Propaganda:*** Content systematically designed to influence beliefs or political attitudes through biased framing, selective information, or emotional manipulation.
+  2. ***Undisclosed Sponsorship:*** Paid promotions or product placements presented as genuine reviews or editorial opinions without proper disclosure to viewers.
+
+  3. ***Unsubstantiated Advice:*** Medical, legal, financial, or safety advice given without credentials or evidence  particularly common in health, wellness, and finance content.
+#### **Special Cases**
+  1. ***Satire or Parody:*** Humorous or satirical content that could be mistaken for genuine reporting  sketch comedy, satirical news, or parody accounts without clear disclaimers.
 
 ### Rating System
 
