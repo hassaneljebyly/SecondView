@@ -4,7 +4,7 @@ import type { NoteResponse } from '@/api/types/notes';
 import { useStackedNavigation } from '@/hooks/useStackedNavigation';
 import { NOTE_POPUP_DURATION_SECONDS } from '@/utils/config/extensionParams';
 import { globalEventSingleton } from '@/utils/lib/events';
-import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
+import { MISINFO_COLORS, NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
 import {
   formatSecondsToDuration,
   secondsToTimeString,
@@ -45,9 +45,10 @@ export default function Note(note: NoteResponse) {
     sources,
     createdAt,
   } = note;
+  const noteConfigs = NOTE_CATEGORIES.find(({ value }) => value === misinfoType);
   const optionsMenuState = openOptionsMenu ? 'open' : 'closed';
-  const categoryColor = NOTE_CATEGORIES[misinfoType]['color'];
-  const categoryLabel = NOTE_CATEGORIES[misinfoType]['displayName'];
+  const categoryColor = MISINFO_COLORS[noteConfigs!.value];
+  const categoryLabel = noteConfigs!.displayName;
   const headerStyle = {
     '--_sv-category-color': categoryColor,
     '--_sv-count-down-duration': `${NOTE_POPUP_DURATION_SECONDS}s`,
@@ -284,9 +285,10 @@ export function StaticNote({
     sources,
     createdAt,
   } = note;
+  const noteConfigs = NOTE_CATEGORIES.find(({ value }) => value === misinfoType);
   const optionsMenuState = openOptionsMenu ? 'open' : 'closed';
-  const categoryColor = NOTE_CATEGORIES[misinfoType]['color'];
-  const categoryLabel = NOTE_CATEGORIES[misinfoType]['displayName'];
+  const categoryColor = MISINFO_COLORS[noteConfigs!.value];
+  const categoryLabel = noteConfigs!.displayName;
   const headerStyle = {
     '--_sv-category-color': categoryColor,
     '--_sv-count-down-duration': `${NOTE_POPUP_DURATION_SECONDS}s`,

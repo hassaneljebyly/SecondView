@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import Button from '@/components/ui/Button';
 import ErrorMessage from '@/components/ui/ErrorMessage';
@@ -28,7 +28,15 @@ export default function NoteForm() {
   } = useNoteForm();
   const [formHasValue, setFormHasValue] = useState(false);
   const [rateLimited, setRateLimited] = useState(false);
+  const [textAreaPlaceHolder, setTextAreaPlaceHolder] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
+
+  function handleSelect(e: React.ChangeEvent<HTMLSelectElement>) {
+    const placeHolder =
+      NOTE_CATEGORIES.find(({ value }) => value === e.target.value)?.notePlaceholder ||
+      'Explain what’s incorrect or unclear, or add relevant context to support the content...';
+    setTextAreaPlaceHolder(placeHolder);
+  }
 
   return (
     <form
@@ -78,16 +86,17 @@ export default function NoteForm() {
           errors={errors}
         />
         <MisInfoSelect
+          onSelect={handleSelect}
           labelDisplayName='Category'
           name='category'
           placeHolder='Select misinformation category'
-          categoriesObject={NOTE_CATEGORIES}
+          categoriesObject={Object.groupBy(NOTE_CATEGORIES, ({ category }) => category)}
           errors={errors}
         />
         <NoteTextArea
           labelDisplayName='Your Note'
           name='noteContent'
-          placeholder='Explain what’s incorrect or unclear, or add relevant context to support the content...'
+          placeholder={textAreaPlaceHolder}
           maxNoteLength={MAX_NOTE_LENGTH}
           minNoteLength={MIN_NOTE_LENGTH}
           errors={errors}

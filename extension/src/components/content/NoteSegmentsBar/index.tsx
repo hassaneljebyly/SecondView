@@ -9,7 +9,7 @@ import { globalEventSingleton } from '@/utils/lib/events';
 import { buildNotesMap, getSegmentPercentRange } from '@/utils/lib/helpers';
 import { logger } from '@/utils/lib/logger';
 import { tempVideoId } from '@shared/mocks/youtube';
-import { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
+import { MISINFO_COLORS } from '@shared/utils/config/noteConstrainsConfig';
 
 export const noteSegmentsBarId = 'sv-note-segments-bar';
 export default function NoteSegmentsBar() {
@@ -92,7 +92,7 @@ export default function NoteSegmentsBar() {
   return (
     <ul id={noteSegmentsBarId} className='sv-segments-list'>
       {notes.map(({ id, misinfoType, startTime, endTime }) => {
-        const segmentColor = NOTE_CATEGORIES[misinfoType]['color'];
+        const segmentColor = MISINFO_COLORS[misinfoType];
         const { segmentWidth, segmentLeftPos } = getSegmentPercentRange({
           videoLength,
           startTime,

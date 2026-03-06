@@ -1,18 +1,6 @@
-import type { ApiResponse } from './responses';
+import type { MisinfoTypeValues } from '@shared/types/noteConstrains';
 
-type NoteCategoryKeys =
-  | 'TEMPORAL_MISREPRESENTATION'
-  | 'UNSUBSTANTIATED_ADVICE'
-  | 'MANIPULATED_CONTENT'
-  | 'FABRICATED_CONTENT'
-  | 'MISLEADING_CONTENT'
-  | 'SATIRE_AND_PARODY'
-  | 'FALSE_CONNECTIONS'
-  | 'SPONSORED_CONTENT'
-  | 'IMPOSTER_CONTENT'
-  | 'FALSE_CONTEXT'
-  | 'PROPAGANDA'
-  | 'ERROR';
+import type { ApiResponse } from './responses';
 
 export type VideoMetaData = {
   videoId: string;
@@ -22,7 +10,7 @@ export type VideoMetaData = {
 export type Note = {
   startTimeSeconds: number;
   endTimeSeconds: number;
-  category: NoteCategoryKeys;
+  category: MisinfoTypeValues;
   noteContent: string;
   sources: string[]; // parsed from noteContent
 };
@@ -39,7 +27,7 @@ export type NoteResponse = {
   videoId: string;
   startTime: number;
   endTime: number;
-  misinfoType: NoteCategoryKeys;
+  misinfoType: MisinfoTypeValues;
   noteText: string;
   sources: string[];
   status: NoteStatus;

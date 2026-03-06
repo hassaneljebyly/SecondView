@@ -13,7 +13,7 @@ import { getVideoLength, getYouTubeId } from '@/utils/dom/youtube';
 import { globalEventSingleton } from '@/utils/lib/events';
 import { logger } from '@/utils/lib/logger';
 import { tempVideoId } from '@shared/mocks/youtube';
-import type { NoteCategoryKeys } from '@shared/types/noteConstrains';
+import type { MisinfoTypeValues } from '@shared/types/noteConstrains';
 import type { FormInputData } from '@shared/types/schemas';
 import type { ValidationConfig, ValidationErrors } from '@shared/types/validation';
 import { validationConstants } from '@shared/utils/config/noteConstrainsConfig';
@@ -118,7 +118,7 @@ export function useNoteForm(): UseNoteFormReturn {
           noteData: {
             startTimeSeconds,
             endTimeSeconds,
-            category: category as NoteCategoryKeys,
+            category: category as MisinfoTypeValues,
             noteContent,
             sources,
           },
@@ -130,7 +130,7 @@ export function useNoteForm(): UseNoteFormReturn {
             videoId: currentYoutubeVideoId,
             startTime: startTimeSeconds,
             endTime: endTimeSeconds,
-            misinfoType: category as NoteCategoryKeys,
+            misinfoType: category as MisinfoTypeValues,
             noteText: noteContent,
             sources,
             status: 'pending',

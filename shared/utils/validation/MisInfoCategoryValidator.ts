@@ -1,4 +1,4 @@
-import type { NoteCategoryKeys } from '@shared/types/noteConstrains';
+import type { MisinfoTypeValues } from '@shared/types/noteConstrains';
 import type { ValidationConfig } from '@shared/types/validation';
 
 import { ValidationHandler } from './AbstractValidationHandler';
@@ -15,7 +15,7 @@ export class MisInfoCategoryValidator extends ValidationHandler {
     const { formData, noteCategories } = context;
     const { category } = formData;
     // Only validate if category field doesn't already have an error
-    if (!this.errors['category'] && !noteCategories.includes(category as NoteCategoryKeys)) {
+    if (!this.errors['category'] && !noteCategories.includes(category as MisinfoTypeValues)) {
       // Check if the selected category is in the allowed list
       this.errors['category'] = 'Invalid Input';
     }

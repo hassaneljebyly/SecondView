@@ -1,13 +1,31 @@
-import type { NOTE_CATEGORIES } from '@shared/utils/config/noteConstrainsConfig';
+export type MisinfoTypeValues =
+  | 'MANIPULATED_CONTENT'
+  | 'FABRICATED_CONTENT'
+  | 'IMPOSTER_CONTENT'
+  | 'TEMPORAL_MISREPRESENTATION'
+  | 'FALSE_CONNECTIONS'
+  | 'MISLEADING_CONTENT'
+  | 'FALSE_CONTEXT'
+  | 'MISSING_CONTEXT'
+  | 'OUTDATED_INFORMATION'
+  | 'ERROR'
+  | 'PROPAGANDA'
+  | 'SPONSORED_CONTENT'
+  | 'UNSUBSTANTIATED_ADVICE'
+  | 'SATIRE_PARODY';
 
-export type NoteCategoryKeys = keyof typeof NOTE_CATEGORIES;
-export type NoteCategoryKeysArray = NoteCategoryKeys[];
-export type NoteCategoryValues = {
+export type MisinfoCategory =
+  | 'MEDIA_INTEGRITY'
+  | 'INFORMATION_QUALITY'
+  | 'INFLUENCE_DISCLOSURE'
+  | 'SPECIAL_CASES';
+
+export type MisinfoTypeValuesArray = MisinfoTypeValues[];
+
+export type MisinfoType = {
+  value: MisinfoTypeValues;
   displayName: string;
+  category: MisinfoCategory;
   description: string;
-  color: string;
-};
-
-export type NoteMisInfoCategories = {
-  [T in NoteCategoryKeys]: NoteCategoryValues;
+  notePlaceholder: string;
 };

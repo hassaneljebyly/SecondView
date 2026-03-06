@@ -1,6 +1,6 @@
 import type { NoteResponse } from '@/api/types/notes';
 
-import type { NoteCategoryKeysArray } from './noteConstrains';
+import type { MisinfoTypeValuesArray } from './noteConstrains';
 import type { FormInputData } from './schemas';
 
 export type FormInputDataFields = keyof FormInputData;
@@ -22,7 +22,7 @@ export type ValidationConfig = {
   maxSegmentLength: number;
   maxNoteLength: number;
   minNoteLength: number;
-  noteCategories: NoteCategoryKeysArray;
+  noteCategories: MisinfoTypeValuesArray;
   validLinksFormat: RegExp;
 };
 

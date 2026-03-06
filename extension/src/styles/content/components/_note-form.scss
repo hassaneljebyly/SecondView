@@ -97,7 +97,7 @@
     --_sv-description-display: block;
   }
   option {
-    color: var(--sv-black-1);
+    color: var(--_sv-form-text-color) !important;
   }
   option:focus-visible {
     background-color: var(--sv-gray-200);
@@ -114,6 +114,9 @@
     max-height: 200px;
     margin-top: var(--sv-space-xxs);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    background-color: var(--_sv-form-bg-color);
+    color: var(--_sv-form-text-color);
+
     line-height: 250%;
 
     color: var(--sv-black-1);
@@ -158,11 +161,12 @@
     bottom: 0;
     color: inherit;
     font-size: var(--sv-font-xs);
-    font-weight: var(--sv-font-weight-medium);
+    font-weight: var(--sv-font-weight-normal);
+    letter-spacing: 0.05rem;
     line-height: 150%;
     display: var(--_sv-description-display);
-    background-color: var(--sv-white);
-    border: 1px solid var(--sv-gray-300);
+    background-color: var(--_sv-form-bg-color);
+    border: 1px solid var(--_sv-live-char-color);
     border-radius: var(--sv-space-xxs);
     padding-block: var(--sv-space-xs);
     padding-inline: var(--sv-space-xs);

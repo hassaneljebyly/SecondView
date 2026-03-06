@@ -1,4 +1,4 @@
-import type { NoteCategoryKeys } from './noteConstrains';
+import type { MisinfoTypeValues } from './noteConstrains';
 import type { VideoMetaData } from './youtube-data';
 
 export type FormInputData = {
@@ -12,7 +12,7 @@ export type Note = {
   userId: string;
   startTimeSeconds: number;
   endTimeSeconds: number;
-  category: NoteCategoryKeys;
+  category: MisinfoTypeValues;
   noteContent: string;
   sources: string[];
 };
