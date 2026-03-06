@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "SecondView",
-  "version": "1.0.1",
-  "version_name": "1.0.1 - Beta",
+  "version": "1.0.2",
+  "version_name": "1.0.2 - Beta",
   "description": "SecondView is a Chrome extension that brings community-driven fact-checking to YouTube videos.",
   "icons": {
     "16": "icons/logo_16px.png",
